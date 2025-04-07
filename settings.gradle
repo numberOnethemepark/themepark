@@ -3,3 +3,4 @@ include 'eureka-server'
 include 'order-service'
 
 include 'themepark-service'
+include 'product-service'

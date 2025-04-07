@@ -1,16 +1,16 @@
 package com.business.themeparkservice.themepark.application.dto.request;
 
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,11 +38,13 @@ public class ReqThemeparkPostDTOApiV1 {
         @NotNull(message = "테마파크 유형을 입력해주세요[AREA,RIDE]")
         private ThemeparkType type;
 
+        @JsonFormat(pattern = "HH:mm")
         @NotNull(message = "테마파크 운영 시작시간을 입력해주세요")
-        private Time operationStartTime;
+        private LocalTime operationStartTime;
 
+        @JsonFormat(pattern = "HH:mm")
         @NotNull(message = "테마파크 운영 종료시간을 입력해주세요")
-        private Time operationEndTime;
+        private LocalTime operationEndTime;
 
         private String heightLimit;
 

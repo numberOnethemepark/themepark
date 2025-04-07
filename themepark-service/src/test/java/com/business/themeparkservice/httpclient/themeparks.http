@@ -8,8 +8,8 @@ Content-Type: application/json
       "description": "슝슝 놀이기구입니다.",
       "type": "RIDE",
       "heightLimit": "130~180cm",
-      "operationStartTime": "10:00:00",
-      "operationEndTime": "18:00:00",
+      "operationStartTime": "10:00",
+      "operationEndTime": "18:00",
       "supervisor": true,
       "hashtag": ["f5e49e7d-3baf-478f-bb36-d70b66330f79", "f5e49e5d-3baf-478f-bb36-d70b66330f79"]
     }

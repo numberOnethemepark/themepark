@@ -2,9 +2,11 @@ package com.business.themeparkservice.themepark.application.dto.response;
 
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,8 +33,13 @@ public class ResThemeparkPostDTOApiv1 {
         private String name;
         private String description;
         private ThemeparkType type;
-        private Time operationStartTime;
-        private Time operationEndTime;
+
+        @JsonFormat(pattern = "HH:mm")
+        private LocalTime operationStartTime;
+
+        @JsonFormat(pattern = "HH:mm")
+        private LocalTime operationEndTime;
+
         private String heightLimit;
         private String supervisor;
         private Hashtag hashtag;

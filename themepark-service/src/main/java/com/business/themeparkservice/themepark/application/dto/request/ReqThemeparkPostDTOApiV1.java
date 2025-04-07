@@ -22,13 +22,13 @@ public class ReqThemeparkPostDTOApiV1 {
 
     @Valid
     @NotNull(message = "테마파크 정보를 입력해주세요")
-    private Themepark themepark;
+    private ThemePark themepark;
 
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Themepark {
+    public static class ThemePark {
         @NotBlank(message = "테마파크 이름을 입력해주세요")
         private String name;
 

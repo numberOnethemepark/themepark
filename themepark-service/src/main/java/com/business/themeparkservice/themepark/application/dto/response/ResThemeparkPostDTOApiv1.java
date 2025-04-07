@@ -16,11 +16,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ResThemeparkPostDTOApiv1 {
 
-    private Themepark themepark;
+    private ThemePark themepark;
 
     public static ResThemeparkPostDTOApiv1 of(ReqThemeparkPostDTOApiV1 reqDto) {
         return ResThemeparkPostDTOApiv1.builder()
-                .themepark(ResThemeparkPostDTOApiv1.Themepark.from(reqDto))
+                .themepark(ResThemeparkPostDTOApiv1.ThemePark.from(reqDto))
                 .build();
     }
 
@@ -28,7 +28,7 @@ public class ResThemeparkPostDTOApiv1 {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Themepark {
+    public static class ThemePark {
         private UUID id;
         private String name;
         private String description;
@@ -44,11 +44,11 @@ public class ResThemeparkPostDTOApiv1 {
         private String supervisor;
         private Hashtag hashtag;
 
-        public static Themepark from(ReqThemeparkPostDTOApiV1 reqDto){
+        public static ThemePark from(ReqThemeparkPostDTOApiV1 reqDto){
             Hashtag hashtag = new Hashtag();
             hashtag.setName(List.of("name1","name2"));
 
-            return Themepark.builder()
+            return ThemePark.builder()
                     .id(UUID.fromString("f5e49e7d-3baf-478f-bb36-d73b66330f79"))
                     .name(reqDto.getThemepark().getName())
                     .description(reqDto.getThemepark().getDescription())

@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  profiles:
+    active: local
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+  cloud:
+    gateway:
+      routes:
+        - id: themepark-service
+          uri: lb://themepark-service
+          predicates:
+            - Path=/v1/themeparks/**
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/v1/users/**
+
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/v1/products/**
+
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/v1/orders/**
+      discovery:
+        locator:
+          enabled: true
+      loadbalancer:
+        enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

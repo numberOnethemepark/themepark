@@ -9,10 +9,24 @@ plugins {
 
 bootJar.enabled = false // 루트 프로젝트는 실행 가능한 JAR을 만들지 않음
 
-subprojects {
-    group = 'com.example'
+allprojects {
+    group = 'com.business'
     version = '0.0.1-SNAPSHOT'
 
+    repositories{
+        mavenCentral()
+    }
+
+    tasks.withType(Test).configureEach {
+        enabled = false
+    }
+
+    tasks.withType(BootJar).configureEach {
+        enabled = false
+    }
+}
+
+subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
@@ -72,21 +86,6 @@ subprojects {
         }
     }
 
-    allprojects {
-        group = 'com.business'
-
-        repositories{
-            mavenCentral()
-        }
-
-        tasks.withType(Test).configureEach {
-            enabled = false
-        }
-
-        tasks.withType(BootJar).configureEach {
-            enabled = false
-        }
-    }
 
     // 서브모듈별로 `bootJar` 및 `jar` 설정을 다르게 적용
     afterEvaluate { project ->
@@ -97,6 +96,10 @@ subprojects {
             bootJar.enabled = true
             jar.enabled = false
         }
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
     }
 
 }

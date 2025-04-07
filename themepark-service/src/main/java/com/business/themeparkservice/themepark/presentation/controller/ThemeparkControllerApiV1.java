@@ -17,6 +17,6 @@ public class ThemeparkControllerApiV1 {
     public ResponseEntity<ResThemeparkPostDTOApiv1> createThemepark(
             @Valid @RequestBody ReqThemeparkPostDTOApiV1 reqDto){
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ResThemeparkPostDTOApiv1.of(reqDto));
     }
 }

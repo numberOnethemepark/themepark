@@ -1,5 +1,6 @@
 package com.business.themeparkservice.themepark.application.dto.request;
 
+import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,8 +35,8 @@ public class ReqThemeparkPostDTOApiV1 {
         @NotBlank(message = "테마파크 설명을 입력해주세요")
         private String description;
 
-        @NotBlank(message = "테마파크 유형을 입력해주세요[AREA,RIDE]")
-        private String type;
+        @NotNull(message = "테마파크 유형을 입력해주세요[AREA,RIDE]")
+        private ThemeparkType type;
 
         @NotNull(message = "테마파크 운영 시작시간을 입력해주세요")
         private Time operationStartTime;

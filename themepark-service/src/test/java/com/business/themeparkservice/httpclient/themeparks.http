@@ -1,4 +1,4 @@
-POST http://localhost:8005/v1/themeparks
+POST http://localhost:8080/v1/themeparks
 Content-Type: application/json
 
 {

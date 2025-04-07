@@ -1,0 +1,99 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+
+}
+
+bootJar.enabled = false // 루트 프로젝트는 실행 가능한 JAR을 만들지 않음
+
+subprojects {
+    group = 'com.example'
+    version = '0.0.1-SNAPSHOT'
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
+
+    ext {
+        set('springCloudVersion', "2024.0.0")
+        set('querydslVersion', "5.0.0")  // QueryDSL 버전 명시적으로 설정
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        //querydsl
+        implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
+        annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
+        annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+        annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+        // JWT
+        implementation 'io.jsonwebtoken:jjwt:0.12.6'
+        compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+        runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+        runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+        //feignClient
+        implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
+
+    def querydslSrcDir = 'src/main/generated'
+    clean {
+        delete file(querydslSrcDir)
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    allprojects {
+        group = 'com.business'
+
+        repositories{
+            mavenCentral()
+        }
+
+        tasks.withType(Test).configureEach {
+            enabled = false
+        }
+
+        tasks.withType(BootJar).configureEach {
+            enabled = false
+        }
+    }
+
+    // 서브모듈별로 `bootJar` 및 `jar` 설정을 다르게 적용
+    afterEvaluate { project ->
+        if (project.name == 'common') {
+            bootJar.enabled = false
+            jar.enabled = true
+        } else {
+            bootJar.enabled = true
+            jar.enabled = false
+        }
+    }
+
+}

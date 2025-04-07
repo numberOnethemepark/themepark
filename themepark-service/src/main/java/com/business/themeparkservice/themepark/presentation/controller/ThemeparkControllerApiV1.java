@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ThemeparkControllerApiV1 {
 
     @PostMapping
-    public ResponseEntity<ResThemeparkPostDTOApiv1> createThemepark(
+    public ResponseEntity<ResThemeparkPostDTOApiv1> postThemepark(
             @Valid @RequestBody ReqThemeparkPostDTOApiV1 reqDto){
 
         return ResponseEntity.ok(ResThemeparkPostDTOApiv1.of(reqDto));

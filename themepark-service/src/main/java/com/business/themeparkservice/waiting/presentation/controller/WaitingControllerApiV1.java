@@ -65,4 +65,15 @@ public class WaitingControllerApiV1 {
         );
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResDTO<Object>> deleteWaiting(@PathVariable UUID id){
+        return new ResponseEntity<>(
+                ResDTO.builder()
+                        .code(0)
+                        .message("대기열 정보가 삭제 되었습니다.")
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
 }

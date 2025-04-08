@@ -2,15 +2,23 @@ package com.business.productservice.presentation.controller;
 
 import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.business.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
+import com.business.productservice.application.dto.response.ResProductGetDTOApiV1;
 import com.business.productservice.application.dto.response.ResProductPostDTOApiV1;
 import com.business.productservice.common.dto.ResDTO;
+import com.business.productservice.domain.product.entity.ProductEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -53,6 +61,30 @@ public class ProductControllerApiV1 {
                                 .data(ResProductGetByIdDTOApiV1.of())
                                 .build(),
                         HttpStatus.OK
+                );
+        }
+
+        @GetMapping
+        public ResponseEntity<ResDTO<ResProductGetDTOApiV1>> getBy(
+                @RequestParam(required = false) String searchValue,
+                @PageableDefault(sort="id", direction = Sort.Direction.ASC) Pageable pageable,
+                Long id //TODO 권한 처리용 (추후 변경 예정)
+        ){
+                List<ProductEntity> tempProducts = List.of(
+                        new ProductEntity(),
+                        new ProductEntity()
+                );
+
+                Page<ProductEntity> tempProductPage = new PageImpl<>(tempProducts, pageable, tempProducts.size());
+
+                ResProductGetDTOApiV1 tempResDto = ResProductGetDTOApiV1.of(tempProductPage);
+
+                return ResponseEntity.ok(
+                        ResDTO.<ResProductGetDTOApiV1>builder()
+                                .code(0)
+                                .message("상품 조회에 성공했습니다.")
+                                .data(tempResDto)
+                                .build()
                 );
         }
 

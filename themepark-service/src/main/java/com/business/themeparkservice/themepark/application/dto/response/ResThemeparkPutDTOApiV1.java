@@ -50,13 +50,13 @@ public class ResThemeparkPutDTOApiV1 {
 
             return ThemePark.builder()
                     .id(id)
-                    .name(reqDto.getThemepark().getName())
-                    .description(reqDto.getThemepark().getDescription())
-                    .type(reqDto.getThemepark().getType())
-                    .operationStartTime(reqDto.getThemepark().getOperationStartTime())
-                    .operationEndTime(reqDto.getThemepark().getOperationEndTime())
+                    .name("놀이기구1")
+                    .description("슝슝 놀이기구입니다.")
+                    .type(ThemeparkType.valueOf("RIDE"))
+                    .operationStartTime(LocalTime.parse("10:00"))
+                    .operationEndTime(LocalTime.parse("18:00"))
                     .heightLimit(reqDto.getThemepark().getHeightLimit())
-                    .supervisor(reqDto.getThemepark().getSupervisor())
+                    .supervisor(true)
                     .hashtag(hashtag)
                     .build();
         }

@@ -65,7 +65,7 @@ public class ThemeparkControllerApiV1 {
                         .code(0)
                         .message("테마파크 삭제를 성공했습니다.")
                         .build(),
-                HttpStatus.OK
+                HttpStatus.NO_CONTENT
         );
     }
 }

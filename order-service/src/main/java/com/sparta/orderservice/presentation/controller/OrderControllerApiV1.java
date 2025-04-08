@@ -30,7 +30,7 @@ public class OrderControllerApiV1 {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResDto<Object>> updateOrder(
-            @PathVariable UUID id,
+            @PathVariable("id") @UUID String id,
             @RequestBody ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1) {
         return new ResponseEntity<>(
             ResDto.builder()

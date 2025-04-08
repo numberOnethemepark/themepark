@@ -28,7 +28,7 @@ public class ReqOrderPutDtoApiV1 {
         private String slackId;
 
         @NotBlank(message = "주문상태를 입력해주세요.")
-        private String OrderStatus;
+        private String orderStatus;
     }
 
 }

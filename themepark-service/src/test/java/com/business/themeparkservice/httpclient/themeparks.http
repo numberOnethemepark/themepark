@@ -14,3 +14,7 @@ Content-Type: application/json
       "hashtag": ["f5e49e7d-3baf-478f-bb36-d70b66330f79", "f5e49e5d-3baf-478f-bb36-d70b66330f79"]
     }
 }
+
+###
+
+GET http://localhost:8080/v1/themeparks/f5e49e7d-3baf-478f-bb36-d70b66330f79

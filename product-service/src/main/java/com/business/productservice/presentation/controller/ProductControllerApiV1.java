@@ -55,4 +55,18 @@ public class ProductControllerApiV1 {
                         HttpStatus.OK
                 );
         }
+
+        @PutMapping("/{id}")
+        public ResponseEntity<ResDTO<Object>> putById(
+                @PathVariable UUID id,
+                @Valid @RequestBody ReqProductPostDTOApiV1 dto
+        ){
+                return new ResponseEntity<>(
+                        ResDTO.builder()
+                                .code(0)
+                                .message("상품 정보 수정에 성공했습니다.")
+                                .build(),
+                        HttpStatus.OK
+                );
+        }
 }

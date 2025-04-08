@@ -2,6 +2,7 @@ package com.business.themeparkservice.waiting.presentation.controller;
 
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingGetByIdDTOApiV1;
+import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostCancelDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDoneDTOApiV1;
 import com.business.themeparkservice.waiting.common.dto.ResDTO;

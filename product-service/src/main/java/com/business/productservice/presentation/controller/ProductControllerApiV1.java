@@ -69,4 +69,17 @@ public class ProductControllerApiV1 {
                         HttpStatus.OK
                 );
         }
+
+        @DeleteMapping("/{id}")
+        public ResponseEntity<ResDTO<Object>> deleteById(
+                @PathVariable UUID id
+        ){
+                return new ResponseEntity<>(
+                        ResDTO.builder()
+                                .code(0)
+                                .message("상품 삭제를 성공했습니다.")
+                                .build(),
+                        HttpStatus.OK
+                );
+        }
 }

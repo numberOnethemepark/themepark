@@ -18,6 +18,8 @@ public class ReqOrdersPostDtoApiV1 {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Order {
 
         @NotBlank(message = "슬랙 정보를 입력해주세요.")

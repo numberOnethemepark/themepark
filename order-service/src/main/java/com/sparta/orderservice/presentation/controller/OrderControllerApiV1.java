@@ -3,6 +3,7 @@ package com.sparta.orderservice.presentation.controller;
 import com.sparta.orderservice.application.dto.request.ReqOrderPutDtoApiV1;
 import com.sparta.orderservice.application.dto.request.ReqOrdersPostDtoApiV1;
 import com.sparta.orderservice.application.dto.response.ResDto;
+import com.sparta.orderservice.application.dto.response.ResOrderGetDtoApiV1;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class OrderControllerApiV1 {
         return new ResponseEntity<>(
                 ResDto.builder()
                         .code(0) //Ok 코드
-                        .message("상품을 생성하였습니다!")
+                        .message("주문을 생성하였습니다!")
                         .build(),
                 HttpStatus.OK
         );
@@ -32,14 +33,28 @@ public class OrderControllerApiV1 {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResDto<Object>> updateOrder(
-            @PathVariable("id") @UUID String id,
+            @PathVariable("id") UUID id,
             @RequestBody ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1) {
         return new ResponseEntity<>(
             ResDto.builder()
                     .code(0) //Ok 코드
-                    .message("상품을 수정하였습니다!")
+                    .message("주문을 수정하였습니다!")
                     .build(),
             HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResDto<ResOrderGetDtoApiV1>> getOrder(
+            @PathVariable("id") UUID id
+    ){
+        return new ResponseEntity<>(
+                ResDto.<ResOrderGetDtoApiV1>builder()
+                        .code(0)
+                        .message("주문정보를 조회하였습니다!")
+                        .data(ResOrderGetDtoApiV1.of(id))
+                        .build(),
+                HttpStatus.OK
         );
     }
 }

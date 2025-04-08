@@ -32,7 +32,7 @@ public class ReqPaymentPostDtoApiV1 {
         public Integer amount;
 
         @NotBlank(message = "카드번호를 입력해주세요.")
-        public Integer cardNumber;
+        public String cardNumber;
     }
 
 }

@@ -1,8 +1,10 @@
 package com.business.themeparkservice.hashtag.presentation.controller;
 
 import com.business.themeparkservice.hashtag.application.dto.request.ReqHashtagPostDTOApiV1;
+import com.business.themeparkservice.hashtag.application.dto.request.ReqHashtagPutDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagGetByIdDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPostDTOApiV1;
+import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPutDTOApiV1;
 import com.business.themeparkservice.themepark.common.dto.ResDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,20 @@ public class HashtagControllerApiV1 {
                         .code(0)
                         .message("해시태그 조회에 성공했습니다.")
                         .data(ResHashtagGetByIdDTOApiV1.of(id))
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResDTO<ResHashtagPutDTOApiV1>> putHashtag(
+            @PathVariable UUID id, @RequestBody ReqHashtagPutDTOApiV1 reqDto){
+
+        return new ResponseEntity<>(
+                ResDTO.<ResHashtagPutDTOApiV1>builder()
+                        .code(0)
+                        .message("해시태그 수정을 성공했습니다.")
+                        .data(ResHashtagPutDTOApiV1.of(id,reqDto))
                         .build(),
                 HttpStatus.OK
         );

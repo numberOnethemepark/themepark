@@ -10,3 +10,14 @@ Content-Type: application/json
 ###
 
 GET http://localhost:8080/v1/hashtags/f5e49e7d-3baf-478f-bb36-d70b66330f79
+
+###
+
+PUT http://localhost:8080/v1/hashtags/f5e49e7d-3baf-478f-bb36-d70b66330f79
+Content-Type: application/json
+
+{
+  "hashtag": {
+    "name": "즐거운"
+  }
+}

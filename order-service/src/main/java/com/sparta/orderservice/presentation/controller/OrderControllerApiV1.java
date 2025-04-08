@@ -36,11 +36,11 @@ public class OrderControllerApiV1 {
             @PathVariable("id") UUID id,
             @RequestBody ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1) {
         return new ResponseEntity<>(
-            ResDto.builder()
-                    .code(0) //Ok 코드
-                    .message("주문을 수정하였습니다!")
-                    .build(),
-            HttpStatus.OK
+                ResDto.builder()
+                        .code(0) //Ok 코드
+                        .message("주문을 수정하였습니다!")
+                        .build(),
+                HttpStatus.OK
         );
     }
 

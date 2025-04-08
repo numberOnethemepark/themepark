@@ -34,7 +34,7 @@ public class ThemeparkControllerApiV1 {
         return new ResponseEntity<>(
                 ResDTO.<ResThemeparkGetByIdDTOApiV1>builder()
                         .code(0)
-                        .message("테마파크 생성을 성공했습니다.")
+                        .message("테마파크 조회에 성공했습니다.")
                         .data(ResThemeparkGetByIdDTOApiV1.of(id))
                         .build(),
                 HttpStatus.OK

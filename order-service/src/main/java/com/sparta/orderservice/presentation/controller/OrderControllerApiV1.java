@@ -26,7 +26,7 @@ public class OrderControllerApiV1 {
                         .code(0) //Ok 코드
                         .message("주문을 생성하였습니다!")
                         .build(),
-                HttpStatus.OK
+                HttpStatus.CREATED
         );
     }
 
@@ -53,6 +53,19 @@ public class OrderControllerApiV1 {
                         .code(0)
                         .message("주문정보를 조회하였습니다!")
                         .data(ResOrderGetDtoApiV1.of(id))
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResDto<Object>> deleteOrder(
+            @PathVariable("id") UUID id
+    ){
+        return new ResponseEntity<>(
+                ResDto.builder()
+                        .code(0)
+                        .message("주문을 삭제하였습니다!")
                         .build(),
                 HttpStatus.OK
         );

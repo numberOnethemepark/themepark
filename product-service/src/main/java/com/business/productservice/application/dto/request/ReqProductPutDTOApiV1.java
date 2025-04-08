@@ -1,5 +1,6 @@
 package com.business.productservice.application.dto.request;
 
+import com.business.productservice.domain.product.vo.ProductStatus;
 import com.business.productservice.domain.product.vo.ProductType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -33,6 +34,7 @@ public class ReqProductPutDTOApiV1 {
         private Integer limitQuantity;
         private LocalDateTime eventStartAt;
         private LocalDateTime eventEndAt;
+        private ProductStatus status;
 
     }
 }

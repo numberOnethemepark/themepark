@@ -1,6 +1,7 @@
 package com.business.productservice.presentation.controller;
 
 import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
+import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1;
 import com.business.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
 import com.business.productservice.application.dto.response.ResProductGetDTOApiV1;
 import com.business.productservice.application.dto.response.ResProductPostDTOApiV1;
@@ -91,7 +92,7 @@ public class ProductControllerApiV1 {
         @PutMapping("/{id}")
         public ResponseEntity<ResDTO<Object>> putById(
                 @PathVariable UUID id,
-                @Valid @RequestBody ReqProductPostDTOApiV1 dto
+                @Valid @RequestBody ReqProductPutDTOApiV1 dto
         ){
                 return new ResponseEntity<>(
                         ResDTO.builder()

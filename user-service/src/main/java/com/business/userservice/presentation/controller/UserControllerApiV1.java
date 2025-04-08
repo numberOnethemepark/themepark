@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,6 +88,23 @@ public class UserControllerApiV1 {
             ResDTO.builder()
                 .code(0)
                 .message("회원 탈퇴에 성공했습니다.")
+                .build(),
+            HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{id}/is-blacklisted")
+    public ResponseEntity<ResDTO<Object>> blacklistById(
+        @PathVariable Long id
+    ) {
+        String message = "";
+        boolean isBlacklisted = false;
+        if(isBlacklisted) message = "블랙리스트 되었습니다.";
+        else message = "블랙리스트 해제 되었습니다.";
+        return new ResponseEntity<>(
+            ResDTO.builder()
+                .code(0)
+                .message(message)
                 .build(),
             HttpStatus.OK
         );

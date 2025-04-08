@@ -2,5 +2,7 @@ POST http://localhost:8080/v1/hashtags
 Content-Type: application/json
 
 {
-  "name": "신나는"
+  "hashtag": {
+    "name": "신나는"
+  }
 }

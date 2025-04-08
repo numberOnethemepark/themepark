@@ -17,3 +17,7 @@ GET http://localhost:8080/v1/waitings/f6e49e7d-3baf-478f-bb36-d70b66330f79
 POST http://localhost:8080/v1/waitings/f5e49e7d-3baf-478f-bb36-d70b66330f79/done
 
 ###
+
+POST http://localhost:8080/v1/waitings/f5e49e7d-3baf-478f-bb36-d70b66330f79/cancel
+
+###

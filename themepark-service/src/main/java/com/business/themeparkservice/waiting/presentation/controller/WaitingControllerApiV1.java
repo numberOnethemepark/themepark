@@ -2,6 +2,7 @@ package com.business.themeparkservice.waiting.presentation.controller;
 
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingGetByIdDTOApiV1;
+import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostCancelDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDoneDTOApiV1;
 import com.business.themeparkservice.waiting.common.dto.ResDTO;
@@ -52,5 +53,16 @@ public class WaitingControllerApiV1 {
         );
     }
 
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<ResDTO<ResWaitingPostCancelDTOApiV1>> postCancelWaiting(@PathVariable UUID id){
+        return new ResponseEntity<>(
+                ResDTO.<ResWaitingPostCancelDTOApiV1>builder()
+                        .code(0)
+                        .message("대기가 취소 되었습니다.")
+                        .data(ResWaitingPostCancelDTOApiV1.of(id))
+                        .build(),
+                HttpStatus.OK
+        );
+    }
 
 }

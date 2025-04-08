@@ -2,11 +2,13 @@ package com.sparta.orderservice.presentation.controller;
 
 import com.sparta.orderservice.application.dto.request.ReqPaymentPostDtoApiV1;
 import com.sparta.orderservice.application.dto.response.ResDto;
+import com.sparta.orderservice.application.dto.response.ResPaymentGetDtoApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.annotation.Repeatable;
 import java.util.UUID;
 
 @RestController
@@ -36,6 +38,20 @@ public class PaymentControllerApiV1 {
                 ResDto.builder()
                         .code(0)
                         .message("결제가 수정되었습니다.")
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResDto<ResPaymentGetDtoApiV1>> getPayment(
+            @PathVariable("id") UUID id
+    ){
+        return new ResponseEntity<>(
+                ResDto.<ResPaymentGetDtoApiV1>builder()
+                        .code(0)
+                        .message("결제정보를 조회하였습니다.")
+                        .data(ResPaymentGetDtoApiV1.of(id))
                         .build(),
                 HttpStatus.OK
         );

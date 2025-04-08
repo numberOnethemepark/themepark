@@ -4,10 +4,9 @@ server:
 spring:
   application:
     name: gateway-service
-  profiles:
-    active: local
+  #  profiles:
+  #    active: local
   main:
-    allow-bean-definition-overriding: true
     web-application-type: reactive
   autoconfigure:
     exclude:
@@ -20,27 +19,74 @@ spring:
           uri: lb://themepark-service
           predicates:
             - Path=/v1/themeparks/**,/v1/hashtags/**,/v1/waitings/**
+        - id: themepark-docs
+          uri: lb://themepark-service
+          predicates:
+            - Path=/themepark-service/v3/api-docs/**
+          filters:
+            - RewritePath=/themepark-service/(?<remaining>.*), /${remaining}
 
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/v1/users/**,/v1/auth/**
+        - id: user-docs
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/v3/api-docs/**
+          filters:
+            - RewritePath=/user-service/(?<remaining>.*), /${remaining}
+
 
         - id: product-service
           uri: lb://product-service
           predicates:
             - Path=/v1/products/**
+        - id: product-docs
+          uri: lb://product-service
+          predicates:
+            - Path=/product-service/v3/api-docs/**
+          filters:
+            - RewritePath=/product-service/(?<remaining>.*), /${remaining}
 
         - id: order-service
           uri: lb://order-service
           predicates:
             - Path=/v1/orders/**
+        - id: order-docs
+          uri: lb://order-service
+          predicates:
+            - Path=/order-service/v3/api-docs/**
+          filters:
+            - RewritePath=/order-service/(?<remaining>.*), /${remaining}
       discovery:
         locator:
           enabled: true
       loadbalancer:
         enabled: true
 
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    use-root-path: true
+    urls[0]:
+      name: ThemePark Service
+      url: /themepark-service/v3/api-docs
+    urls[1]:
+      name: User Service
+      url: /user-service/v3/api-docs
+    urls[2]:
+      name: Product Service
+      url: /product-service/v3/api-docs
+    urls[3]:
+      name: Order Service
+      url: /order-service/v3/api-docs
 eureka:
   client:
     service-url:

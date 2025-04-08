@@ -3,6 +3,7 @@ package com.business.themeparkservice.hashtag.presentation.controller;
 import com.business.themeparkservice.hashtag.application.dto.request.ReqHashtagPostDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPostDTOApiV1;
 import com.business.themeparkservice.themepark.common.dto.ResDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HashtagControllerApiV1 {
 
     @PostMapping
-    public ResponseEntity<ResDTO<ResHashtagPostDTOApiV1>> postHashtag(@RequestBody ReqHashtagPostDTOApiV1 reqDto){
+    public ResponseEntity<ResDTO<ResHashtagPostDTOApiV1>> postHashtag(@Valid @RequestBody ReqHashtagPostDTOApiV1 reqDto){
         return new ResponseEntity<>(
                 ResDTO.<ResHashtagPostDTOApiV1>builder()
                         .code(0)

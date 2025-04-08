@@ -13,15 +13,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReqStockRestorePatchDTOApiV1 {
 
+    @NotNull(message = "복구하고자 하는 수량을 입력해주세요")
+    private Integer stock;
+
     @Valid
-    @NotNull(message = "복구하고자 하는 상품 수를 입력해주세요")
-    private ReqStockDecreasePatchDTOApiV1.Stock stock;
+    @NotNull(message = "상품 정보를 입력해주세요")
+    private Product product;
 
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Stock {
-        private Integer stock;
+    public static class Product {
+
+        @NotNull(message = "상품의 제한 수량(limitQuantity)을 입력해주세요")
+        private Integer limitQuantity;
     }
 }

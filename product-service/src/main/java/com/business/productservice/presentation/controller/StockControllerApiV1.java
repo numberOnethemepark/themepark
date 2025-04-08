@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -18,6 +20,7 @@ public class StockControllerApiV1 {
 
     @PatchMapping("/{id}/stocks-decrease")
     public ResponseEntity<ResDTO<Object>> patchBy(
+            @PathVariable UUID id,
             @Valid @RequestBody ReqStockDecreasePatchDTOApiV1 dto
     ){
         return new ResponseEntity<>(
@@ -31,6 +34,7 @@ public class StockControllerApiV1 {
 
     @PatchMapping("/{id}/stocks-restore")
     public ResponseEntity<ResDTO<Object>> patchBy(
+            @PathVariable UUID id,
             @Valid @RequestBody ReqStockRestorePatchDTOApiV1 dto
     ){
         return new ResponseEntity<>(

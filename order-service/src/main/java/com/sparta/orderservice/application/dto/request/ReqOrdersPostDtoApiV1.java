@@ -3,13 +3,15 @@ package com.sparta.orderservice.application.dto.request;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
+
+import java.util.UUID;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ReqOrdersPostDtoApiV1 {
-
     @Valid
     @NotNull(message = "주문 정보를 입력해주세요.")
     private Order order;
@@ -23,6 +25,9 @@ public class ReqOrdersPostDtoApiV1 {
 
         @NotBlank(message = "주문제품의 수량을 입력해주세요.")
         private int orderQuantity;
+
+        @NotBlank(message = "상품의 정보를 입력해주세요.")
+        private UUID product_id;
     }
 }
 

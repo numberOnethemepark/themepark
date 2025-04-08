@@ -19,6 +19,7 @@ public class OrderControllerApiV1 {
     @PostMapping
     public ResponseEntity<ResDto<Object>> createOrder(
             @Valid @RequestBody ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1) {
+        System.out.println(reqOrdersPostDtoApiV1.toString());
         return new ResponseEntity<>(
                 ResDto.builder()
                         .code(0) //Ok 코드

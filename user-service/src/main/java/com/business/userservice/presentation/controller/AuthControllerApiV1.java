@@ -1,6 +1,7 @@
 package com.business.userservice.presentation.controller;
 
 import com.business.userservice.application.dto.request.ReqAuthJoinDTOApiV1;
+import com.business.userservice.application.dto.request.ReqAuthPostJoinDTOApiV1;
 import com.business.userservice.common.dto.ResDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public class AuthControllerApiV1 {
     @PostMapping("/join")
     public ResponseEntity<ResDTO<Object>> joinBy(
         @Valid
-        @RequestBody ReqAuthJoinDTOApiV1 dto
+        @RequestBody ReqAuthPostJoinDTOApiV1 dto
     ) {
         return new ResponseEntity<>(
             ResDTO.builder()

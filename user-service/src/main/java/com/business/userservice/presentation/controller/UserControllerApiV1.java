@@ -1,5 +1,6 @@
 package com.business.userservice.presentation.controller;
 
+import com.business.userservice.application.dto.request.ReqUserDeleteDTOApiV1;
 import com.business.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetDTOApiV1;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -71,6 +73,20 @@ public class UserControllerApiV1 {
                 .code(0)
                 .message("회원 리스트 조회에 성공했습니다.")
                 .data(tempResDto)
+                .build(),
+            HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResDTO<Object>> deleteById(
+        @PathVariable Long id,
+        @RequestBody ReqUserDeleteDTOApiV1 dto
+    ) {
+        return new ResponseEntity<>(
+            ResDTO.builder()
+                .code(0)
+                .message("회원 탈퇴에 성공했습니다.")
                 .build(),
             HttpStatus.OK
         );

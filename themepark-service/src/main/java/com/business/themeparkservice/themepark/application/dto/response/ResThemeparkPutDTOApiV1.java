@@ -1,11 +1,10 @@
 package com.business.themeparkservice.themepark.application.dto.response;
 
-import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
+import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPutDTOApiV1;
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
@@ -14,21 +13,22 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResThemeparkPostDTOApiv1 {
+public class ResThemeparkPutDTOApiV1 {
 
     private ThemePark themepark;
 
-    public static ResThemeparkPostDTOApiv1 of(ReqThemeparkPostDTOApiV1 reqDto) {
-        return ResThemeparkPostDTOApiv1.builder()
-                .themepark(ResThemeparkPostDTOApiv1.ThemePark.from(reqDto))
+    public static ResThemeparkPutDTOApiV1 of(ReqThemeparkPutDTOApiV1 reqDto,UUID id) {
+        return ResThemeparkPutDTOApiV1.builder()
+                .themepark(ThemePark.from(reqDto,id))
                 .build();
     }
+
 
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ThemePark {
+    public static class ThemePark{
         private UUID id;
         private String name;
         private String description;
@@ -44,19 +44,19 @@ public class ResThemeparkPostDTOApiv1 {
         private Boolean supervisor;
         private Hashtag hashtag;
 
-        public static ThemePark from(ReqThemeparkPostDTOApiV1 reqDto){
+        public static ThemePark from(ReqThemeparkPutDTOApiV1 reqDto,UUID id) {
             Hashtag hashtag = new Hashtag();
             hashtag.setName(List.of("name1","name2"));
 
             return ThemePark.builder()
-                    .id(UUID.fromString("f5e49e7d-3baf-478f-bb36-d73b66330f79"))
-                    .name(reqDto.getThemepark().getName())
-                    .description(reqDto.getThemepark().getDescription())
-                    .type(reqDto.getThemepark().getType())
-                    .operationStartTime(reqDto.getThemepark().getOperationStartTime())
-                    .operationEndTime(reqDto.getThemepark().getOperationEndTime())
+                    .id(id)
+                    .name("놀이기구1")
+                    .description("슝슝 놀이기구입니다.")
+                    .type(ThemeparkType.valueOf("RIDE"))
+                    .operationStartTime(LocalTime.parse("10:00"))
+                    .operationEndTime(LocalTime.parse("18:00"))
                     .heightLimit(reqDto.getThemepark().getHeightLimit())
-                    .supervisor(reqDto.getThemepark().getSupervisor())
+                    .supervisor(true)
                     .hashtag(hashtag)
                     .build();
         }

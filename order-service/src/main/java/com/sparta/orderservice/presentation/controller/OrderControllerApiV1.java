@@ -20,6 +20,7 @@ public class OrderControllerApiV1 {
     @PostMapping
     public ResponseEntity<ResDto<Object>> createOrder(
             @Valid @RequestBody ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1) {
+
         return new ResponseEntity<>(
                 ResDto.builder()
                         .code(0) //Ok 코드
@@ -28,6 +29,7 @@ public class OrderControllerApiV1 {
                 HttpStatus.OK
         );
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<ResDto<Object>> updateOrder(
@@ -56,5 +58,4 @@ public class OrderControllerApiV1 {
         );
     }
 }
-
 

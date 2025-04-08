@@ -1,6 +1,7 @@
 package com.business.productservice.presentation.controller;
 
 import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
+import com.business.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
 import com.business.productservice.application.dto.response.ResProductPostDTOApiV1;
 import com.business.productservice.common.dto.ResDTO;
 import jakarta.validation.Valid;
@@ -8,10 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +37,20 @@ public class ProductControllerApiV1 {
                                 .code(0)
                                 .message("상품 등록에 성공했습니다.")
                                 .data(resProductPostDTOApiV1)
+                                .build(),
+                        HttpStatus.OK
+                );
+        }
+
+        @GetMapping("/{id}")
+        public ResponseEntity<ResDTO<ResProductGetByIdDTOApiV1>> getById(
+                @PathVariable UUID id
+        ){
+                return new ResponseEntity<>(
+                        ResDTO.<ResProductGetByIdDTOApiV1>builder()
+                                .code(0)
+                                .message("상품 조회에 성공했습니다.")
+                                .data(ResProductGetByIdDTOApiV1.of())
                                 .build(),
                         HttpStatus.OK
                 );

@@ -6,18 +6,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
 @Builder
-public class ReqAuthJoinDTOApiV1 {
+public class ReqAuthPostJoinDTOApiV1 {
 
     @JsonProperty
     @Valid
     @NotNull(message = "회원 정보를 입력해주세요.")
     private User user;
 
-    @Getter
     @Builder
     public static class User {
         @NotBlank(message = "아이디를 입력해주세요.")

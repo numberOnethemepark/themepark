@@ -1,8 +1,10 @@
 package com.business.themeparkservice.themepark.presentation.controller;
 
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
+import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPutDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkGetByIdDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPostDTOApiv1;
+import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPutDTOApiV1;
 import com.business.themeparkservice.themepark.common.dto.ResDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -25,8 +27,8 @@ public class ThemeparkControllerApiV1 {
                         .message("테마파크 생성을 성공했습니다.")
                         .data(ResThemeparkPostDTOApiv1.of(reqDto))
                         .build(),
-                HttpStatus.OK
-                );
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping("/{id}")
@@ -38,6 +40,32 @@ public class ThemeparkControllerApiV1 {
                         .data(ResThemeparkGetByIdDTOApiV1.of(id))
                         .build(),
                 HttpStatus.OK
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResDTO<ResThemeparkPutDTOApiV1>> putThemepark(
+            @PathVariable UUID id,
+            @RequestBody ReqThemeparkPutDTOApiV1 reqDto){
+
+        return new ResponseEntity<>(
+                ResDTO.<ResThemeparkPutDTOApiV1>builder()
+                        .code(0)
+                        .message("테마파크 수정을 성공했습니다.")
+                        .data(ResThemeparkPutDTOApiV1.of(reqDto,id))
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResDTO<Void>> deleteThemepark(@PathVariable UUID id){
+        return new ResponseEntity<>(
+                ResDTO.<Void>builder()
+                        .code(0)
+                        .message("테마파크 삭제를 성공했습니다.")
+                        .build(),
+                HttpStatus.NO_CONTENT
         );
     }
 }

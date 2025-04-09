@@ -32,20 +32,11 @@ public class ProductControllerApiV1 {
         public ResponseEntity<ResDTO<ResProductPostDTOApiV1>> postBy(
                 @Valid @RequestBody ReqProductPostDTOApiV1 dto
         ){
-                ResProductPostDTOApiV1.Product product = ResProductPostDTOApiV1.Product.builder()
-                        .name("20% 할인권")
-                        .price(30000)
-                        .build();
-
-                ResProductPostDTOApiV1 resProductPostDTOApiV1 = ResProductPostDTOApiV1.builder()
-                        .product(product)
-                        .build();
-
                 return new ResponseEntity<>(
                         ResDTO.<ResProductPostDTOApiV1>builder()
                                 .code(0)
                                 .message("상품 등록에 성공했습니다.")
-                                .data(resProductPostDTOApiV1)
+                                .data(ResProductPostDTOApiV1.of())
                                 .build(),
                         HttpStatus.OK
                 );

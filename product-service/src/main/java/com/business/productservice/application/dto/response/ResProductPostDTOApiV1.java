@@ -14,13 +14,8 @@ public class ResProductPostDTOApiV1 {
     private Product product;
 
     public static ResProductPostDTOApiV1 of(){
-        Product product = Product.builder()
-                .name("20% 할인권")
-                .price(30000)
-                .build();
-
         return ResProductPostDTOApiV1.builder()
-                .product(product)
+                .product(Product.from())
                 .build();
     }
 
@@ -31,5 +26,12 @@ public class ResProductPostDTOApiV1 {
     public static class Product{
         private String name;
         private Integer price;
+
+        public static Product from(){
+            return Product.builder()
+                    .name("20% 할인권")
+                    .price(30000)
+                    .build();
+        }
     }
 }

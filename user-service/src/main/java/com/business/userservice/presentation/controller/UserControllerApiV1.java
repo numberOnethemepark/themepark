@@ -8,6 +8,7 @@ import com.business.userservice.common.dto.ResDTO;
 import com.business.userservice.domain.user.entity.UserEntity;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/users")
 public class UserControllerApiV1 {
 

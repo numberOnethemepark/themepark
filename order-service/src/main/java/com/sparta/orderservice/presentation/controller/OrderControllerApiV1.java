@@ -1,5 +1,6 @@
 package com.sparta.orderservice.presentation.controller;
 
+import com.sparta.orderservice.application.dto.response.ResOrdersGetByIdDtoApiV1;
 import com.sparta.orderservice.application.dto.request.ReqOrderPutDtoApiV1;
 import com.sparta.orderservice.application.dto.request.ReqOrdersPostDtoApiV1;
 import com.sparta.orderservice.application.dto.response.ResDto;
@@ -53,6 +54,22 @@ public class OrderControllerApiV1 {
                         .code(0)
                         .message("주문정보를 조회하였습니다!")
                         .data(ResOrderGetDtoApiV1.of(id))
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ResDto<ResOrdersGetByIdDtoApiV1>> getOrdersById(
+            @RequestParam(name = "userId") Integer id,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size
+    ){
+        return new ResponseEntity<>(
+                ResDto.<ResOrdersGetByIdDtoApiV1>builder()
+                        .code(0)
+                        .message("주문목록을 조회하였습니다!")
+                        .data(ResOrdersGetByIdDtoApiV1.of(id, page, size))
                         .build(),
                 HttpStatus.OK
         );

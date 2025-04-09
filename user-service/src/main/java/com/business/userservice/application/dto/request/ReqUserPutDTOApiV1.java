@@ -11,8 +11,11 @@ public class ReqUserPutDTOApiV1 {
 
     @Builder
     public static class User {
+        @JsonProperty
         private String username;
+        @JsonProperty
         private String password;
+        @JsonProperty
         private String slackId;
 
 //        public void update(UserEntity userEntity) {

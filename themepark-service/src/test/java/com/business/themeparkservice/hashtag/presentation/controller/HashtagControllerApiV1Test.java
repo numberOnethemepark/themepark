@@ -1,8 +1,7 @@
-package com.business.themeparkservice.hashtag.presentation;
+package com.business.themeparkservice.hashtag.presentation.controller;
 
 import com.business.themeparkservice.hashtag.application.dto.request.ReqHashtagPostDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.request.ReqHashtagPutDTOApiV1;
-import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPutDTOApiV1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

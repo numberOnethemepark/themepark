@@ -11,7 +11,14 @@ Content-Type: application/json
       "operationStartTime": "10:00",
       "operationEndTime": "18:00",
       "supervisor": true,
-      "hashtag": ["f5e49e7d-3baf-478f-bb36-d70b66330f79", "f5e49e5d-3baf-478f-bb36-d70b66330f79"]
+      "hashtagList": [{
+        "hashtagId": "f5e49e7d-3baf-478f-bb36-d70b66330f79",
+        "name": "즐거운"
+      },{
+        "hashtagId": "f5e49e5d-3baf-478f-bb36-d70b66330f79",
+        "name": "짜릿한"
+      }
+      ]
     }
 }
 

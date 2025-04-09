@@ -36,7 +36,14 @@ public class ReqThemeparkPutDTOApiV1 {
 
         private String heightLimit;
         private Boolean supervisor;
-        private List<UUID> hashtag;
+        private List<Hashtag> hashtagList;
 
+
+        @Getter
+        @Builder
+        public static class Hashtag{
+            private UUID hashtagId;
+            private String name;
+        }
     }
 }

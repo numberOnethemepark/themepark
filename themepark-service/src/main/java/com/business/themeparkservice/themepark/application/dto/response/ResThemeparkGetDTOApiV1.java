@@ -57,7 +57,7 @@ public class ResThemeparkGetDTOApiV1 {
 
             private String heightLimit;
             private Boolean supervisor;
-            private Hashtag hashtag;
+            private List<Hashtag> hashtagList;
 
             public static List<Themepark> from(List<ThemeparkEntity> themeparkEntityList) {
                 return themeparkEntityList.stream()
@@ -66,8 +66,7 @@ public class ResThemeparkGetDTOApiV1 {
             }
 
             public static Themepark from(ThemeparkEntity entity) {
-                Hashtag hashtag = new Hashtag();
-                hashtag.setName(List.of("name1","name2"));
+                List<String> stringList = List.of("신나는","즐거운");
 
                 return Themepark.builder()
                         .id(UUID.fromString("f5e49e7d-3baf-478f-bb36-d73b66330f79"))
@@ -78,7 +77,7 @@ public class ResThemeparkGetDTOApiV1 {
                         .operationEndTime(LocalTime.parse("18:00"))
                         .heightLimit("130~180cm")
                         .supervisor(true)
-                        .hashtag(hashtag)
+                        .hashtagList(Hashtag.from(stringList))
                         .build();
             }
 
@@ -89,7 +88,19 @@ public class ResThemeparkGetDTOApiV1 {
             @NoArgsConstructor
             @AllArgsConstructor
             public static class Hashtag {
-                private List<String> name;
+                private String name;
+
+                public static Hashtag from(String name){
+                    return Hashtag.builder()
+                            .name(name)
+                            .build();
+                }
+
+                public static List<Hashtag> from(List<String> nameList) {
+                    return nameList.stream()
+                            .map(name-> Hashtag.from(name))
+                            .toList();
+                }
             }
         }
 

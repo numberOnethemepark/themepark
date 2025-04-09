@@ -42,11 +42,10 @@ public class ResThemeparkPutDTOApiV1 {
 
         private String heightLimit;
         private Boolean supervisor;
-        private Hashtag hashtag;
+        private List<Hashtag> hashtagList;
 
         public static ThemePark from(ReqThemeparkPutDTOApiV1 reqDto,UUID id) {
-            Hashtag hashtag = new Hashtag();
-            hashtag.setName(List.of("name1","name2"));
+            List<String> stringList = List.of("신나는","즐거운");
 
             return ThemePark.builder()
                     .id(id)
@@ -57,7 +56,7 @@ public class ResThemeparkPutDTOApiV1 {
                     .operationEndTime(LocalTime.parse("18:00"))
                     .heightLimit(reqDto.getThemepark().getHeightLimit())
                     .supervisor(true)
-                    .hashtag(hashtag)
+                    .hashtagList(Hashtag.from(stringList))
                     .build();
         }
 
@@ -67,7 +66,19 @@ public class ResThemeparkPutDTOApiV1 {
         @NoArgsConstructor
         @AllArgsConstructor
         public static class Hashtag {
-            private List<String> name;
+            private String name;
+
+            public static Hashtag from(String name){
+                return Hashtag.builder()
+                        .name(name)
+                        .build();
+            }
+
+            public static List<Hashtag> from(List<String> nameList) {
+                return nameList.stream()
+                        .map(name-> Hashtag.from(name))
+                        .toList();
+            }
         }
     }
 }

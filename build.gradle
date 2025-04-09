@@ -17,9 +17,9 @@ allprojects {
         mavenCentral()
     }
 
-    tasks.withType(Test).configureEach {
-        enabled = false
-    }
+//    tasks.withType(Test).configureEach {
+//        enabled = false
+//    }
 
     tasks.withType(BootJar).configureEach {
         enabled = false

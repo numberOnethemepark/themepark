@@ -25,7 +25,7 @@ import java.util.UUID;
 public class ThemeparkControllerApiV1 {
 
     @PostMapping
-    public ResponseEntity<ResDTO<ResThemeparkPostDTOApiv1>> postThemepark(
+    public ResponseEntity<ResDTO<ResThemeparkPostDTOApiv1>> postBy(
             @Valid @RequestBody ReqThemeparkPostDTOApiV1 reqDto){
 
         return new ResponseEntity<>(
@@ -39,7 +39,7 @@ public class ThemeparkControllerApiV1 {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResDTO<ResThemeparkGetByIdDTOApiV1>> getThemeparkById(@PathVariable UUID id){
+    public ResponseEntity<ResDTO<ResThemeparkGetByIdDTOApiV1>> getBy(@PathVariable UUID id){
         return new ResponseEntity<>(
                 ResDTO.<ResThemeparkGetByIdDTOApiV1>builder()
                         .code(0)
@@ -51,7 +51,7 @@ public class ThemeparkControllerApiV1 {
     }
 
     @GetMapping
-    public ResponseEntity<ResDTO<ResThemeparkGetDTOApiV1>>getThemepark(
+    public ResponseEntity<ResDTO<ResThemeparkGetDTOApiV1>> getBy(
             @RequestParam(required = false) String searchValue,
             @PageableDefault(page = 0, size = 10, sort = "createdAt") Pageable pageable
     ){
@@ -76,7 +76,7 @@ public class ThemeparkControllerApiV1 {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResDTO<ResThemeparkPutDTOApiV1>> putThemepark(
+    public ResponseEntity<ResDTO<ResThemeparkPutDTOApiV1>> putBy(
             @PathVariable UUID id,
             @RequestBody ReqThemeparkPutDTOApiV1 reqDto){
 
@@ -91,13 +91,13 @@ public class ThemeparkControllerApiV1 {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResDTO<Void>> deleteThemepark(@PathVariable UUID id){
+    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id){
         return new ResponseEntity<>(
-                ResDTO.<Void>builder()
+                ResDTO.builder()
                         .code(0)
                         .message("테마파크 삭제를 성공했습니다.")
                         .build(),
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 }

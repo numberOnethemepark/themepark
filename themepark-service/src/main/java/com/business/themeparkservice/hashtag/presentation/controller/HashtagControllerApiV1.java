@@ -25,7 +25,7 @@ import java.util.UUID;
 public class HashtagControllerApiV1 {
 
     @PostMapping
-    public ResponseEntity<ResDTO<ResHashtagPostDTOApiV1>> postHashtag(@Valid @RequestBody ReqHashtagPostDTOApiV1 reqDto){
+    public ResponseEntity<ResDTO<ResHashtagPostDTOApiV1>> postBy(@Valid @RequestBody ReqHashtagPostDTOApiV1 reqDto){
         return new ResponseEntity<>(
                 ResDTO.<ResHashtagPostDTOApiV1>builder()
                         .code(0)
@@ -37,7 +37,7 @@ public class HashtagControllerApiV1 {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResDTO<ResHashtagGetByIdDTOApiV1>> getHashtagById(@PathVariable UUID id){
+    public ResponseEntity<ResDTO<ResHashtagGetByIdDTOApiV1>> getBy(@PathVariable UUID id){
         return new ResponseEntity<>(
                 ResDTO.<ResHashtagGetByIdDTOApiV1>builder()
                         .code(0)
@@ -49,7 +49,7 @@ public class HashtagControllerApiV1 {
     }
 
     @GetMapping
-    public ResponseEntity<ResDTO<ResHashtagGetDTOApiV1>> getHashtag(
+    public ResponseEntity<ResDTO<ResHashtagGetDTOApiV1>> getBy(
             @RequestParam(required = false) String name,
             @PageableDefault(page = 0, size = 10, sort = "createdAt") Pageable pageable
     ){
@@ -74,7 +74,7 @@ public class HashtagControllerApiV1 {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResDTO<ResHashtagPutDTOApiV1>> putHashtag(
+    public ResponseEntity<ResDTO<ResHashtagPutDTOApiV1>> putBy(
             @PathVariable UUID id, @RequestBody ReqHashtagPutDTOApiV1 reqDto){
 
         return new ResponseEntity<>(
@@ -88,7 +88,7 @@ public class HashtagControllerApiV1 {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResDTO<Void>> deleteHashtag(@PathVariable UUID id){
+    public ResponseEntity<ResDTO<Void>> deleteBy(@PathVariable UUID id){
         return new ResponseEntity<>(
                 ResDTO.<Void>builder()
                         .code(0)

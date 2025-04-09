@@ -2,9 +2,9 @@ package com.business.productservice.presentation.controller;
 
 import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1;
-import com.business.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
-import com.business.productservice.application.dto.response.ResProductGetDTOApiV1;
-import com.business.productservice.application.dto.response.ResProductPostDTOApiV1;
+import com.business.productservice.application.dto.request.ReqStockDecreasePatchDTOApiV1;
+import com.business.productservice.application.dto.request.ReqStockRestorePatchDTOApiV1;
+import com.business.productservice.application.dto.response.*;
 import com.business.productservice.common.dto.ResDTO;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import jakarta.validation.Valid;
@@ -102,6 +102,34 @@ public class ProductControllerApiV1 {
                         ResDTO.builder()
                                 .code(0)
                                 .message("상품 삭제를 성공했습니다.")
+                                .build(),
+                        HttpStatus.OK
+                );
+        }
+
+        @PostMapping("/{id}/stocks-decrease")
+        public ResponseEntity<ResDTO<Object>> patchBy(
+                @PathVariable UUID id,
+                @Valid @RequestBody ReqStockDecreasePatchDTOApiV1 dto
+        ){
+                return new ResponseEntity<>(
+                        ResDTO.builder()
+                                .code(0)
+                                .message("상품 재고가 차감되었습니다.")
+                                .build(),
+                        HttpStatus.OK
+                );
+        }
+
+        @PostMapping("/{id}/stocks-restore")
+        public ResponseEntity<ResDTO<Object>> patchBy(
+                @PathVariable UUID id,
+                @Valid @RequestBody ReqStockRestorePatchDTOApiV1 dto
+        ){
+                return new ResponseEntity<>(
+                        ResDTO.builder()
+                                .code(0)
+                                .message("상품 재고가 복구되었습니다.")
                                 .build(),
                         HttpStatus.OK
                 );

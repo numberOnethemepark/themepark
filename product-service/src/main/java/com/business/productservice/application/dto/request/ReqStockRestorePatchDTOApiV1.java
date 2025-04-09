@@ -26,7 +26,7 @@ public class ReqStockRestorePatchDTOApiV1 {
     @AllArgsConstructor
     public static class Product {
 
-        @NotNull(message = "상품의 제한 수량(limitQuantity)을 입력해주세요")
+        @NotNull(message = "상품의 제한 수량을 입력해주세요")
         private Integer limitQuantity;
     }
 }

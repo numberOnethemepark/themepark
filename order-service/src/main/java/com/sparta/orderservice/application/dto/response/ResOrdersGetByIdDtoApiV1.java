@@ -30,7 +30,7 @@ public class ResOrdersGetByIdDtoApiV1 {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Orders{
-        List<ResOrderGetDtoApiV1.Order> orders;
+        List<ResOrderGetDtoApiV1.Order> ordersList;
 
         public static Orders from(Integer id, int page, int size) {
             return Orders.builder()

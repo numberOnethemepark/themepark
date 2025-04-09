@@ -15,7 +15,7 @@ import java.util.UUID;
 public class PaymentControllerApiV1 {
 
     @PostMapping()
-    public ResponseEntity<ResDto<Object>> createPayment(
+    public ResponseEntity<ResDto<Object>> postBy(
             @RequestBody ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1
     ){
         return new ResponseEntity<>(
@@ -28,7 +28,7 @@ public class PaymentControllerApiV1 {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResDto<Object>> updatePayment(
+    public ResponseEntity<ResDto<Object>> updateBy(
             @RequestBody ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1,
             @PathVariable("id") UUID id
     ){

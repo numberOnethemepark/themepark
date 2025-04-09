@@ -5,17 +5,27 @@ import lombok.Builder;
 
 @Builder
 public class ResUserGetByIdDTOApiV1 {
-
     @JsonProperty
-    private String username;
-    @JsonProperty
-    private String slackId;
-
+    private User user;
 
     public static ResUserGetByIdDTOApiV1 of(String username, String slackId) {
         return ResUserGetByIdDTOApiV1.builder()
-            .username(username)
-            .slackId(slackId)
+            .user(User.from(username, slackId))
             .build();
+    }
+
+    @Builder
+    public static class User {
+        @JsonProperty
+        private String username;
+        @JsonProperty
+        private String slackId;
+
+        private static User from(String username, String slackId) {
+            return User.builder()
+                .username(username)
+                .slackId(slackId)
+                .build();
+        }
     }
 }

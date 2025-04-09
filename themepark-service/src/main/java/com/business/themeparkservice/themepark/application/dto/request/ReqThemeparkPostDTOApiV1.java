@@ -52,6 +52,14 @@ public class ReqThemeparkPostDTOApiV1 {
         private Boolean supervisor;
 
         @NotNull(message = "테마파크 설명 해시태그를 입력해주세요")
-        private List<UUID> hashtag;
+        private List<Hashtag> hashtagList;
+
+
+        @Getter
+        @Builder
+        public static class Hashtag{
+            private UUID hashtagId;
+            private String name;
+        }
     }
 }

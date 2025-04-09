@@ -32,7 +32,7 @@ public class ThemeparkControllerApiV1 {
                 ResDTO.<ResThemeparkPostDTOApiv1>builder()
                         .code(0)
                         .message("테마파크 생성을 성공했습니다.")
-                        .data(ResThemeparkPostDTOApiv1.of(reqDto))
+                        .data(ResThemeparkPostDTOApiv1.of())
                         .build(),
                 HttpStatus.CREATED
         );

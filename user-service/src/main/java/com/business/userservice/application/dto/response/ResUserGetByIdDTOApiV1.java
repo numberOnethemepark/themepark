@@ -16,7 +16,9 @@ public class ResUserGetByIdDTOApiV1 {
 
     @Builder
     public static class User {
+        @JsonProperty
         private String username;
+        @JsonProperty
         private String slackId;
 
         private static User from(String username, String slackId) {

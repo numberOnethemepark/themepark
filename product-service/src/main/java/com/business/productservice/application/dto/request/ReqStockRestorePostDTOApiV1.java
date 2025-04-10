@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReqStockRestorePatchDTOApiV1 {
+public class ReqStockRestorePostDTOApiV1 {
 
     @Valid
     @NotNull(message = "재고 정보를 입력해주세요")

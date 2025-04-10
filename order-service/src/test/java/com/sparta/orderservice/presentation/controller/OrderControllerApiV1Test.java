@@ -41,7 +41,7 @@ public class OrderControllerApiV1Test {
     public void testOrderGetSuccess2() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/v1/orders")
-                        .param("userId", "1")
+                        .param("userId", UUID.randomUUID().toString())
                         .param("page", "10")
                         .param("size", "0")
                 )

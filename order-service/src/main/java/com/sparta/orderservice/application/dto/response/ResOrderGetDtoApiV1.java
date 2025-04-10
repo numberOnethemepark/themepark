@@ -33,16 +33,12 @@ public class ResOrderGetDtoApiV1 {
     public static class Order{
 
         private Orderer orderer;
-        private Integer amount;
-        private String paymentStatus;
-        private String paymentCardNumber;
+        private Payments payments;
 
         public static Order from(UUID id){
             return Order.builder()
                     .orderer(Orderer.from(1,"admin","slackId"))
-                    .amount(100)
-                    .paymentStatus("paid")
-                    .paymentCardNumber("123")
+                    .payments(Payments.from(100,"paid", "1234"))
                     .build();
         }
 
@@ -59,6 +55,23 @@ public class ResOrderGetDtoApiV1 {
                         .userId(userId)
                         .role(role)
                         .slackId(slackId)
+                        .build();
+            }
+        }
+
+        @Getter
+        @Builder
+        public static class Payments {
+
+            private Integer amount;
+            private String paymentStatus;
+            private String paymentCardNumber;
+
+            public static Payments from(Integer amount, String paymentStatus, String paymentCardNumber) {
+                return Payments.builder()
+                        .amount(amount)
+                        .paymentStatus(paymentStatus)
+                        .paymentCardNumber(paymentCardNumber)
                         .build();
             }
         }

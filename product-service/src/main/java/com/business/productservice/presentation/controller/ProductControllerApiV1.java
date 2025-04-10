@@ -2,8 +2,8 @@ package com.business.productservice.presentation.controller;
 
 import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1;
-import com.business.productservice.application.dto.request.ReqStockDecreasePatchDTOApiV1;
-import com.business.productservice.application.dto.request.ReqStockRestorePatchDTOApiV1;
+import com.business.productservice.application.dto.request.ReqStockDecreasePostDTOApiV1;
+import com.business.productservice.application.dto.request.ReqStockRestorePostDTOApiV1;
 import com.business.productservice.application.dto.response.*;
 import com.business.productservice.common.dto.ResDTO;
 import com.business.productservice.domain.product.entity.ProductEntity;
@@ -38,13 +38,13 @@ public class ProductControllerApiV1 {
                                 .message("상품 등록에 성공했습니다.")
                                 .data(ResProductPostDTOApiV1.of())
                                 .build(),
-                        HttpStatus.OK
+                        HttpStatus.CREATED
                 );
         }
 
         @GetMapping("/{id}")
         public ResponseEntity<ResDTO<ResProductGetByIdDTOApiV1>> getById(
-                @PathVariable UUID id
+                @PathVariable("id") UUID id
         ){
                 return new ResponseEntity<>(
                         ResDTO.<ResProductGetByIdDTOApiV1>builder()
@@ -58,9 +58,9 @@ public class ProductControllerApiV1 {
 
         @GetMapping
         public ResponseEntity<ResDTO<ResProductGetDTOApiV1>> getBy(
-                @RequestParam(required = false) String searchValue,
-                @PageableDefault(sort="id", direction = Sort.Direction.ASC) Pageable pageable,
-                Long id //TODO 권한 처리용 (추후 변경 예정)
+                @RequestParam(name = "searchValue", required = false) String searchValue,
+                @PageableDefault(sort="id", direction = Sort.Direction.ASC) Pageable pageable
+//                Long id //TODO 권한 처리용 (추후 변경 예정)
         ){
                 List<ProductEntity> tempProducts = List.of(
                         new ProductEntity(),
@@ -71,18 +71,19 @@ public class ProductControllerApiV1 {
 
                 ResProductGetDTOApiV1 tempResDto = ResProductGetDTOApiV1.of(tempProductPage);
 
-                return ResponseEntity.ok(
+                return new ResponseEntity<>(
                         ResDTO.<ResProductGetDTOApiV1>builder()
                                 .code(0)
                                 .message("상품 조회에 성공했습니다.")
                                 .data(tempResDto)
-                                .build()
+                                .build(),
+                        HttpStatus.OK
                 );
         }
 
         @PutMapping("/{id}")
         public ResponseEntity<ResDTO<Object>> putById(
-                @PathVariable UUID id,
+                @PathVariable("id") UUID id,
                 @Valid @RequestBody ReqProductPutDTOApiV1 dto
         ){
                 return new ResponseEntity<>(
@@ -96,7 +97,7 @@ public class ProductControllerApiV1 {
 
         @DeleteMapping("/{id}")
         public ResponseEntity<ResDTO<Object>> deleteById(
-                @PathVariable UUID id
+                @PathVariable("id") UUID id
         ){
                 return new ResponseEntity<>(
                         ResDTO.builder()
@@ -108,9 +109,9 @@ public class ProductControllerApiV1 {
         }
 
         @PostMapping("/{id}/stocks-decrease")
-        public ResponseEntity<ResDTO<Object>> patchBy(
-                @PathVariable UUID id,
-                @Valid @RequestBody ReqStockDecreasePatchDTOApiV1 dto
+        public ResponseEntity<ResDTO<Object>> postDecreaseById(
+                @PathVariable("id") UUID id,
+                @Valid @RequestBody ReqStockDecreasePostDTOApiV1 dto
         ){
                 return new ResponseEntity<>(
                         ResDTO.builder()
@@ -122,9 +123,9 @@ public class ProductControllerApiV1 {
         }
 
         @PostMapping("/{id}/stocks-restore")
-        public ResponseEntity<ResDTO<Object>> patchBy(
-                @PathVariable UUID id,
-                @Valid @RequestBody ReqStockRestorePatchDTOApiV1 dto
+        public ResponseEntity<ResDTO<Object>> postRestoreById(
+                @PathVariable("id") UUID id,
+                @Valid @RequestBody ReqStockRestorePostDTOApiV1 dto
         ){
                 return new ResponseEntity<>(
                         ResDTO.builder()

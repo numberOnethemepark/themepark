@@ -18,47 +18,22 @@ spring:
         - id: themepark-service
           uri: lb://themepark-service
           predicates:
-            - Path=/v1/themeparks/**,/v1/hashtags/**,/v1/waitings/**
-        - id: themepark-docs
-          uri: lb://themepark-service
-          predicates:
-            - Path=/themepark-service/v3/api-docs/**
-          filters:
-            - RewritePath=/themepark-service/(?<remaining>.*), /${remaining}
+            - Path=/v1/themeparks/**, /v1/hashtags/**,/v1/waitings/**, /springdoc/openapi3-themepark-service.json
 
         - id: user-service
           uri: lb://user-service
           predicates:
-            - Path=/v1/users/**,/v1/auth/**
-        - id: user-docs
-          uri: lb://user-service
-          predicates:
-            - Path=/user-service/v3/api-docs/**
-          filters:
-            - RewritePath=/user-service/(?<remaining>.*), /${remaining}
-
+            - Path=/v1/users/**, /v1/auth/**, /springdoc/openapi3-user-service.json
 
         - id: product-service
           uri: lb://product-service
           predicates:
-            - Path=/v1/products/**
-        - id: product-docs
-          uri: lb://product-service
-          predicates:
-            - Path=/product-service/v3/api-docs/**
-          filters:
-            - RewritePath=/product-service/(?<remaining>.*), /${remaining}
+            - Path=/v1/products/**, /springdoc/openapi3-product-service.json
 
         - id: order-service
           uri: lb://order-service
           predicates:
-            - Path=/v1/orders/**
-        - id: order-docs
-          uri: lb://order-service
-          predicates:
-            - Path=/order-service/v3/api-docs/**
-          filters:
-            - RewritePath=/order-service/(?<remaining>.*), /${remaining}
+            - Path=/v1/orders/**, /springdoc/openapi3-order-service.json
       discovery:
         locator:
           enabled: true
@@ -67,26 +42,20 @@ spring:
 
 
 springdoc:
-  api-docs:
-    enabled: true
-    path: /v3/api-docs
   swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
-    config-url: /v3/api-docs/swagger-config
     use-root-path: true
     urls[0]:
       name: ThemePark Service
-      url: /themepark-service/v3/api-docs
+      url: /springdoc/openapi3-themepark-service.json
     urls[1]:
       name: User Service
-      url: /user-service/v3/api-docs
+      url: /springdoc/openapi3-user-service.json
     urls[2]:
       name: Product Service
-      url: /product-service/v3/api-docs
+      url: /springdoc/openapi3-product-service.json
     urls[3]:
       name: Order Service
-      url: /order-service/v3/api-docs
+      url: /springdoc/openapi3-order-service.json
 eureka:
   client:
     service-url:

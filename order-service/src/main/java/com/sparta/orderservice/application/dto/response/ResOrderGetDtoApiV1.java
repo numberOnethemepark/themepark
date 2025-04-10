@@ -32,22 +32,48 @@ public class ResOrderGetDtoApiV1 {
     @AllArgsConstructor
     public static class Order{
 
-        private Integer userId;
-        private String slackId;
-        private String role;
-        private Integer amount;
-        private String paymentStatus;
-        private String paymentCardNumber;
+        private Orderer orderer;
+        private Payments payments;
 
         public static Order from(UUID id){
             return Order.builder()
-                    .userId(1)
-                    .slackId("slack")
-                    .role("admin")
-                    .amount(100)
-                    .paymentStatus("paid")
-                    .paymentCardNumber("123")
+                    .orderer(Orderer.from(1,"admin","slackId"))
+                    .payments(Payments.from(100,"paid", "1234"))
                     .build();
+        }
+
+        @Getter
+        @Builder
+        public static class Orderer {
+
+            private Integer userId;
+            private String role;
+            private String slackId;
+
+            public static Orderer from(Integer userId, String role, String slackId) {
+                return Orderer.builder()
+                        .userId(userId)
+                        .role(role)
+                        .slackId(slackId)
+                        .build();
+            }
+        }
+
+        @Getter
+        @Builder
+        public static class Payments {
+
+            private Integer amount;
+            private String paymentStatus;
+            private String paymentCardNumber;
+
+            public static Payments from(Integer amount, String paymentStatus, String paymentCardNumber) {
+                return Payments.builder()
+                        .amount(amount)
+                        .paymentStatus(paymentStatus)
+                        .paymentCardNumber(paymentCardNumber)
+                        .build();
+            }
         }
     }
 }

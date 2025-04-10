@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class ReqOrderPutDtoApiV1 {
 
     @Valid
@@ -20,8 +18,6 @@ public class ReqOrderPutDtoApiV1 {
 
     @Getter
     @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class Order {
 
         @NotBlank(message = "슬랙 ID를 입력해주세요.")

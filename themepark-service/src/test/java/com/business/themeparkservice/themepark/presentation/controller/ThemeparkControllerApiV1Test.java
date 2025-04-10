@@ -3,15 +3,19 @@ package com.business.themeparkservice.themepark.presentation.controller;
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPutDTOApiV1;
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +24,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs
 @Transactional
 @ActiveProfiles("dev")
 public class ThemeparkControllerApiV1Test {
@@ -58,32 +66,65 @@ public class ThemeparkControllerApiV1Test {
         String reqDtoJson = objectMapper.writeValueAsString(reqThemeparkPostDTOApiV1);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/v1/themeparks")
+                        RestDocumentationRequestBuilders.post("/v1/themeparks")
                                 .content(reqDtoJson)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isCreated()
+                )
+                .andDo(
+                        MockMvcRestDocumentationWrapper.document("Themepark 생성 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("Themepark v1")
+                                        .build()
+                                )
+                        )
                 );
     }
 
     @Test
     public void testThemeparkGetByIdSuccess() throws Exception{
         mockMvc.perform(
-                        MockMvcRequestBuilders.get("/v1/themeparks/{id}", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.get("/v1/themeparks/{id}", UUID.randomUUID())
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
+                )
+                .andDo(
+                        MockMvcRestDocumentationWrapper.document("Themepark 개별 조회 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("Themepark v1")
+                                        .pathParameters(
+                                                parameterWithName("id").type(SimpleType.STRING).description("테마파크 ID")
+                                        )
+                                        .build()
+                                )
+                        )
                 );
     }
 
     @Test
     public void testThemeparkGetSuccess() throws Exception{
         mockMvc.perform(
-                        MockMvcRequestBuilders.get("/v1/themeparks")
+                        RestDocumentationRequestBuilders.get("/v1/themeparks")
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
+                )
+                .andDo(
+                        MockMvcRestDocumentationWrapper.document("Themepark 전체 조회 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("Themepark v1")
+                                        .build()
+                                )
+                        )
                 );
     }
 
@@ -112,22 +153,46 @@ public class ThemeparkControllerApiV1Test {
         String reqDtoJson = objectMapper.writeValueAsString(reqThemeparkPutDTOApiV1);
 
         mockMvc.perform(
-                    MockMvcRequestBuilders.put("/v1/themeparks/{id}", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.put("/v1/themeparks/{id}", UUID.randomUUID())
                             .content(reqDtoJson)
                             .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
+                ).andDo(
+                        MockMvcRestDocumentationWrapper.document("Themepark 수정 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("Themepark v1")
+                                        .pathParameters(
+                                                parameterWithName("id").type(SimpleType.STRING).description("테마파크 ID")
+                                        )
+                                        .build()
+                                )
+                        )
                 );
     }
 
     @Test
     public void testThemeparkDeleteSuccess() throws Exception{
         mockMvc.perform(
-                        MockMvcRequestBuilders.delete("/v1/themeparks/{id}", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.delete("/v1/themeparks/{id}", UUID.randomUUID())
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
+                ).andDo(
+                        MockMvcRestDocumentationWrapper.document("Themepark 삭제 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("Themepark v1")
+                                        .pathParameters(
+                                                parameterWithName("id").type(SimpleType.STRING).description("테마파크 ID")
+                                        )
+                                        .build()
+                                )
+                        )
                 );
     }
 

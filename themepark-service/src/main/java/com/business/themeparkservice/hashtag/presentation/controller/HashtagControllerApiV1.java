@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -88,13 +89,13 @@ public class HashtagControllerApiV1 {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResDTO<Void>> deleteBy(@PathVariable UUID id){
+    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id){
         return new ResponseEntity<>(
-                ResDTO.<Void>builder()
+                ResDTO.builder()
                         .code(0)
                         .message("해시태그 삭제를 성공했습니다.")
                         .build(),
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 }

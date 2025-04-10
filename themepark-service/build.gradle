@@ -29,7 +29,7 @@ openapi3 {
             }
     ]
     title = 'THEMEPARK API'
-    description = ''
+    description = 'API for themepark-service'
     version = '1.0.0'
     format = 'json'
 }

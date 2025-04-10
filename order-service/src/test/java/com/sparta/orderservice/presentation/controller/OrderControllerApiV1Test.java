@@ -150,7 +150,7 @@ public class OrderControllerApiV1Test {
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
                 ).andDo(
-                        MockMvcRestDocumentationWrapper.document("Order 생성 성공!",
+                        MockMvcRestDocumentationWrapper.document("Order 수정 성공!",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()

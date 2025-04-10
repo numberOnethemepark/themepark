@@ -81,7 +81,7 @@ public class PaymentControllerApiV1Test {
         ).andExpectAll(
                 MockMvcResultMatchers.status().isCreated()
         ).andDo(
-                MockMvcRestDocumentationWrapper.document("결제 조회 성공!",
+                MockMvcRestDocumentationWrapper.document("결제 생성 성공!",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
@@ -117,7 +117,7 @@ public class PaymentControllerApiV1Test {
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
                 ).andDo(
-                        MockMvcRestDocumentationWrapper.document("결제 조회 성공!",
+                        MockMvcRestDocumentationWrapper.document("결제 수정 성공!",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()

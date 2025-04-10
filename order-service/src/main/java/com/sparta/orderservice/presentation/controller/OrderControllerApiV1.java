@@ -62,7 +62,7 @@ public class OrderControllerApiV1 {
 
     @GetMapping("")
     public ResponseEntity<ResDto<ResOrdersGetByIdDtoApiV1>> getBy(
-            @RequestParam(name = "userId", required = false) Integer id,
+            @RequestParam(name = "userId", required = false) UUID id,
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "10") int size
     ){

@@ -5,3 +5,11 @@ include 'gateway-service'
 include 'themepark-service'
 include 'product-service'
 include 'user-service'
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}

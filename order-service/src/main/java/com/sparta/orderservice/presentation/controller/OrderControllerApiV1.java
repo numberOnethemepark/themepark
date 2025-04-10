@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("v1/orders")
+@RequestMapping("/v1/orders")
 @RequiredArgsConstructor
 public class OrderControllerApiV1 {
 
@@ -33,9 +33,10 @@ public class OrderControllerApiV1 {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResDto<Object>> updateOrder(
+    public ResponseEntity<ResDto<Object>> updateBy(
             @PathVariable("id") UUID id,
-            @RequestBody ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1) {
+            @RequestBody ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1
+    ) {
         return new ResponseEntity<>(
                 ResDto.builder()
                         .code(0) //Ok 코드
@@ -46,7 +47,7 @@ public class OrderControllerApiV1 {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResDto<ResOrderGetDtoApiV1>> getOrder(
+    public ResponseEntity<ResDto<ResOrderGetDtoApiV1>> getBy(
             @PathVariable("id") UUID id
     ){
         return new ResponseEntity<>(
@@ -60,8 +61,8 @@ public class OrderControllerApiV1 {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResDto<ResOrdersGetByIdDtoApiV1>> getOrdersById(
-            @RequestParam(name = "userId") Integer id,
+    public ResponseEntity<ResDto<ResOrdersGetByIdDtoApiV1>> getBy(
+            @RequestParam(name = "userId", required = false) UUID id,
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "10") int size
     ){
@@ -76,7 +77,7 @@ public class OrderControllerApiV1 {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResDto<Object>> deleteOrder(
+    public ResponseEntity<ResDto<Object>> deleteBy(
             @PathVariable("id") UUID id
     ){
         return new ResponseEntity<>(

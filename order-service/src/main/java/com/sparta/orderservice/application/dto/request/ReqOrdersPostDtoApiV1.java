@@ -8,18 +8,15 @@ import lombok.*;
 import java.util.UUID;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class ReqOrdersPostDtoApiV1 {
+
     @Valid
     @NotNull(message = "주문 정보를 입력해주세요.")
     private Order order;
 
     @Getter
     @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class Order {
 
         @NotBlank(message = "슬랙 정보를 입력해주세요.")
@@ -28,9 +25,10 @@ public class ReqOrdersPostDtoApiV1 {
         @NotBlank(message = "주문제품의 수량을 입력해주세요.")
         private Integer orderQuantity;
 
-
         @NotBlank(message = "상품의 정보를 입력해주세요.")
-        private UUID product_id;
+        private UUID productId;
+
+
     }
 }
 

@@ -1,3 +1,25 @@
+plugins {
+    // 플러그인 추가
+    id 'com.epages.restdocs-api-spec' version "0.19.2"
+}
+
+// 컴파일 시 빌드 폴더를 지웁니다.
+compileJava {
+    dependsOn 'clean'
+}
+
+openapi3 {
+    servers = [
+            {
+                url = 'http://localhost:8080'
+            }
+    ]
+    title = 'PRODUCT API'
+    description = ''
+    version = '1.0.0'
+    format = 'json'
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -8,4 +30,44 @@ dependencies {
 
     //swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+    // restdocs & openapi
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
+}
+
+// task를 만듭니다.
+tasks.register('setDocs') {
+    // openapi3 태스크를 먼저 실행합니다.
+    dependsOn 'openapi3'
+    // 문서가 다 생성되면 build 파일에 복사합니다.
+    // MSA일 경우 파일명이 중복될 수 있으므로,
+    // 파일명 뒤에 서비스명을 붙여줍시다.
+    doLast {
+        copy {
+            from "build/api-spec"
+            include "*.json"
+            include "*.yaml"
+            into "build/resources/main/static/springdoc"
+            rename { String fileName ->
+                if (fileName.endsWith('.json')) {
+                    return fileName.replace('.json', '-product-service.json')
+                } else if (fileName.endsWith('.yaml')) {
+                    return fileName.replace('.yaml', '-product-service.yml')
+                }
+                return fileName
+            }
+        }
+    }
+}
+
+// bootRun 실행 시 문서 생성 태스크를 실행합니다.
+bootRun {
+    dependsOn 'setDocs'
+}
+
+// bootJar 실행 시 문서 생성 태스크를 실행합니다.
+bootJar {
+    dependsOn 'setDocs'
 }

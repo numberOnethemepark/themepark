@@ -52,7 +52,7 @@ public class WaitingControllerApiV1Test {
     @Test
     public void testWaitingGetByIdSuccess() throws Exception{
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/v1/waitings/" + UUID.randomUUID())
+                MockMvcRequestBuilders.get("/v1/waitings/{id}", UUID.randomUUID())
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -72,7 +72,7 @@ public class WaitingControllerApiV1Test {
     @Test
     public void testWaitingPostDoneSuccess() throws Exception{
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/v1/waitings/" + UUID.randomUUID()+"/done")
+                MockMvcRequestBuilders.post("/v1/waitings/{id}", UUID.randomUUID()+"/done")
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -82,7 +82,7 @@ public class WaitingControllerApiV1Test {
     @Test
     public void testWaitingPostCancelSuccess() throws Exception{
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/v1/waitings/" + UUID.randomUUID()+"/cancel")
+                        MockMvcRequestBuilders.post("/v1/waitings/{id}", UUID.randomUUID()+"/cancel")
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -92,7 +92,7 @@ public class WaitingControllerApiV1Test {
     @Test
     public void testWaitingGetDeletedSuccess() throws Exception{
         mockMvc.perform(
-                MockMvcRequestBuilders.delete("/v1/waitings/" + UUID.randomUUID())
+                MockMvcRequestBuilders.delete("/v1/waitings/{id}", UUID.randomUUID())
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()

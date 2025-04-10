@@ -15,7 +15,7 @@ openapi3 {
             }
     ]
     title = 'PRODUCT API'
-    description = ''
+    description = 'API for product-service'
     version = '1.0.0'
     format = 'json'
 }

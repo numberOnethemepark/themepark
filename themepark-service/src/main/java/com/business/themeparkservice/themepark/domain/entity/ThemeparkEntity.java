@@ -31,7 +31,7 @@ public class ThemeparkEntity extends BaseEntity {
     private LocalTime operationStartTime;
 
     @Column(name = "operation_end_time", nullable = false)
-    private LocalDateTime operationEndTime;
+    private LocalTime operationEndTime;
 
     @Column(name = "height_limit", nullable = false)
     private String heightLimit;

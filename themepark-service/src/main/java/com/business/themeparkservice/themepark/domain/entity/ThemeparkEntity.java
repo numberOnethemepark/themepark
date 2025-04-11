@@ -34,6 +34,7 @@ public class ThemeparkEntity extends BaseEntity {
     private LocalTime operationEndTime;
 
     @Column(name = "height_limit", nullable = false)
+    @ColumnDefault("'없음'")
     private String heightLimit;
 
     @Column(name = "supervisor", nullable = false)

@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@Table(name = "p_themeparks")
 public class ThemeparkEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

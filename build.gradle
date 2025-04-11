@@ -4,7 +4,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.3'
     id 'io.spring.dependency-management' version '1.1.7'
-
 }
 
 bootJar.enabled = false // 루트 프로젝트는 실행 가능한 JAR을 만들지 않음
@@ -13,13 +12,6 @@ allprojects {
     group = 'com.business'
     version = '0.0.1-SNAPSHOT'
 
-    repositories{
-        mavenCentral()
-    }
-
-//    tasks.withType(Test).configureEach {
-//        enabled = false
-//    }
 
     tasks.withType(BootJar).configureEach {
         enabled = false
@@ -46,11 +38,9 @@ subprojects {
         set('querydslVersion', "5.0.0")  // QueryDSL 버전 명시적으로 설정
     }
 
-    repositories {
-        mavenCentral()
-    }
+    dependencies { //루트 bulid.gradle 에 의존되면 안된다! 하나의 서비스로 존재해야함. 독립적이어야한다.
+        //공통모듈 최소화해서 만들기
 
-    dependencies {
         //querydsl
         implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
         annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"

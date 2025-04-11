@@ -33,9 +33,9 @@ public class ProductEntity {
     @Column(name = "limit_quantity", nullable = false)
     private Integer limitQuantity;
 
-    @Column(name = "event-start-at", nullable = false)
+    @Column(name = "event_start_at", nullable = false)
     private LocalDateTime eventStartAt;
 
-    @Column(name = "event-end-at", nullable = false)
+    @Column(name = "event_end_at", nullable = false)
     private LocalDateTime eventEndTAt;
 }

@@ -1,19 +1,17 @@
 package com.business.themeparkservice.themepark.domain.entity;
 
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
-import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Table(name = "p_themeparks")
-public class ThemeparkEntity extends BaseEntity {
+public class ThemeparkEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "themepark_id", nullable = false)

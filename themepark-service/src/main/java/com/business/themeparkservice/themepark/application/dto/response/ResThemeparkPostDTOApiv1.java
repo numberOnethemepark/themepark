@@ -1,6 +1,7 @@
 package com.business.themeparkservice.themepark.application.dto.response;
 
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
+import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -18,9 +19,9 @@ public class ResThemeparkPostDTOApiv1 {
 
     private ThemePark themepark;
 
-    public static ResThemeparkPostDTOApiv1 of() {
+    public static ResThemeparkPostDTOApiv1 of(ThemeparkEntity themeparkEntity) {
         return ResThemeparkPostDTOApiv1.builder()
-                .themepark(ResThemeparkPostDTOApiv1.ThemePark.from())
+                .themepark(ResThemeparkPostDTOApiv1.ThemePark.from(themeparkEntity))
                 .build();
     }
 
@@ -44,18 +45,18 @@ public class ResThemeparkPostDTOApiv1 {
         private Boolean supervisor;
         private List<Hashtag> hashtagList;
 
-        public static ThemePark from(){
+        public static ThemePark from(ThemeparkEntity themeparkEntity) {
             List<String> stringList = List.of("신나는","즐거운");
 
             return ThemePark.builder()
-                    .id(UUID.fromString("f5e49e7d-3baf-478f-bb36-d73b66330f79"))
-                    .name("테마파크1")
-                    .description("테마파크설명")
-                    .type(ThemeparkType.valueOf("RIDE"))
-                    .operationStartTime(LocalTime.parse("10:00"))
-                    .operationEndTime(LocalTime.parse("18:00"))
-                    .heightLimit("130~180cm")
-                    .supervisor(true)
+                    .id(themeparkEntity.getId())
+                    .name(themeparkEntity.getName())
+                    .description(themeparkEntity.getDescription())
+                    .type(themeparkEntity.getType())
+                    .operationStartTime(themeparkEntity.getOperationStartTime())
+                    .operationEndTime(themeparkEntity.getOperationEndTime())
+                    .heightLimit(themeparkEntity.getHeightLimit())
+                    .supervisor(themeparkEntity.isSupervisor())
                     .hashtagList(Hashtag.from(stringList))
                     .build();
         }

@@ -1,4 +1,4 @@
-package com.business.themeparkservice.themepark.infastructure;
+package com.business.themeparkservice.themepark.infastructure.persistence.themepark;
 
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.repository.ThemeparkRepository;

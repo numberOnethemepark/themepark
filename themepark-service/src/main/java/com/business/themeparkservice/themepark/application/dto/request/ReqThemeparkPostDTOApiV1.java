@@ -1,5 +1,6 @@
 package com.business.themeparkservice.themepark.application.dto.request;
 
+import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
@@ -23,6 +24,18 @@ public class ReqThemeparkPostDTOApiV1 {
     @Valid
     @NotNull(message = "테마파크 정보를 입력해주세요")
     private ThemePark themepark;
+
+    public ThemeparkEntity createThemepark() {
+        return ThemeparkEntity.builder()
+                .name(themepark.getName())
+                .description(themepark.getDescription())
+                .type(themepark.getType())
+                .operationStartTime(themepark.getOperationStartTime())
+                .operationEndTime(themepark.getOperationEndTime())
+                .heightLimit(themepark.getHeightLimit())
+                .supervisor(themepark.getSupervisor())
+                .build();
+    }
 
     @Getter
     @Builder

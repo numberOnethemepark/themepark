@@ -2,8 +2,8 @@ package com.business.themeparkservice.waiting.presentation.controller;
 
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.*;
-import com.business.themeparkservice.waiting.common.dto.ResDTO;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
+import com.github.themepark.common.application.dto.ResDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

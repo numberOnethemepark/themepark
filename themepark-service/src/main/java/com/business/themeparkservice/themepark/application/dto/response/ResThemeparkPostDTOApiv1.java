@@ -1,10 +1,12 @@
 package com.business.themeparkservice.themepark.application.dto.response;
 
+import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
@@ -17,9 +19,9 @@ public class ResThemeparkPostDTOApiv1 {
 
     private ThemePark themepark;
 
-    public static ResThemeparkPostDTOApiv1 of(ThemeparkEntity themeparkEntity, List<String> hashtagNames) {
+    public static ResThemeparkPostDTOApiv1 of(ThemeparkEntity themeparkEntity) {
         return ResThemeparkPostDTOApiv1.builder()
-                .themepark(ResThemeparkPostDTOApiv1.ThemePark.from(themeparkEntity,hashtagNames))
+                .themepark(ResThemeparkPostDTOApiv1.ThemePark.from(themeparkEntity))
                 .build();
     }
 
@@ -43,7 +45,9 @@ public class ResThemeparkPostDTOApiv1 {
         private Boolean supervisor;
         private List<Hashtag> hashtagList;
 
-        public static ThemePark from(ThemeparkEntity themeparkEntity,List<String> hashtagNames) {
+        public static ThemePark from(ThemeparkEntity themeparkEntity) {
+            List<String> stringList = List.of("신나는","즐거운");
+
             return ThemePark.builder()
                     .id(themeparkEntity.getId())
                     .name(themeparkEntity.getName())
@@ -53,7 +57,7 @@ public class ResThemeparkPostDTOApiv1 {
                     .operationEndTime(themeparkEntity.getOperationEndTime())
                     .heightLimit(themeparkEntity.getHeightLimit())
                     .supervisor(themeparkEntity.isSupervisor())
-                    .hashtagList(Hashtag.from(hashtagNames))
+                    .hashtagList(Hashtag.from(stringList))
                     .build();
         }
 
@@ -73,7 +77,7 @@ public class ResThemeparkPostDTOApiv1 {
 
             public static List<Hashtag> from(List<String> nameList) {
                 return nameList.stream()
-                        .map(Hashtag::from)
+                        .map(name->Hashtag.from(name))
                         .toList();
             }
         }

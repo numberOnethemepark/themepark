@@ -21,7 +21,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
 
     private final ThemeparkJpaRepository themeparkRepository;
@@ -35,7 +34,6 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
         List<ThemeparkHashtagEntity> themeparkHashtagEntityList = new ArrayList<>();
         ThemeparkEntity themeparkEntity = themeparkRepository.save(reqDto.createThemepark());
         themeparkRepository.flush();
-        log.info("찍히긴 하는거냐{}", themeparkEntity.getId());
 
         //중간테이블 입력
         for (ReqThemeparkPostDTOApiV1.ThemePark.Hashtag tagDto : reqDto.getThemepark().getHashtagList()) {
@@ -54,8 +52,6 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
 
         }
         themeparkHashtagRepository.saveAll(themeparkHashtagEntityList);
-        themeparkHashtagRepository.flush();
-        log.info("찍히긴 하는거냐2{}", themeparkEntity.getId());
         // 저장된 테마파크와 해시태그 이름을 응답에 포함시키기 위해 해시태그 이름 리스트 만들기
         List<String> hashtagNames = themeparkHashtagEntityList.stream()
                 .map(hashname -> hashname.getHashtag().getHashtagName())  // 해시태그 이름만 추출

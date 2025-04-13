@@ -31,9 +31,11 @@ public class ProductEntity extends BaseEntity {
     @Column(name ="product_price", nullable = false)
     private Integer price;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "product_type", nullable = false)
     private ProductType productType;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "product_status", nullable = false)
     private ProductStatus productStatus = ProductStatus.DRAFT;
 

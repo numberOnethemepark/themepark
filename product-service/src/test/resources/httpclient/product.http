@@ -1,3 +1,4 @@
+###
 POST http://localhost:8080/v1/products
 Authorization: Bearer jwt_token_string
 Content-Type: application/json
@@ -11,5 +12,39 @@ Content-Type: application/json
     "limitQuantity": 100,
     "eventStartAt": "2025-05-01T09:00:00",
     "eventEndAt": "2025-05-31T23:59:59"
+  }
+}
+
+###
+POST http://localhost:8080/v1/products
+Authorization: Bearer jwt_token_string
+Content-Type: application/json
+
+{
+  "product": {
+    "name": "입장권",
+    "description": "일반 입장권",
+    "productType": "TICKET",
+    "price": 25000,
+    "limitQuantity": -1,
+    "eventStartAt": "9999-12-31T23:59:00",
+    "eventEndAt": "9999-12-31T23:59:00"
+  }
+}
+
+###
+POST http://localhost:8080/v1/products
+Authorization: Bearer jwt_token_string
+Content-Type: application/json
+
+{
+  "product": {
+    "name": "회원권",
+    "description": "연 회원권",
+    "productType": "MEMBERSHIP",
+    "price": 25000,
+    "limitQuantity": -1,
+    "eventStartAt": "9999-12-31T23:59:00",
+    "eventEndAt": "9999-12-31T23:59:00"
   }
 }

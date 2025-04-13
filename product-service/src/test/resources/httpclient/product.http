@@ -1,0 +1,15 @@
+POST http://localhost:8080/v1/products
+Authorization: Bearer jwt_token_string
+Content-Type: application/json
+
+{
+  "product": {
+    "name": "할인 이용권",
+    "description": "5월 한정 20% 할인",
+    "productType": "EVENT",
+    "price": 25000,
+    "limitQuantity": 100,
+    "eventStartAt": "2025-05-01T09:00:00",
+    "eventEndAt": "2025-05-31T23:59:59"
+  }
+}

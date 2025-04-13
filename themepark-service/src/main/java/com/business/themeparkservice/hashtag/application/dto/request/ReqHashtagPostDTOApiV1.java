@@ -20,7 +20,7 @@ public class ReqHashtagPostDTOApiV1 {
 
     public HashtagEntity createHashtag() {
         return HashtagEntity.builder()
-                .hashtagName(hashtag.getName())
+                .name(hashtag.getName())
                 .build();
     }
 

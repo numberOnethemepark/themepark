@@ -2,12 +2,15 @@ package com.business.themeparkservice.themepark.application.service;
 
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import com.business.themeparkservice.hashtag.domain.repository.HashtagRepository;
+import com.business.themeparkservice.hashtag.infastructure.persistence.hashtag.HashtagJpaRepository;
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPostDTOApiv1;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkHashtagEntity;
 import com.business.themeparkservice.themepark.domain.repository.ThemeparkHashtagRepository;
 import com.business.themeparkservice.themepark.domain.repository.ThemeparkRepository;
+import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkHashtagJpaRepository;
+import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +25,11 @@ import java.util.UUID;
 @Transactional
 public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
 
-    private final ThemeparkRepository themeparkRepository;
+    private final ThemeparkJpaRepository themeparkRepository;
 
-    private final ThemeparkHashtagRepository themeparkHashtagRepository;
+    private final ThemeparkHashtagJpaRepository themeparkHashtagRepository;
 
-    private final HashtagRepository hashtagRepository;
+    private final HashtagJpaRepository hashtagRepository;
 
     @Override
     public ResThemeparkPostDTOApiv1 postBy(ReqThemeparkPostDTOApiV1 reqDto) {
@@ -52,7 +55,7 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
         themeparkHashtagRepository.saveAll(themeparkHashtagEntityList);
         // 저장된 테마파크와 해시태그 이름을 응답에 포함시키기 위해 해시태그 이름 리스트 만들기
         List<String> hashtagNames = themeparkHashtagEntityList.stream()
-                .map(hashname -> hashname.getHashtag().getHashtagName())  // 해시태그 이름만 추출
+                .map(hashname -> hashname.getHashtag().getName())  // 해시태그 이름만 추출
                 .toList();
 
 

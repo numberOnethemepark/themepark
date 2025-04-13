@@ -21,13 +21,13 @@ public class HashtagEntity extends BaseEntity {
     private UUID id;
 
     @Column(name = "hashtag_name",nullable = false)
-    private String hashtagName;
+    private String name;
 
     @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
     private List<ThemeparkHashtagEntity> themeparkHashtagEntityList;
 
     @Builder
-    public HashtagEntity(String hashtagName) {
-        this.hashtagName = hashtagName;
+    public HashtagEntity(String name) {
+        this.name = name;
     }
 }

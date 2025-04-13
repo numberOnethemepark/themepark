@@ -32,7 +32,7 @@ public class ResHashtagPostDTOApiV1 {
         public static Hashtag from(HashtagEntity reqDto) {
             return Hashtag.builder()
                     .id(reqDto.getId())
-                    .name(reqDto.getHashtagName())
+                    .name(reqDto.getName())
                     .build();
         }
 

@@ -1,9 +1,11 @@
 package com.business.themeparkservice.hashtag.domain.entity;
 
+import com.business.themeparkservice.themepark.domain.entity.ThemeparkHashtagEntity;
 import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,4 +19,7 @@ public class HashtagEntity extends BaseEntity {
 
     @Column(name = "hashtag_name",nullable = false)
     private String hashtagName;
+
+    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
+    private List<ThemeparkHashtagEntity> themeparkHashtagEntityList;
 }

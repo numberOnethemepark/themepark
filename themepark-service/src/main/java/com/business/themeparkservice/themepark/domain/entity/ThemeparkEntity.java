@@ -1,17 +1,22 @@
 package com.business.themeparkservice.themepark.domain.entity;
 
+import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
 import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Table(name = "p_themeparks")
+@NoArgsConstructor
 public class ThemeparkEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -25,6 +30,7 @@ public class ThemeparkEntity extends BaseEntity {
     private String description;
 
     @Column(name = "themepark_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ThemeparkType type;
 
     @Column(name = "operation_start_time", nullable = false)
@@ -40,5 +46,19 @@ public class ThemeparkEntity extends BaseEntity {
     @Column(name = "supervisor", nullable = false)
     @ColumnDefault("false")
     private boolean supervisor;
+
+    @OneToMany(mappedBy = "themepark",cascade = CascadeType.ALL)
+    private List<ThemeparkHashtagEntity> themeparkHashtagEntityList;
+
+    @Builder
+    public ThemeparkEntity(String name, String description, ThemeparkType type, LocalTime operationStartTime, LocalTime operationEndTime, String heightLimit, boolean supervisor) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.operationStartTime = operationStartTime;
+        this.operationEndTime = operationEndTime;
+        this.heightLimit = heightLimit;
+        this.supervisor = supervisor;
+    }
 
 }

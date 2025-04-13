@@ -6,9 +6,11 @@ import com.business.themeparkservice.themepark.application.dto.response.ResTheme
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkGetDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPostDTOApiv1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPutDTOApiV1;
-import com.business.themeparkservice.themepark.common.dto.ResDTO;
+import com.business.themeparkservice.themepark.application.service.ThemeparkServiceApiV1;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
+import com.github.themepark.common.application.dto.ResDTO;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +24,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/themeparks")
+@RequiredArgsConstructor
 public class ThemeparkControllerApiV1 {
+
+    private final ThemeparkServiceApiV1 themeparkService;
 
     @PostMapping
     public ResponseEntity<ResDTO<ResThemeparkPostDTOApiv1>> postBy(
@@ -32,7 +37,7 @@ public class ThemeparkControllerApiV1 {
                 ResDTO.<ResThemeparkPostDTOApiv1>builder()
                         .code(0)
                         .message("테마파크 생성을 성공했습니다.")
-                        .data(ResThemeparkPostDTOApiv1.of())
+                        .data(themeparkService.postBy(reqDto))
                         .build(),
                 HttpStatus.CREATED
         );

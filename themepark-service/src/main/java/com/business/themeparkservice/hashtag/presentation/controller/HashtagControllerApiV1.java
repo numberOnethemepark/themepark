@@ -7,7 +7,7 @@ import com.business.themeparkservice.hashtag.application.dto.response.ResHashtag
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPostDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPutDTOApiV1;
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
-import com.business.themeparkservice.themepark.common.dto.ResDTO;
+import com.github.themepark.common.application.dto.ResDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

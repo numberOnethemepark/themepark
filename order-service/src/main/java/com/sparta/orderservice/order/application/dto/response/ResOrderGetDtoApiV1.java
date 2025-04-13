@@ -1,7 +1,6 @@
-package com.sparta.orderservice.application.dto.response;
+package com.sparta.orderservice.order.application.dto.response;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

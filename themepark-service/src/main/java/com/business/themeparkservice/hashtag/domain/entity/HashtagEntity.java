@@ -3,7 +3,9 @@ package com.business.themeparkservice.hashtag.domain.entity;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkHashtagEntity;
 import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +13,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Table(name = "p_hashtags")
+@NoArgsConstructor
 public class HashtagEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,4 +25,9 @@ public class HashtagEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
     private List<ThemeparkHashtagEntity> themeparkHashtagEntityList;
+
+    @Builder
+    public HashtagEntity(String hashtagName) {
+        this.hashtagName = hashtagName;
+    }
 }

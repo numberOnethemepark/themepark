@@ -14,10 +14,10 @@ import jakarta.transaction.Transactional;
 public class HashtagServiceImplApiV1 implements HashtagServiceApiV1{
 
     private final HashtagJpaRepository hashtagRepository;
+
     @Override
     public ResHashtagPostDTOApiV1 postBy(ReqHashtagPostDTOApiV1 reqDto) {
         HashtagEntity hashtagEntity = hashtagRepository.save(reqDto.createHashtag());
-        System.out.println("hashtagEntity = " + hashtagEntity);
         return ResHashtagPostDTOApiV1.of(hashtagEntity);
     }
 }

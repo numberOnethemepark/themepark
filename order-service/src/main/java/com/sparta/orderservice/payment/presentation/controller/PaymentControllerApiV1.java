@@ -1,14 +1,13 @@
-package com.sparta.orderservice.presentation.controller;
+package com.sparta.orderservice.payment.presentation.controller;
 
-import com.sparta.orderservice.application.dto.request.ReqPaymentPostDtoApiV1;
-import com.sparta.orderservice.application.dto.response.ResDto;
-import com.sparta.orderservice.application.dto.response.ResPaymentGetDtoApiV1;
+import com.sparta.orderservice.payment.application.dto.request.ReqPaymentPostDtoApiV1;
+import com.sparta.orderservice.order.application.dto.response.ResDto;
+import com.sparta.orderservice.payment.application.dto.response.ResPaymentGetDtoApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.annotation.Repeatable;
 import java.util.UUID;
 
 @RestController

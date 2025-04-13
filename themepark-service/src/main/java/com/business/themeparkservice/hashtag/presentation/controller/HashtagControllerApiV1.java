@@ -47,7 +47,7 @@ public class HashtagControllerApiV1 {
                 ResDTO.<ResHashtagGetByIdDTOApiV1>builder()
                         .code(0)
                         .message("해시태그 조회에 성공했습니다.")
-                        .data(ResHashtagGetByIdDTOApiV1.of(id))
+                        .data(hashtagService.getBy(id))
                         .build(),
                 HttpStatus.OK
         );

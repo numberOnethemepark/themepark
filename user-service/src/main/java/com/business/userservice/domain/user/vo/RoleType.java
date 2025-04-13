@@ -1,8 +1,8 @@
 package com.business.userservice.domain.user.vo;
 
 public enum RoleType {
-    MASTER,
-    ADMIN,
-    USER,
-    GUEST
+    ROLE_MASTER,
+    ROLE_ADMIN,
+    ROLE_USER,
+    ROLE_GUEST
 }

@@ -3,7 +3,6 @@ package com.business.themeparkservice.hashtag.application.service;
 import com.business.themeparkservice.hashtag.application.dto.request.ReqHashtagPostDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPostDTOApiV1;
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
-import com.business.themeparkservice.hashtag.domain.repository.HashtagRepository;
 import com.business.themeparkservice.hashtag.infastructure.persistence.hashtag.HashtagJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

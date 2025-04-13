@@ -1,5 +1,6 @@
 package com.business.productservice.application.dto.request;
 
+import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.domain.product.vo.ProductType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -37,7 +38,7 @@ public class ReqProductPostDTOApiV1 {
         private ProductType productType;
 
         @NotNull(message = "상품 가격을 입력해주세요.")
-        private Long price;
+        private Integer price;
 
         @NotNull(message = "상품 제한 수량을 입력해주세요.")
         private Integer limitQuantity;
@@ -49,4 +50,18 @@ public class ReqProductPostDTOApiV1 {
         private LocalDateTime eventEndAt;
 
     }
+
+    public ProductEntity toEntityWithStock() {
+        return ProductEntity.createWithStock(
+                product.getName(),
+                product.getDescription(),
+                product.getProductType(),
+                product.getPrice(),
+                product.getEventStartAt(),
+                product.getEventEndAt(),
+                product.getLimitQuantity(),
+                null // productStatus는 기본값(DRAFT)으로 처리
+        );
+    }
+
 }

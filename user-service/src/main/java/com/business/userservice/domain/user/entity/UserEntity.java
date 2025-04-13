@@ -1,7 +1,6 @@
 package com.business.userservice.domain.user.entity;
 
 import com.business.userservice.domain.user.vo.RoleType;
-import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "p_users")
-public class UserEntity extends BaseEntity {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

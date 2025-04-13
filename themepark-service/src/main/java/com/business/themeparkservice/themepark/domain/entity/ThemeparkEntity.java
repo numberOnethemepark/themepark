@@ -4,6 +4,7 @@ import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
 import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Getter
 @Table(name = "p_themeparks")
 @NoArgsConstructor
+@AllArgsConstructor
 public class ThemeparkEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -6,9 +6,11 @@ import com.business.themeparkservice.hashtag.application.dto.response.ResHashtag
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagGetDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPostDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPutDTOApiV1;
+import com.business.themeparkservice.hashtag.application.service.HashtagServiceApiV1;
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import com.github.themepark.common.application.dto.ResDTO;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +25,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/hashtags")
+@RequiredArgsConstructor
 public class HashtagControllerApiV1 {
+
+    private final HashtagServiceApiV1 hashtagService;
 
     @PostMapping
     public ResponseEntity<ResDTO<ResHashtagPostDTOApiV1>> postBy(@Valid @RequestBody ReqHashtagPostDTOApiV1 reqDto){
@@ -31,7 +36,7 @@ public class HashtagControllerApiV1 {
                 ResDTO.<ResHashtagPostDTOApiV1>builder()
                         .code(0)
                         .message("해시태그 생성을 성공했습니다.")
-                        .data(ResHashtagPostDTOApiV1.of(reqDto))
+                        .data(hashtagService.postBy(reqDto))
                         .build(),
                 HttpStatus.CREATED
         );

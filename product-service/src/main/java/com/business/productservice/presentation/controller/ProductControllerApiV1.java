@@ -5,8 +5,9 @@ import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1
 import com.business.productservice.application.dto.request.ReqStockDecreasePostDTOApiV1;
 import com.business.productservice.application.dto.request.ReqStockRestorePostDTOApiV1;
 import com.business.productservice.application.dto.response.*;
-import com.business.productservice.common.dto.ResDTO;
+import com.business.productservice.application.service.ProductServiceApiV1;
 import com.business.productservice.domain.product.entity.ProductEntity;
+import com.github.themepark.common.application.dto.ResDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,15 +29,18 @@ import java.util.UUID;
 @RequestMapping("/v1/products")
 public class ProductControllerApiV1 {
 
+        private final ProductServiceApiV1 productServiceApiV1;
+
         @PostMapping
         public ResponseEntity<ResDTO<ResProductPostDTOApiV1>> postBy(
                 @Valid @RequestBody ReqProductPostDTOApiV1 dto
         ){
+                ResProductPostDTOApiV1 responseDto = productServiceApiV1.postBy(dto);
                 return new ResponseEntity<>(
                         ResDTO.<ResProductPostDTOApiV1>builder()
                                 .code(0)
                                 .message("상품 등록에 성공했습니다.")
-                                .data(ResProductPostDTOApiV1.of())
+                                .data(responseDto)
                                 .build(),
                         HttpStatus.CREATED
                 );

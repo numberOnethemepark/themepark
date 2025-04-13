@@ -1,17 +1,16 @@
 package com.business.themeparkservice.themepark.application.service;
 
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
-import com.business.themeparkservice.hashtag.infastructure.persistence.hashtag.HashtagJpaRepository;
+import com.business.themeparkservice.hashtag.domain.repository.HashtagRepository;
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPostDTOApiv1;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkHashtagEntity;
-import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkHashtagJpaRepository;
-import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkJpaRepository;
+import com.business.themeparkservice.themepark.domain.repository.ThemeparkHashtagRepository;
+import com.business.themeparkservice.themepark.domain.repository.ThemeparkRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,17 +22,16 @@ import java.util.UUID;
 @Transactional
 public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
 
-    private final ThemeparkJpaRepository themeparkRepository;
+    private final ThemeparkRepository themeparkRepository;
 
-    private final ThemeparkHashtagJpaRepository themeparkHashtagRepository;
+    private final ThemeparkHashtagRepository themeparkHashtagRepository;
 
-    private final HashtagJpaRepository hashtagRepository;
+    private final HashtagRepository hashtagRepository;
 
     @Override
     public ResThemeparkPostDTOApiv1 postBy(ReqThemeparkPostDTOApiV1 reqDto) {
         List<ThemeparkHashtagEntity> themeparkHashtagEntityList = new ArrayList<>();
         ThemeparkEntity themeparkEntity = themeparkRepository.save(reqDto.createThemepark());
-        themeparkRepository.flush();
 
         //중간테이블 입력
         for (ReqThemeparkPostDTOApiV1.ThemePark.Hashtag tagDto : reqDto.getThemepark().getHashtagList()) {

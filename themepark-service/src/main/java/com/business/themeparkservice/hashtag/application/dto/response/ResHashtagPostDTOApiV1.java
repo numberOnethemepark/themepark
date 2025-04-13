@@ -1,6 +1,6 @@
 package com.business.themeparkservice.hashtag.application.dto.response;
 
-import com.business.themeparkservice.hashtag.application.dto.request.ReqHashtagPostDTOApiV1;
+import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class ResHashtagPostDTOApiV1 {
 
     private Hashtag hashtag;
 
-    public static ResHashtagPostDTOApiV1 of(ReqHashtagPostDTOApiV1 reqDto) {
+    public static ResHashtagPostDTOApiV1 of(HashtagEntity reqDto) {
         return ResHashtagPostDTOApiV1.builder()
                 .hashtag(Hashtag.from(reqDto))
                 .build();
@@ -29,10 +29,10 @@ public class ResHashtagPostDTOApiV1 {
         private UUID id;
         private String name;
 
-        public static Hashtag from(ReqHashtagPostDTOApiV1 reqDto) {
+        public static Hashtag from(HashtagEntity reqDto) {
             return Hashtag.builder()
-                    .id(UUID.fromString("f5e49e7d-3baf-478f-bb36-d73b66330f79"))
-                    .name(reqDto.getHashtag().getName())
+                    .id(reqDto.getId())
+                    .name(reqDto.getName())
                     .build();
         }
 

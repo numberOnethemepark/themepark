@@ -4,8 +4,8 @@ Content-Type: application/json
 {
   "themepark":
     {
-      "name": "놀이기구1",
-      "description": "슝슝 놀이기구입니다.",
+      "name": "놀이기구2",
+      "description": "슝슝 놀이기구입니다.2",
       "type": "RIDE",
       "heightLimit": "130~180cm",
       "operationStartTime": "10:00",

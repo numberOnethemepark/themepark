@@ -1,5 +1,6 @@
 package com.business.themeparkservice.themepark.application.dto.response;
 
+import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -13,9 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResThemeparkGetByIdDTOApiV1 {
-    public static ResThemeparkGetByIdDTOApiV1 of(UUID id) {
+    public static ResThemeparkGetByIdDTOApiV1 of(ThemeparkEntity themeparkEntity,List<String> hashtagNames) {
         return ResThemeparkGetByIdDTOApiV1.builder()
-                .themePark(ThemePark.from(id))
+                .themePark(ThemePark.from(themeparkEntity,hashtagNames))
                 .build();
     }
 
@@ -41,19 +42,18 @@ public class ResThemeparkGetByIdDTOApiV1 {
         private Boolean supervisor;
         private List<Hashtag> hashtagList;
 
-        public static ThemePark from(UUID id){
-            List<String> stringList = List.of("신나는","즐거운");
+        public static ThemePark from(ThemeparkEntity themeparkEntity,List<String> hashtagNames){
 
             return ThemePark.builder()
-                    .id(id)
-                    .name("놀이기구1")
-                    .description("슝슝 놀이기구입니다.")
-                    .type(ThemeparkType.valueOf("RIDE"))
-                    .operationStartTime(LocalTime.parse("10:00"))
-                    .operationEndTime(LocalTime.parse("18:00"))
-                    .heightLimit("130~180cm")
-                    .supervisor(true)
-                    .hashtagList(Hashtag.from(stringList))
+                    .id(themeparkEntity.getId())
+                    .name(themeparkEntity.getName())
+                    .description(themeparkEntity.getDescription())
+                    .type(themeparkEntity.getType())
+                    .operationStartTime(themeparkEntity.getOperationStartTime())
+                    .operationEndTime(themeparkEntity.getOperationEndTime())
+                    .heightLimit(themeparkEntity.getHeightLimit())
+                    .supervisor(themeparkEntity.isSupervisor())
+                    .hashtagList(Hashtag.from(hashtagNames))
                     .build();
         }
 
@@ -71,9 +71,9 @@ public class ResThemeparkGetByIdDTOApiV1 {
                         .build();
             }
 
-            public static List<Hashtag> from(List<String> nameList) {
-                return nameList.stream()
-                        .map(name-> Hashtag.from(name))
+            public static List<Hashtag> from(List<String> hashtagNames) {
+                return hashtagNames.stream()
+                        .map(Hashtag::from)
                         .toList();
             }
         }

@@ -3,6 +3,7 @@ package com.business.themeparkservice.themepark.application.service;
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import com.business.themeparkservice.hashtag.infastructure.persistence.hashtag.HashtagJpaRepository;
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
+import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkGetByIdDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPostDTOApiv1;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkHashtagEntity;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,14 +32,28 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
 
     @Override
     public ResThemeparkPostDTOApiv1 postBy(ReqThemeparkPostDTOApiV1 reqDto) {
-        List<ThemeparkHashtagEntity> themeparkHashtagEntityList = new ArrayList<>();
         ThemeparkEntity themeparkEntity = themeparkRepository.save(reqDto.createThemepark());
+        List<String> hashtagNames = addHashtagNames(themeparkEntity, reqDto);
 
-        //중간테이블 입력
+        return ResThemeparkPostDTOApiv1.of(themeparkEntity,hashtagNames);
+    }
+
+    @Override
+    public ResThemeparkGetByIdDTOApiV1 getBy(UUID id) {
+        ThemeparkEntity themeparkEntity = findThemepark(id);
+        List<String> hashtagNames = findThmeparkHashtags(id);
+
+        return ResThemeparkGetByIdDTOApiV1.of(themeparkEntity,hashtagNames);
+    }
+
+
+
+    private List<String> addHashtagNames(ThemeparkEntity themeparkEntity, ReqThemeparkPostDTOApiV1 reqDto) {
+        List<ThemeparkHashtagEntity> themeparkHashtagEntityList = new ArrayList<>();
+
         for (ReqThemeparkPostDTOApiV1.ThemePark.Hashtag tagDto : reqDto.getThemepark().getHashtagList()) {
-            UUID tagId = tagDto.getHashtagId();
 
-            HashtagEntity hashtagEntity = hashtagRepository.findById(tagId)
+            HashtagEntity hashtagEntity = hashtagRepository.findById(tagDto.getHashtagId())
                     .orElseThrow(()->new EntityNotFoundException("Hashtag not found"));
 
             ThemeparkHashtagEntity themeparkHashtagEntity =
@@ -49,14 +65,36 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
             themeparkHashtagEntityList.add(themeparkHashtagEntity);
 
         }
+
         themeparkHashtagRepository.saveAll(themeparkHashtagEntityList);
-        // 저장된 테마파크와 해시태그 이름을 응답에 포함시키기 위해 해시태그 이름 리스트 만들기
-        List<String> hashtagNames = themeparkHashtagEntityList.stream()
-                .map(hashname -> hashname.getHashtag().getName())  // 해시태그 이름만 추출
+
+        return themeparkHashtagEntityList.stream()
+                .map(hashname -> hashname.getHashtag().getName())
                 .toList();
+    }
+
+    private List<String> findThmeparkHashtags(UUID id) {
+        List<HashtagEntity> hashtagEntityList = new ArrayList<>();
+
+        List<ThemeparkHashtagEntity> themeparkHashtagEntityList =
+                themeparkHashtagRepository.findAllByThemeparkId(id);
 
 
-        //응답반환
-        return ResThemeparkPostDTOApiv1.of(themeparkEntity,hashtagNames);
+        for (ThemeparkHashtagEntity hashtagEntity : themeparkHashtagEntityList) {
+            HashtagEntity hashtag = hashtagRepository.findById(hashtagEntity.getHashtag().getId())
+                    .orElseThrow(()->new EntityNotFoundException("Hashtag not found"));
+
+            hashtagEntityList.add(hashtag);
+        }
+
+        return hashtagEntityList.stream()
+                .map(HashtagEntity::getName)
+                .toList();
+    }
+
+
+    private ThemeparkEntity findThemepark(UUID id) {
+        return themeparkRepository.findById(id)
+                .orElseThrow(()->new EntityNotFoundException("Hashtag not found"));
     }
 }

@@ -37,6 +37,9 @@ public class UserEntity {
     @Column(nullable = false)
     private RoleType role;
 
+    @Column(name = "is_blacklisted")
+    private Boolean isBlacklisted = Boolean.FALSE;
+
     @Builder(access = AccessLevel.PRIVATE)
     private UserEntity(
         String username,

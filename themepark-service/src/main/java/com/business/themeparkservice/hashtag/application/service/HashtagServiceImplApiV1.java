@@ -3,16 +3,17 @@ package com.business.themeparkservice.hashtag.application.service;
 import com.business.themeparkservice.hashtag.application.dto.request.ReqHashtagPostDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.request.ReqHashtagPutDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagGetByIdDTOApiV1;
+import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagGetDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPostDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPutDTOApiV1;
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import com.business.themeparkservice.hashtag.infastructure.persistence.hashtag.HashtagJpaRepository;
-import jakarta.ws.rs.NotFoundException;
+import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 import java.util.UUID;
 
@@ -35,6 +36,12 @@ public class HashtagServiceImplApiV1 implements HashtagServiceApiV1{
     public ResHashtagGetByIdDTOApiV1 getBy(UUID id) {
         HashtagEntity hashtagEntity = getHashtag(id);
         return ResHashtagGetByIdDTOApiV1.of(hashtagEntity);
+    }
+
+    @Override
+    public ResHashtagGetDTOApiV1 getBy(Predicate predicate, Pageable pageable) {
+        Page<HashtagEntity> hashtagEntityPage = hashtagRepository.findAll(predicate,pageable);
+        return ResHashtagGetDTOApiV1.of(hashtagEntityPage);
     }
 
     @Override

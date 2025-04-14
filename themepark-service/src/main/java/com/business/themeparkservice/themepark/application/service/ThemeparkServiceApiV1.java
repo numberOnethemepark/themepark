@@ -15,6 +15,7 @@ public interface ThemeparkServiceApiV1 {
     ResThemeparkPostDTOApiv1 postBy(@Valid ReqThemeparkPostDTOApiV1 reqDto);
 
     ResThemeparkGetByIdDTOApiV1 getBy(UUID id);
-
+  
     ResThemeparkGetDTOApiV1 getBy(Predicate predicate, Pageable pageable);
+
 }

@@ -49,7 +49,7 @@ public class ThemeparkEntity extends BaseEntity {
     @ColumnDefault("false")
     private boolean supervisor;
 
-    @OneToMany(mappedBy = "themepark",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "themepark",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ThemeparkHashtagEntity> themeparkHashtagEntityList;
 
     @Builder

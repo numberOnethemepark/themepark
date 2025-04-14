@@ -4,19 +4,19 @@ Content-Type: application/json
 {
   "themepark":
     {
-      "name": "놀이기구2",
-      "description": "슝슝 놀이기구입니다.2",
+      "name": "알라딘",
+      "description": "아라비안 나이트",
       "type": "RIDE",
       "heightLimit": "130~180cm",
       "operationStartTime": "10:00",
       "operationEndTime": "18:00",
       "supervisor": true,
       "hashtagList": [{
-        "hashtagId": "f5e49e7d-3baf-478f-bb36-d70b66330f79",
-        "name": "즐거운"
+        "hashtagId": "b79fe1c3-3fb3-47e5-aa31-c7a8cb79a99a",
+        "name": "신나는"
       },{
-        "hashtagId": "f5e49e5d-3baf-478f-bb36-d70b66330f79",
-        "name": "짜릿한"
+        "hashtagId": "1d57d230-3fe2-4b9b-ae80-d69f73a117b2",
+        "name": "드라마틱"
       }
       ]
     }
@@ -28,7 +28,7 @@ GET http://localhost:8080/v1/themeparks/1ebb0dfa-1266-4736-a71b-4ee8b953a6b8
 
 ###
 
-GET http://localhost:8080/v1/themeparks
+GET http://localhost:8080/v1/themeparks?description=슝슝 놀이기구입니다.3
 
 ###
 

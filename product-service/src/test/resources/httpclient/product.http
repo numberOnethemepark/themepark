@@ -71,4 +71,4 @@ Content-Type: application/json
 }
 
 ### 6. 상품 삭제
-DELETE http://localhost:8080/v1/products/895a3f93-5f84-4c5c-977d-630a325f6ae3
+DELETE http://localhost:8080/v1/products/48aa06d0-f865-4a49-acf6-64c13adb389c

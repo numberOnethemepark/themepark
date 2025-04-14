@@ -53,10 +53,10 @@ public class ResUserGetDTOApiV1 {
 
             public static User from(UserEntity userEntity) {
                 return User.builder()
-                    .username("username")
-                    .slackId("slack-id")
-                    .role(RoleType.USER)
-                    .isBlacklisted(Boolean.FALSE)
+                    .username(userEntity.getUsername())
+                    .slackId(userEntity.getSlackId())
+                    .role(userEntity.getRole())
+                    .isBlacklisted(userEntity.getIsBlacklisted())
                     .build();
             }
         }

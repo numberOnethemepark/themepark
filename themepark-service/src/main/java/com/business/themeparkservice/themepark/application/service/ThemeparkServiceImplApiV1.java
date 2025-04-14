@@ -4,20 +4,21 @@ import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import com.business.themeparkservice.hashtag.infastructure.persistence.hashtag.HashtagJpaRepository;
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkGetByIdDTOApiV1;
+import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkGetDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPostDTOApiv1;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkHashtagEntity;
 import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkHashtagJpaRepository;
 import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkJpaRepository;
+import com.querydsl.core.types.Predicate;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +47,18 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
         return ResThemeparkGetByIdDTOApiV1.of(themeparkEntity,hashtagNames);
     }
 
+    @Override
+    public ResThemeparkGetDTOApiV1 getBy(Predicate predicate, Pageable pageable) {
+        Map<UUID, List<String>> hashtagMap = new HashMap<>();
+        Page<ThemeparkEntity> themeparkEntityPage= themeparkRepository.findAll(predicate,pageable);
+
+        for(ThemeparkEntity themeparkEntity : themeparkEntityPage){
+            List<String> hashtagNames = findThmeparkHashtags(themeparkEntity.getId());
+            hashtagMap.put(themeparkEntity.getId(), hashtagNames);
+        }
+
+        return ResThemeparkGetDTOApiV1.of(themeparkEntityPage,hashtagMap);
+    }
 
 
     private List<String> addHashtagNames(ThemeparkEntity themeparkEntity, ReqThemeparkPostDTOApiV1 reqDto) {
@@ -80,8 +93,8 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
                 themeparkHashtagRepository.findAllByThemeparkId(id);
 
 
-        for (ThemeparkHashtagEntity hashtagEntity : themeparkHashtagEntityList) {
-            HashtagEntity hashtag = hashtagRepository.findById(hashtagEntity.getHashtag().getId())
+        for (ThemeparkHashtagEntity themeparkHashtagEntity : themeparkHashtagEntityList) {
+            HashtagEntity hashtag = hashtagRepository.findById(themeparkHashtagEntity.getHashtag().getId())
                     .orElseThrow(()->new EntityNotFoundException("Hashtag not found"));
 
             hashtagEntityList.add(hashtag);

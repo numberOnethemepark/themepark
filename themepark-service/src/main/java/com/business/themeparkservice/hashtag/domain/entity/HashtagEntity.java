@@ -23,7 +23,7 @@ public class HashtagEntity extends BaseEntity {
     @Column(name = "hashtag_name",nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ThemeparkHashtagEntity> themeparkHashtagEntityList;
 
     @Builder

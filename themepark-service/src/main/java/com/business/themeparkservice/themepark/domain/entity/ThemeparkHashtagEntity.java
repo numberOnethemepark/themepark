@@ -9,7 +9,6 @@ import java.util.UUID;
 @Table(name = "p_themepark_hashtags")
 @Builder
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

@@ -49,7 +49,7 @@ public class ThemeparkControllerApiV1 {
                 ResDTO.<ResThemeparkGetByIdDTOApiV1>builder()
                         .code(0)
                         .message("테마파크 조회에 성공했습니다.")
-                        .data(ResThemeparkGetByIdDTOApiV1.of(id))
+                        .data(themeparkService.getBy(id))
                         .build(),
                 HttpStatus.OK
         );

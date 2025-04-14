@@ -57,4 +57,13 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
         return ResProductPutDTOApiV1.of(productEntity);
     }
 
+    @Override
+    public void deleteBy(UUID id) {
+
+        ProductEntity productEntity = productRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
+
+        productEntity.deletedBy(1L);
+    }
+
 }

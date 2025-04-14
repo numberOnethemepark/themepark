@@ -15,4 +15,6 @@ public interface ProductServiceApiV1 {
     ResProductGetByIdDTOApiV1 getBy(UUID id);
 
     ResProductPutDTOApiV1 putBy(UUID id, ReqProductPutDTOApiV1 dto);
+
+    void deleteBy(UUID id);
 }

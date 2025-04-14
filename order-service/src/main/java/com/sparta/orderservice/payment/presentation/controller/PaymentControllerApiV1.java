@@ -1,8 +1,9 @@
 package com.sparta.orderservice.payment.presentation.controller;
 
-import com.sparta.orderservice.payment.application.dto.request.ReqPaymentPostDtoApiV1;
-import com.sparta.orderservice.order.application.dto.response.ResDto;
-import com.sparta.orderservice.payment.application.dto.response.ResPaymentGetDtoApiV1;
+import com.sparta.orderservice.payment.presentation.dto.request.ReqPaymentPostDtoApiV1;
+import com.github.themepark.common.application.dto.ResDTO;
+import com.sparta.orderservice.payment.presentation.dto.response.ResPaymentGetDtoApiV1;
+import com.sparta.orderservice.payment.presentation.dto.response.ResPaymentPostDtoApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,25 +17,26 @@ import java.util.UUID;
 public class PaymentControllerApiV1 {
 
     @PostMapping()
-    public ResponseEntity<ResDto<Object>> postBy(
+    public ResponseEntity<ResDTO<ResPaymentPostDtoApiV1>> postBy(
             @RequestBody ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1
     ){
         return new ResponseEntity<>(
-                ResDto.builder()
+                ResDTO.<ResPaymentPostDtoApiV1>builder()
                         .code(0)
                         .message("결제를 완료하였습니다.")
+                        .data(ResPaymentPostDtoApiV1.of())
                         .build(),
                 HttpStatus.CREATED
         );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResDto<Object>> updateBy(
+    public ResponseEntity<ResDTO<Object>> updateBy(
             @RequestBody ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1,
             @PathVariable("id") UUID id
     ){
         return new ResponseEntity<>(
-                ResDto.builder()
+                ResDTO.builder()
                         .code(0)
                         .message("결제가 수정되었습니다.")
                         .build(),
@@ -43,11 +45,11 @@ public class PaymentControllerApiV1 {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResDto<ResPaymentGetDtoApiV1>> getPayment(
+    public ResponseEntity<ResDTO<ResPaymentGetDtoApiV1>> getPayment(
             @PathVariable("id") UUID id
     ){
         return new ResponseEntity<>(
-                ResDto.<ResPaymentGetDtoApiV1>builder()
+                ResDTO.<ResPaymentGetDtoApiV1>builder()
                         .code(0)
                         .message("결제정보를 조회하였습니다.")
                         .data(ResPaymentGetDtoApiV1.of(id))

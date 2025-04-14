@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,6 +28,7 @@ public class HashtagServiceImplApiV1 implements HashtagServiceApiV1{
         HashtagEntity hashtagEntity = hashtagRepository.save(reqDto.createHashtag());
         return ResHashtagPostDTOApiV1.of(hashtagEntity);
     }
+
 
     @Transactional(readOnly = true)
     @Override

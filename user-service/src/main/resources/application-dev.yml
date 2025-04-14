@@ -1,6 +1,8 @@
 spring:
   application:
     name: user-service
+  jwt:
+    secret: "MeyhsO2FjOuniO2MjO2BrO2Mn+2MhQ=="
 eureka:
   client:
     register-with-eureka: true

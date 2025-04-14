@@ -47,14 +47,16 @@ public class ProductControllerApiV1 {
         }
 
         @GetMapping("/{id}")
-        public ResponseEntity<ResDTO<ResProductGetByIdDTOApiV1>> getById(
+        public ResponseEntity<ResDTO<ResProductGetByIdDTOApiV1>> getBy(
                 @PathVariable("id") UUID id
         ){
+                ResProductGetByIdDTOApiV1 responseDto = productServiceApiV1.getBy(id);
+
                 return new ResponseEntity<>(
                         ResDTO.<ResProductGetByIdDTOApiV1>builder()
                                 .code(0)
                                 .message("상품 조회에 성공했습니다.")
-                                .data(ResProductGetByIdDTOApiV1.of())
+                                .data(responseDto)
                                 .build(),
                         HttpStatus.OK
                 );

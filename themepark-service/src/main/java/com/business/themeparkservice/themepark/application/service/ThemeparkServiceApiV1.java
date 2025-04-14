@@ -1,9 +1,11 @@
 package com.business.themeparkservice.themepark.application.service;
 
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
+import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPutDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkGetByIdDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkGetDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPostDTOApiv1;
+import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPutDTOApiV1;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -18,4 +20,5 @@ public interface ThemeparkServiceApiV1 {
   
     ResThemeparkGetDTOApiV1 getBy(Predicate predicate, Pageable pageable);
 
+    ResThemeparkPutDTOApiV1 putBy(UUID id, ReqThemeparkPutDTOApiV1 reqDto);
 }

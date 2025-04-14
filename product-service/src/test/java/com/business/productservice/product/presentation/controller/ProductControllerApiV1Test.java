@@ -161,7 +161,7 @@ public class ProductControllerApiV1Test {
                                 .limitQuantity(100)
                                 .eventStartAt(LocalDateTime.now())
                                 .eventEndAt(LocalDateTime.now().plusDays(1))
-                                .status(ProductStatus.CLOSED)
+                                .productStatus(ProductStatus.CLOSED)
                                 .build()
                 )
                 .build();

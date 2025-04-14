@@ -88,14 +88,16 @@ public class ProductControllerApiV1 {
         }
 
         @PutMapping("/{id}")
-        public ResponseEntity<ResDTO<Object>> putById(
+        public ResponseEntity<ResDTO<ResProductPutDTOApiV1>> putBy(
                 @PathVariable("id") UUID id,
                 @Valid @RequestBody ReqProductPutDTOApiV1 dto
         ){
+                ResProductPutDTOApiV1 responseDto = productServiceApiV1.putBy(id, dto);
                 return new ResponseEntity<>(
-                        ResDTO.builder()
+                        ResDTO.<ResProductPutDTOApiV1>builder()
                                 .code(0)
                                 .message("상품 정보 수정에 성공했습니다.")
+                                .data(responseDto)
                                 .build(),
                         HttpStatus.OK
                 );

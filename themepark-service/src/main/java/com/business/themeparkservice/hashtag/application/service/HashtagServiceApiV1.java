@@ -21,4 +21,6 @@ public interface HashtagServiceApiV1 {
     ResHashtagGetDTOApiV1 getBy(Predicate predicate, Pageable pageable);
 
     ResHashtagPutDTOApiV1 putBy(UUID id, ReqHashtagPutDTOApiV1 reqDto);
+
+    void deleteBy(UUID id);
 }

@@ -51,6 +51,11 @@ public class HashtagServiceImplApiV1 implements HashtagServiceApiV1{
         return ResHashtagPutDTOApiV1.of(hashtagEntity);
     }
 
+    @Override
+    public void deleteBy(UUID id) {
+        getHashtag(id).deletedBy(1L);
+    }
+
     private HashtagEntity getHashtag(UUID id) {
         return hashtagRepository.findById(id).orElseThrow(() -> new RuntimeException("Hashtag not found"));
     }

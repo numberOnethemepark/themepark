@@ -88,6 +88,7 @@ public class HashtagControllerApiV1 {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id){
+        hashtagService.deleteBy(id);
         return new ResponseEntity<>(
                 ResDTO.builder()
                         .code(0)

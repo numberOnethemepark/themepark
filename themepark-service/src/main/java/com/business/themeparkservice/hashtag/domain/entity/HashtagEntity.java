@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Table(name = "p_hashtags")
+@SQLRestriction("deleted_at IS NULL")
 @NoArgsConstructor
 public class HashtagEntity extends BaseEntity {
     @Id
@@ -34,4 +37,5 @@ public class HashtagEntity extends BaseEntity {
     public void update(String name) {
         this.name = name;
     }
+
 }

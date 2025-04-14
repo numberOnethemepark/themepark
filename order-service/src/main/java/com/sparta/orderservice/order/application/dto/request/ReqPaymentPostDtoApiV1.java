@@ -1,4 +1,4 @@
-package com.sparta.orderservice.payment.application.dto.request;
+package com.sparta.orderservice.order.application.dto.request;
 
 
 import jakarta.validation.Valid;
@@ -31,8 +31,5 @@ public class ReqPaymentPostDtoApiV1 {
         @NotBlank(message = "총금액을 입력해주세요.")
         public Integer amount;
 
-        @NotBlank(message = "카드번호를 입력해주세요.")
-        public String cardNumber;
     }
-
 }

@@ -1,4 +1,4 @@
-package com.sparta.orderservice.order.application.dto.response;
+package com.sparta.orderservice.order.presentation.dto.response;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

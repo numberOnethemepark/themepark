@@ -1,4 +1,4 @@
-package com.sparta.orderservice.order.application.dto.request;
+package com.sparta.orderservice.order.presentation.dto.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -28,7 +28,8 @@ public class ReqOrdersPostDtoApiV1 {
         @NotBlank(message = "상품의 정보를 입력해주세요.")
         private UUID productId;
 
-
+        @NotBlank(message = "주문의 금액을 입력해주세요.")
+        private Integer amount;
     }
 }
 

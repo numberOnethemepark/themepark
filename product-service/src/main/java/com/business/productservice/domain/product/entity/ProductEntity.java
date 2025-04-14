@@ -89,4 +89,21 @@ public class ProductEntity extends BaseEntity {
         this.stock=stock;
     }
 
+    public void update(String name, String description, ProductType productType,
+                       Integer price, LocalDateTime eventStartAt, LocalDateTime eventEndAt,
+                       Integer limitQuantity, ProductStatus productStatus){
+        this.name = name;
+        this.description = description;
+        this.productType = productType;
+        this.price = price;
+        this.eventStartAt = eventStartAt;
+        this.eventEndAt = eventEndAt;
+        this.limitQuantity = limitQuantity;
+        this.productStatus = productStatus;
+
+        if (this.stock != null) {
+            this.stock.updateQuantity(limitQuantity);
+        }
+    }
+
 }

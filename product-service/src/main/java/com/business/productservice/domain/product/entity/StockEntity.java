@@ -38,5 +38,10 @@ public class StockEntity extends BaseEntity {
         }
     }
 
+    public void updateQuantity(int quantity) {
+        this.stock = quantity;
+    }
+
+
 
 }

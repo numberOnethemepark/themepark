@@ -1,20 +1,17 @@
 package com.business.themeparkservice.themepark.application.service;
 
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
-import com.business.themeparkservice.hashtag.domain.repository.HashtagRepository;
 import com.business.themeparkservice.hashtag.infastructure.persistence.hashtag.HashtagJpaRepository;
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPostDTOApiv1;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkHashtagEntity;
-import com.business.themeparkservice.themepark.domain.repository.ThemeparkHashtagRepository;
-import com.business.themeparkservice.themepark.domain.repository.ThemeparkRepository;
 import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkHashtagJpaRepository;
 import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;

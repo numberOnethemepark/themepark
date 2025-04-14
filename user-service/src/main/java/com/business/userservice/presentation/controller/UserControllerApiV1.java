@@ -4,8 +4,9 @@ import com.business.userservice.application.dto.request.ReqUserDeleteDTOApiV1;
 import com.business.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetDTOApiV1;
-import com.business.userservice.common.dto.ResDTO;
+import com.business.userservice.application.service.UserServiceApiV1;
 import com.business.userservice.domain.user.entity.UserEntity;
+import com.github.themepark.common.application.dto.ResDTO;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/users")
 public class UserControllerApiV1 {
 
+    private final UserServiceApiV1 userService;
+
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> putBy(
         @PathVariable Long id,
@@ -49,12 +52,12 @@ public class UserControllerApiV1 {
     public ResponseEntity<ResDTO<ResUserGetByIdDTOApiV1>> getBy(
         @PathVariable Long id
     ) {
-        ResUserGetByIdDTOApiV1 tempResDto = ResUserGetByIdDTOApiV1.of("username", "slack-id");
+        ResUserGetByIdDTOApiV1 data = userService.getBy(id);
         return new ResponseEntity<>(
             ResDTO.<ResUserGetByIdDTOApiV1>builder()
                 .code(0)
                 .message("회원 조회에 성공하였습니다.")
-                .data(tempResDto)
+                .data(data)
                 .build(),
             HttpStatus.OK
         );

@@ -10,4 +10,6 @@ public interface UserRepository {
     Optional<UserEntity> findBySlackId(String slackId);
 
     UserEntity save(UserEntity saveUser);
+
+    Optional<UserEntity> findById(Long id);
 }

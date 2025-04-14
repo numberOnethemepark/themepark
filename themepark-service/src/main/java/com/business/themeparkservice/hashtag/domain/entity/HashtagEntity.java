@@ -30,4 +30,8 @@ public class HashtagEntity extends BaseEntity {
     public HashtagEntity(String name) {
         this.name = name;
     }
+
+    public void update(String name) {
+        this.name = name;
+    }
 }

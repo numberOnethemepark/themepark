@@ -46,7 +46,7 @@ dependencies {
     testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
 
     //common
-//    implementation 'com.github.numberOnethemepark:common:0.0.5'
+    implementation 'com.github.numberOnethemepark:common:0.0.6'
 
     //querydsl
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"

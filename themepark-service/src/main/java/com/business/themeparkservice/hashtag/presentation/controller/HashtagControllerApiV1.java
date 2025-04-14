@@ -86,7 +86,7 @@ public class HashtagControllerApiV1 {
                 ResDTO.<ResHashtagPutDTOApiV1>builder()
                         .code(0)
                         .message("해시태그 수정을 성공했습니다.")
-                        .data(ResHashtagPutDTOApiV1.of(id,reqDto))
+                        .data(hashtagService.putBy(id,reqDto))
                         .build(),
                 HttpStatus.OK
         );

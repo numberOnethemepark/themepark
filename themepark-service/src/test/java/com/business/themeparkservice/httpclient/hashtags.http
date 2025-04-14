@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "hashtag": {
-    "name": "신나는"
+    "name": "드라마틱"
   }
 }
 
@@ -17,12 +17,12 @@ GET http://localhost:8080/v1/hashtags
 
 ###
 
-PUT http://localhost:8080/v1/hashtags/f5e49e7d-3baf-478f-bb36-d70b66330f78
+PUT http://localhost:8080/v1/hashtags/f20d7a0c-0872-4b95-9440-dc2bd1c49cc1
 Content-Type: application/json
 
 {
   "hashtag": {
-    "name": "즐거운"
+    "name": "흥미로운"
   }
 }
 

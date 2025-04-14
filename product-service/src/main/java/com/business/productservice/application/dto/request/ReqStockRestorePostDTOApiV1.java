@@ -23,7 +23,7 @@ public class ReqStockRestorePostDTOApiV1 {
     @AllArgsConstructor
     public static class Stock {
 
-        @NotNull(message = "상품 재고 차감 수량을 입력해주세요.")
+        @NotNull(message = "상품 재고 복구 수량을 입력해주세요.")
         private Integer stockRestoreAmount;
     }
 }

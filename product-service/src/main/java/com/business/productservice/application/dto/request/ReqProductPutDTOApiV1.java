@@ -34,7 +34,7 @@ public class ReqProductPutDTOApiV1 {
         private Integer limitQuantity;
         private LocalDateTime eventStartAt;
         private LocalDateTime eventEndAt;
-        private ProductStatus status;
+        private ProductStatus productStatus;
 
     }
 }

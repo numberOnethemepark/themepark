@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "p_waitings")
-@SQLRestriction("deleted_at IS NULL")
+@SQLRestriction("waiting_status= 'WAITING' AND deleted_at IS NULL")
 @Getter
 @NoArgsConstructor
 public class WaitingEntity extends BaseEntity {
@@ -44,6 +44,10 @@ public class WaitingEntity extends BaseEntity {
         this.userId = userId;
         this.themeparkId = themeparkId;
         this.waitingNumber = waitingNumber;
+        this.waitingLeft = waitingLeft;
+    }
+
+    public void updateWaitingLeft(int waitingLeft) {
         this.waitingLeft = waitingLeft;
     }
 }

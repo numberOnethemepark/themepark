@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface WaitingJpaRepository extends JpaRepository<WaitingEntity, Long>, WaitingRepository {
+public interface WaitingJpaRepository extends JpaRepository<WaitingEntity, UUID>, WaitingRepository {
 }

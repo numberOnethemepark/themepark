@@ -22,4 +22,6 @@ public interface ProductServiceApiV1 {
     ResProductPutDTOApiV1 putBy(UUID id, ReqProductPutDTOApiV1 dto);
 
     void deleteBy(UUID id);
+
+    void postDecreaseById(UUID id);
 }

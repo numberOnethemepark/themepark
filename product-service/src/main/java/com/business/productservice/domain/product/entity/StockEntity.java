@@ -42,6 +42,8 @@ public class StockEntity extends BaseEntity {
         this.stock = quantity;
     }
 
-
+    public void decrease() {
+        this.stock--;
+    }
 
 }

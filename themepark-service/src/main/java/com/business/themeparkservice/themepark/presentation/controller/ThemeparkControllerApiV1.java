@@ -84,7 +84,7 @@ public class ThemeparkControllerApiV1 {
                 ResDTO.<ResThemeparkPutDTOApiV1>builder()
                         .code(0)
                         .message("테마파크 수정을 성공했습니다.")
-                        .data(ResThemeparkPutDTOApiV1.of(reqDto,id))
+                        .data(themeparkService.putBy(id,reqDto))
                         .build(),
                 HttpStatus.OK
         );

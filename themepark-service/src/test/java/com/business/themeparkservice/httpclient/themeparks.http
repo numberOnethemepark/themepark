@@ -32,12 +32,22 @@ GET http://localhost:8080/v1/themeparks?description=슝슝 놀이기구입니다
 
 ###
 
-PUT http://localhost:8080/v1/themeparks/f5e49e7d-3baf-478f-bb36-d70b66330f79
+PUT http://localhost:8080/v1/themeparks/1ebb0dfa-1266-4736-a71b-4ee8b953a6b8
 Content-Type: application/json
 
 {
   "themepark": {
-    "heightLimit": "140~180cm"
+    "heightLimit": "140~180cm",
+    "hashtagList": [
+      {
+        "hashtagId": "f5e49e7d-3baf-478f-bb36-d70b66330f79",
+        "name": "즐거운"
+      },
+      {
+        "hashtagId": "f5e49e5d-3baf-478f-bb36-d70b66330f79",
+        "name": "짜릿한"
+      }
+    ]
   }
 }
 

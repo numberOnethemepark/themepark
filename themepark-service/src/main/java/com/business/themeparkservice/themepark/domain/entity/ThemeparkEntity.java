@@ -1,6 +1,6 @@
 package com.business.themeparkservice.themepark.domain.entity;
 
-import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
+import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPutDTOApiV1;
 import com.business.themeparkservice.themepark.domain.vo.ThemeparkType;
 import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -12,6 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -61,6 +62,18 @@ public class ThemeparkEntity extends BaseEntity {
         this.operationEndTime = operationEndTime;
         this.heightLimit = heightLimit;
         this.supervisor = supervisor;
+    }
+
+    public void update(ReqThemeparkPutDTOApiV1 reqDto) {
+        var dto = reqDto.getThemepark();
+
+        Optional.ofNullable(dto.getName()).ifPresent(name -> this.name = name);
+        Optional.ofNullable(dto.getDescription()).ifPresent(description -> this.description = description);
+        Optional.ofNullable(dto.getType()).ifPresent(type -> this.type = type);
+        Optional.ofNullable(dto.getOperationStartTime()).ifPresent(time -> this.operationStartTime = time);
+        Optional.ofNullable(dto.getOperationEndTime()).ifPresent(time -> this.operationEndTime = time);
+        Optional.ofNullable(dto.getHeightLimit()).ifPresent(limit -> this.heightLimit = limit);
+        Optional.ofNullable(dto.getSupervisor()).ifPresent(supervisor -> this.supervisor = supervisor);
     }
 
 }

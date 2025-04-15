@@ -85,6 +85,8 @@ public class UserControllerApiV1 {
         @PathVariable Long id,
         @RequestBody ReqUserDeleteDTOApiV1 dto
     ) {
+        userService.deleteById(id, dto);
+
         return new ResponseEntity<>(
             ResDTO.builder()
                 .code(0)

@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -72,5 +73,9 @@ public class UserEntity extends BaseEntity {
         if (username != null) this.username = username;
         if (password != null) this.password = password;
         if (slackId != null) this.slackId = slackId;
+    }
+
+    public boolean isPasswordMatch(String rawPassword, PasswordEncoder encoder) {
+        return encoder.matches(rawPassword, this.password);
     }
 }

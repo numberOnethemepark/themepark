@@ -72,3 +72,6 @@ Content-Type: application/json
 
 ### 6. 상품 삭제
 DELETE http://localhost:8080/v1/products/48aa06d0-f865-4a49-acf6-64c13adb389c
+
+### 7. 상품 검색 조회
+GET http://localhost:8080/v1/products?name=할인 이용권 수정1&productStatus=OPEN

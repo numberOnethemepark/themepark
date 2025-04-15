@@ -1,6 +1,7 @@
 package com.business.themeparkservice.waiting.application.dto.response;
 
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
+import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,9 +18,9 @@ import java.util.UUID;
 public class ResWaitingPostDTOApiV1 {
     private Waiting waiting;
 
-    public static ResWaitingPostDTOApiV1 of(@Valid ReqWaitingPostDTOApiV1 reqDto) {
+    public static ResWaitingPostDTOApiV1 of(WaitingEntity waitingEntity) {
         return ResWaitingPostDTOApiV1.builder()
-                .waiting(Waiting.from(reqDto))
+                .waiting(Waiting.from(waitingEntity))
                 .build();
     }
 
@@ -35,14 +36,14 @@ public class ResWaitingPostDTOApiV1 {
         private Integer waitingLeft;
         private WaitingStatus status;
 
-        public static Waiting from(@Valid ReqWaitingPostDTOApiV1 reqDto) {
+        public static Waiting from(WaitingEntity waitingEntity) {
             return Waiting.builder()
-                    .id(UUID.fromString("f5e49e7d-3baf-478f-bb36-d73b66330f79"))
-                    .userId(reqDto.getWaiting().getUserId())
-                    .themeparkId(reqDto.getWaiting().getThemeparkId())
-                    .waitingNumber(3)
-                    .waitingLeft(2)
-                    .status(WaitingStatus.WAITING)
+                    .id(waitingEntity.getId())
+                    .userId(waitingEntity.getUserId())
+                    .themeparkId(waitingEntity.getThemeparkId())
+                    .waitingNumber(waitingEntity.getWaitingNumber())
+                    .waitingLeft(waitingEntity.getWaitingLeft())
+                    .status(waitingEntity.getWaitingStatus())
                     .build();
         }
     }

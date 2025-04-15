@@ -15,8 +15,8 @@ Content-Type: application/json
         "hashtagId": "b79fe1c3-3fb3-47e5-aa31-c7a8cb79a99a",
         "name": "신나는"
       },{
-        "hashtagId": "1d57d230-3fe2-4b9b-ae80-d69f73a117b2",
-        "name": "드라마틱"
+        "hashtagId": "f5e49e5d-3baf-478f-bb36-d70b66330f79",
+        "name": "짜릿한"
       }
       ]
     }
@@ -24,7 +24,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/v1/themeparks/1ebb0dfa-1266-4736-a71b-4ee8b953a6b8
+GET http://localhost:8080/v1/themeparks/3dca02ed-55c7-4f7c-9e5b-2126f9b2139f
 
 ###
 
@@ -53,4 +53,4 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8080/v1/themeparks/f5e49e7d-3baf-478f-bb36-d70b66330f79
+DELETE http://localhost:8080/v1/themeparks/1bce86d2-1afb-4e80-994e-a1fb4d92aaf9

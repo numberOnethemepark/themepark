@@ -18,7 +18,7 @@ GET http://localhost:8080/v1/waitings
 
 ###
 
-POST http://localhost:8080/v1/waitings/f5e49e7d-3baf-478f-bb36-d70b66330f79/done
+POST http://localhost:8080/v1/waitings/37cba726-3fca-4d51-bd96-f0d4724424de/done
 
 ###
 

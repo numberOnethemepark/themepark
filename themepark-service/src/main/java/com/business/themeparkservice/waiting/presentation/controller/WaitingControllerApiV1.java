@@ -44,7 +44,7 @@ public class WaitingControllerApiV1 {
                 ResDTO.<ResWaitingGetByIdDTOApiV1>builder()
                         .code(0)
                         .message("대기열 조회에 성공했습니다.")
-                        .data(ResWaitingGetByIdDTOApiV1.of(id))
+                        .data(waitingService.getBy(id))
                         .build(),
                 HttpStatus.OK
         );

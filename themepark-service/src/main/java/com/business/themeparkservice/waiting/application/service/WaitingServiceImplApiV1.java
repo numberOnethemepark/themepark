@@ -2,6 +2,7 @@ package com.business.themeparkservice.waiting.application.service;
 
 import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkJpaRepository;
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
+import com.business.themeparkservice.waiting.application.dto.response.ResWaitingGetByIdDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
@@ -30,15 +31,30 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
             throw new RuntimeException("대기정보가 존재합니다.");
         }
 
-        //대기번호 생성
-        int waitingNumber = waitingRepository.countByThemeparkId(reqDto.getWaiting().getThemeparkId()) + 1;
-        //남은 대기자 수
-        int waitingLeft = waitingNumber - 1;
+        int waitingLeft = waitingRepository.countByThemeparkId(reqDto.getWaiting().getThemeparkId());
+
+        int waitingNumber=waitingRepository.findLastWaitingNumber(reqDto.getWaiting().getThemeparkId())+1;
 
         WaitingEntity waitingEntity = reqDto.createWaiting(waitingNumber,waitingLeft);
         waitingRepository.save(waitingEntity);
 
         return ResWaitingPostDTOApiV1.of(waitingEntity);
+    }
+
+    @Override
+    public ResWaitingGetByIdDTOApiV1 getBy(UUID id) {
+        WaitingEntity waitingEntity = findWaitingById(id);
+        int waitingLeft = waitingRepository
+                .checkingMyWaitingLeft(waitingEntity.getWaitingNumber(),waitingEntity.getThemeparkId());
+
+        waitingEntity.updateWaitingLeft(waitingLeft);
+
+        return ResWaitingGetByIdDTOApiV1.of(waitingEntity);
+    }
+
+
+    private WaitingEntity findWaitingById(UUID id) {
+        return waitingRepository.findById(id).orElseThrow(()->new RuntimeException(" waiting notfound"));
     }
 
     private int WaitingChecking(ReqWaitingPostDTOApiV1 reqDto) {

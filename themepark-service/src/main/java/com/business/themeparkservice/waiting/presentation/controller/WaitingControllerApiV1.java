@@ -2,9 +2,11 @@ package com.business.themeparkservice.waiting.presentation.controller;
 
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.*;
+import com.business.themeparkservice.waiting.application.service.WaitingServiceApiV1;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.github.themepark.common.application.dto.ResDTO;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +19,10 @@ import java.util.List;
 import java.util.UUID;
 @RestController
 @RequestMapping("/v1/waitings")
+@RequiredArgsConstructor
 public class WaitingControllerApiV1 {
+
+    private final WaitingServiceApiV1 waitingService;
 
     @PostMapping
     public ResponseEntity<ResDTO<ResWaitingPostDTOApiV1>> postBy(
@@ -27,7 +32,7 @@ public class WaitingControllerApiV1 {
                 ResDTO.<ResWaitingPostDTOApiV1>builder()
                         .code(0)
                         .message("대기열 생성을 성공했습니다.")
-                        .data(ResWaitingPostDTOApiV1.of(reqDto))
+                        .data(waitingService.postBy(reqDto))
                         .build(),
                 HttpStatus.CREATED
         );

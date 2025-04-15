@@ -50,7 +50,7 @@ Content-Type: application/json
 }
 
 ### 4. 상품 단건 조회
-GET http://localhost:8080/v1/products/895a3f93-5f84-4c5c-977d-630a325f6ae3
+GET http://localhost:8080/v1/products/8982c5ab-1fb0-4989-a812-167587843a68
 
 ### 5. 상품 정보 수정
 PUT http://localhost:8080/v1/products/895a3f93-5f84-4c5c-977d-630a325f6ae3
@@ -75,3 +75,7 @@ DELETE http://localhost:8080/v1/products/48aa06d0-f865-4a49-acf6-64c13adb389c
 
 ### 7. 상품 검색 조회
 GET http://localhost:8080/v1/products?name=할인 이용권 수정1&productStatus=OPEN
+
+### 8. 상품 재고 차감 (내부 호출용) - 선착순 1인 1예매
+POST localhost:8080/v1/products/8982c5ab-1fb0-4989-a812-167587843a68/stocks-decrease
+

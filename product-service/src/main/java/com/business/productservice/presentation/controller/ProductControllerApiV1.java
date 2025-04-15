@@ -112,9 +112,9 @@ public class ProductControllerApiV1 {
 
         @PostMapping("/{id}/stocks-decrease")
         public ResponseEntity<ResDTO<Object>> postDecreaseById(
-                @PathVariable("id") UUID id,
-                @Valid @RequestBody ReqStockDecreasePostDTOApiV1 dto
+                @PathVariable("id") UUID id
         ){
+                productServiceApiV1.postDecreaseById(id);
                 return new ResponseEntity<>(
                         ResDTO.builder()
                                 .code(0)

@@ -1,6 +1,7 @@
 package com.business.userservice.domain.user.entity;
 
 import com.business.userservice.domain.user.vo.RoleType;
+import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "p_users")
-public class UserEntity {
+public class UserEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,5 +66,11 @@ public class UserEntity {
             .slackId(slackId)
             .role(role)
             .build();
+    }
+
+    public void update(String username, String password, String slackId) {
+        if (username != null) this.username = username;
+        if (password != null) this.password = password;
+        if (slackId != null) this.slackId = slackId;
     }
 }

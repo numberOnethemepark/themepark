@@ -37,6 +37,8 @@ public class UserControllerApiV1 {
         @PathVariable Long id,
         @Valid @RequestBody ReqUserPutDTOApiV1 dto
     ) {
+        userService.putBy(id, dto);
+
         return new ResponseEntity<>(
             ResDTO.builder()
                 .code(0)

@@ -8,12 +8,13 @@ import com.business.productservice.application.dto.response.*;
 import com.business.productservice.application.service.ProductServiceApiV1;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.github.themepark.common.application.dto.ResDTO;
+import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,24 +65,16 @@ public class ProductControllerApiV1 {
 
         @GetMapping
         public ResponseEntity<ResDTO<ResProductGetDTOApiV1>> getBy(
-                @RequestParam(name = "searchValue", required = false) String searchValue,
-                @PageableDefault(sort="id", direction = Sort.Direction.ASC) Pageable pageable
-//                Long id //TODO 권한 처리용 (추후 변경 예정)
+                @QuerydslPredicate(root = ProductEntity.class) Predicate predicate,
+                @PageableDefault(page = 0, size = 10, sort = "createdAt") Pageable pageable
         ){
-                List<ProductEntity> tempProducts = List.of(
-                        new ProductEntity(),
-                        new ProductEntity()
-                );
-
-                Page<ProductEntity> tempProductPage = new PageImpl<>(tempProducts, pageable, tempProducts.size());
-
-                ResProductGetDTOApiV1 tempResDto = ResProductGetDTOApiV1.of(tempProductPage);
+                ResProductGetDTOApiV1 responseDto = productServiceApiV1.getBy(predicate, pageable);
 
                 return new ResponseEntity<>(
                         ResDTO.<ResProductGetDTOApiV1>builder()
                                 .code(0)
                                 .message("상품 조회에 성공했습니다.")
-                                .data(tempResDto)
+                                .data(responseDto)
                                 .build(),
                         HttpStatus.OK
                 );

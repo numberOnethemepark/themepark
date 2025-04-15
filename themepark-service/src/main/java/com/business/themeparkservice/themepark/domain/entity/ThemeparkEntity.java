@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Table(name = "p_themeparks")
+@SQLRestriction("deleted_at IS NULL")
 @NoArgsConstructor
 @AllArgsConstructor
 public class ThemeparkEntity extends BaseEntity {

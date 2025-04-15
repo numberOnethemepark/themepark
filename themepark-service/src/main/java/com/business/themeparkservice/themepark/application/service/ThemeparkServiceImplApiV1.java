@@ -79,6 +79,13 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
         return ResThemeparkPutDTOApiV1.of(themeparkEntity, hashtagNames);
     }
 
+    @Override
+    public void deleteBy(UUID id) {
+        ThemeparkEntity themeparkEntity = findThemepark(id);
+        themeparkEntity.deletedBy(1L);
+        themeparkEntity.getThemeparkHashtagEntityList().clear();
+    }
+
     private List<String> addHashtagNames(ThemeparkEntity themeparkEntity, ReqThemeparkPutDTOApiV1 reqDto) {
         List<ThemeparkHashtagEntity> themeparkHashtagEntityList = new ArrayList<>();
 

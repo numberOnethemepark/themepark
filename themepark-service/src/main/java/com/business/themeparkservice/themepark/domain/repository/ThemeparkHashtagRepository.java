@@ -9,4 +9,6 @@ import java.util.UUID;
 
 public interface ThemeparkHashtagRepository {
     List<ThemeparkHashtagEntity> findAllByThemeparkId(UUID id);
+
+    void deleteByThemepark_Id(UUID id);
 }

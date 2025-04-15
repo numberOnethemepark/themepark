@@ -4,13 +4,18 @@ import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.ws.rs.DefaultValue;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "p_waitings")
+@SQLRestriction("deleted_at IS NULL")
 @Getter
+@NoArgsConstructor
 public class WaitingEntity extends BaseEntity {
 
     @Id
@@ -31,8 +36,14 @@ public class WaitingEntity extends BaseEntity {
     private Integer waitingLeft;
 
     @Column(name = "waiting_status",nullable = false)
-    @DefaultValue("WAITING")
-    private WaitingStatus waitingStatus;
+    @Enumerated(EnumType.STRING)
+    private WaitingStatus waitingStatus = WaitingStatus.WAITING;
 
-
+    @Builder
+    public WaitingEntity(Integer userId, UUID themeparkId, Integer waitingNumber, Integer waitingLeft) {
+        this.userId = userId;
+        this.themeparkId = themeparkId;
+        this.waitingNumber = waitingNumber;
+        this.waitingLeft = waitingLeft;
+    }
 }

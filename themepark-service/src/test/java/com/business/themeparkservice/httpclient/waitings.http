@@ -3,8 +3,8 @@ Content-Type: application/json
 
 {
   "waiting": {
-    "userId": 3,
-    "themeparkId": "f5e49e7d-3baf-478f-bb36-d70b66330f79"
+    "userId": 2,
+    "themeparkId": "f5220852-59fe-4894-8fc4-200bd1419872"
   }
 }
 

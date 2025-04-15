@@ -69,3 +69,6 @@ Content-Type: application/json
     "productStatus": "OPEN"
   }
 }
+
+### 6. 상품 삭제
+DELETE http://localhost:8080/v1/products/48aa06d0-f865-4a49-acf6-64c13adb389c

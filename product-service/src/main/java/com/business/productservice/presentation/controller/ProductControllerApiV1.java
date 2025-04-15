@@ -104,9 +104,10 @@ public class ProductControllerApiV1 {
         }
 
         @DeleteMapping("/{id}")
-        public ResponseEntity<ResDTO<Object>> deleteById(
+        public ResponseEntity<ResDTO<Object>> deleteBy(
                 @PathVariable("id") UUID id
         ){
+                productServiceApiV1.deleteBy(id);
                 return new ResponseEntity<>(
                         ResDTO.builder()
                                 .code(0)

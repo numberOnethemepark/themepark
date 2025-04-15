@@ -7,7 +7,9 @@ import com.business.productservice.application.dto.response.ResProductPostDTOApi
 import com.business.productservice.application.dto.response.ResProductPutDTOApiV1;
 import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.entity.ProductEntity;
+import com.business.productservice.domain.product.entity.StockEntity;
 import com.business.productservice.infrastructure.persistence.product.ProductJpaRepository;
+import com.business.productservice.infrastructure.persistence.product.StockJpaRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.UUID;
 public class ProductServiceImplApiV1 implements ProductServiceApiV1{
 
     private final ProductJpaRepository productRepository;
+    private final StockJpaRepository stockRepository;
 
     @Override
     public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
@@ -55,6 +58,18 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
                 dto.getProduct().getProductStatus()
         );
         return ResProductPutDTOApiV1.of(productEntity);
+    }
+
+    @Override
+    public void deleteBy(UUID id) {
+
+        ProductEntity productEntity = productRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
+        StockEntity stockEntity = stockRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
+
+        productEntity.deletedBy(1L);
+        stockEntity.deletedBy(1L);
     }
 
 }

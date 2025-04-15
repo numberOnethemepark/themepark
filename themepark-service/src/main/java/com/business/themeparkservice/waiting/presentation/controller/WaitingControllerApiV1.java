@@ -92,7 +92,7 @@ public class WaitingControllerApiV1 {
                 ResDTO.<ResWaitingPostCancelDTOApiV1>builder()
                         .code(0)
                         .message("대기가 취소 되었습니다.")
-                        .data(ResWaitingPostCancelDTOApiV1.of(id))
+                        .data(waitingService.postCancelBy(id))
                         .build(),
                 HttpStatus.OK
         );

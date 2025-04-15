@@ -54,4 +54,8 @@ public class WaitingEntity extends BaseEntity {
     public void postDone() {
         this.waitingStatus = WaitingStatus.DONE;
     }
+
+    public void postCancel() {
+        this.waitingStatus = WaitingStatus.CANCELLED;
+    }
 }

@@ -2,6 +2,7 @@ package com.business.themeparkservice.waiting.application.service;
 
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingGetByIdDTOApiV1;
+import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostCancelDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDoneDTOApiV1;
 import jakarta.validation.Valid;
@@ -14,4 +15,6 @@ public interface WaitingServiceApiV1 {
     ResWaitingGetByIdDTOApiV1 getBy(UUID id);
 
     ResWaitingPostDoneDTOApiV1 postDoneBy(UUID id);
+
+    ResWaitingPostCancelDTOApiV1 postCancelBy(UUID id);
 }

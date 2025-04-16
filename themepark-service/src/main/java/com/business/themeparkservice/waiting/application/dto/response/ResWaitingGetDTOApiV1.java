@@ -55,14 +55,14 @@ public class ResWaitingGetDTOApiV1 {
                         .toList();
             }
 
-            public static Waiting from(WaitingEntity entity) {
+            public static Waiting from(WaitingEntity waitingEntity) {
                 return Waiting.builder()
-                        .id(UUID.fromString("f4a49e7d-3baf-478f-bb36-d73b66330f79"))
-                        .userId(3)
-                        .themeparkId(UUID.fromString("f5e49e7d-3baf-478f-bb36-d73b66330f79"))
-                        .waitingNumber(2)
-                        .waitingLeft(1)
-                        .status(WaitingStatus.WAITING)
+                        .id(waitingEntity.getId())
+                        .userId(waitingEntity.getUserId())
+                        .themeparkId(waitingEntity.getThemeparkId())
+                        .waitingNumber(waitingEntity.getWaitingNumber())
+                        .waitingLeft(waitingEntity.getWaitingLeft())
+                        .status(waitingEntity.getWaitingStatus())
                         .build();
             }
         }

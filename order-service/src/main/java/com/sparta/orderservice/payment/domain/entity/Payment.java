@@ -38,5 +38,5 @@ public class Payment extends BaseEntity {
     private String cardNumber;
 
     @Column(name = "amount", nullable = false)
-    private Number amount;
+    private Integer amount;
 }

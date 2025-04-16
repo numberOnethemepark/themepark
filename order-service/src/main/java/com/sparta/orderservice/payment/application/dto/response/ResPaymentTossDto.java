@@ -1,5 +1,6 @@
 package com.sparta.orderservice.payment.application.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class ResPaymentTossDto {
     @Getter
     @Builder
     public static class Card{
+        @JsonProperty("amount")
         private Integer amount;
         private String number;
     }

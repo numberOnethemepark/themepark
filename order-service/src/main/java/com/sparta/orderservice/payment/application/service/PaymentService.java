@@ -26,23 +26,23 @@ public class PaymentService implements PaymentUseCase {
 
     @Override
     public void createPayment(ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1){
-        ResponseEntity<ResPaymentTossDto> tossRes = tossPaymentsClient.confirmPayment(ReqPaymentTossDto
+        ResPaymentTossDto tossRes = tossPaymentsClient.confirmPayment(ReqPaymentTossDto
                 .of(reqPaymentPostDtoApiV1.getPayment().getOrderId()
                         , reqPaymentPostDtoApiV1.getPayment().getAmount()
                         , reqPaymentPostDtoApiV1.getPayment().getPaymentKey()
                 )
         );
 
-        if (tossRes.getBody().getFailure() != null){
+        if (tossRes.getFailure() != null){
             throw new RuntimeException("데이터가 존재하지 않습니다.");
         }
 
         Payment payment = Payment.builder()
-                .paymentKey(Objects.requireNonNull(tossRes.getBody()).getPaymentKey())
-                .orderId(tossRes.getBody().getOrderId())
-                .paymentStatus(tossRes.getBody().getStatus())
-                .cardNumber(tossRes.getBody().getCard().getNumber())
-                .amount(tossRes.getBody().getCard().getAmount())
+                .paymentKey(Objects.requireNonNull(tossRes).getPaymentKey())
+                .orderId(tossRes.getOrderId())
+                .paymentStatus(tossRes.getStatus())
+                .cardNumber(tossRes.getCard().getNumber())
+                .amount(tossRes.getCard().getAmount())
                 .build();
 
         paymentRepository.save(payment);

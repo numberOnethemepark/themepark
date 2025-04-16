@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "p_orders")
-public class Order extends BaseEntity {
+public class OrderEntity extends BaseEntity {
     @Id
     @UuidGenerator
     @Column(name = "order_id", nullable = false)

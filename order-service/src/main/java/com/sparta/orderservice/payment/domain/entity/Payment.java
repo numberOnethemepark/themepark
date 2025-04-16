@@ -22,7 +22,10 @@ import java.util.UUID;
 public class Payment extends BaseEntity {
 
     @Id
-    @Column(name = "payment_id", nullable = false)
+    @UuidGenerator
+    private UUID paymentId;
+
+    @Column(name = "payment_key", nullable = false)
     private String paymentKey;
 
     @Column(name = "order_id", nullable = false)

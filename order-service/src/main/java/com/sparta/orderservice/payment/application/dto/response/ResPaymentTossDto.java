@@ -11,24 +11,23 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ResPaymentTossDto {
 
-    @Valid
-    private Payment payment;
+    private String paymentKey;
+    private UUID orderId;
+    private String status;
+    private Card card;
+    private Failure failure;
 
     @Getter
     @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Payment{
-        private String paymentKey;
-        private UUID orderId;
-        private String status;
-        private Card card;
+    public static class Card{
+        private Integer amount;
+        private String number;
+    }
 
-        @Getter
-        @Builder
-        public static class Card{
-            private Number amount;
-            private String number;
-        }
+    @Getter
+    @Builder
+    public static class Failure{
+        private String code;
+        private String message;
     }
 }

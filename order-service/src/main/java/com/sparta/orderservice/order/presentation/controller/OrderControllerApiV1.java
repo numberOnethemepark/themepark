@@ -1,7 +1,8 @@
 package com.sparta.orderservice.order.presentation.controller;
 
 import com.sparta.orderservice.order.application.facade.OrderFacade;
-import com.sparta.orderservice.order.domain.entity.Order;
+import com.sparta.orderservice.order.domain.entity.OrderEntity;
+import com.sparta.orderservice.order.presentation.dto.response.ResOrderPostDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrdersGetByIdDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoApiV1;
@@ -24,20 +25,20 @@ public class OrderControllerApiV1 {
     private final OrderFacade orderFacade;
 
     @PostMapping
-    public void createOrder(
+    public ResponseEntity<ResDTO<ResOrderPostDtoApiV1>> createOrder(
            @RequestBody ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1,
            HttpServletResponse response) throws IOException {
 
-        Order order = orderFacade.createOrder(reqOrdersPostDtoApiV1);
+        OrderEntity orderEntity = orderFacade.createOrder(reqOrdersPostDtoApiV1);
 
-        String paymentUrl = String.format(
-                "/payments.html?orderId=%s&amount=%d",
-                order.getOrderId(),
-                order.getAmount()
+        return new ResponseEntity<>(
+                ResDTO.<ResOrderPostDtoApiV1>builder()
+                        .code(0)
+                        .message("주문을 생성하였습니다!")
+                        .data(ResOrderPostDtoApiV1.of(orderEntity))
+                        .build(),
+                HttpStatus.CREATED
         );
-
-        // 클라이언트를 결제창으로 리다이렉트
-        response.sendRedirect(paymentUrl);
     }
 
 

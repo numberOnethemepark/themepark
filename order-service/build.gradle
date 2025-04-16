@@ -1,6 +1,7 @@
-import org.springframework.boot.gradle.tasks.bundling.BootJar
-
 plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.3'
+	id 'io.spring.dependency-management' version '1.1.7'
 	id 'com.epages.restdocs-api-spec' version "0.19.2"
 }
 
@@ -11,64 +12,72 @@ tasks.withType(Test).configureEach {
 group = 'com.business'
 version = '0.0.1-SNAPSHOT'
 
-
-tasks.withType(BootJar).configureEach {
-	enabled = false
-}
-
 ext {
-	set('querydslVersion', "5.0.0") // QueryDSL 버전 명시적으로 설정
+	set('springCloudVersion', "2024.0.0")
+	set('querydslVersion', "5.0.0")
 }
 
 def querydslSrcDir = 'src/main/generated'
+
 clean {
 	delete file(querydslSrcDir)
 }
 
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
 
 dependencies {
-	//eureka client
+	// Spring Cloud starter
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
-	//jakarta
+	// Jakarta & JPA
 	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-	//jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.postgresql:postgresql'
 
-	// restdocs & openapi
+	// OpenAPI, RestDocs
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 	testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
 
-	//feignClient
+	// FeignClient
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
-	//querydsl
+	// QueryDSL
 	implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
 	annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+
+	// Actuator & Miscellaneous
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-	//toss
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
-	implementation 'org.apache.httpcomponents.client5:httpclient5:5.3'
 
-	// common
+
+	// Lombok
+	implementation 'org.projectlombok:lombok:1.18.30'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+	// Common libraries
 	implementation 'com.github.numberOnethemepark:common:0.0.7'
 }
 
-// 컴파일 시 빌드 폴더를 지웁니다.
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
+
 compileJava {
 	dependsOn 'clean'
 }
 
-// OpenApi에 들어갈 메타데이터를 추가합니다.
-// 모놀리식일 경우 해당 프로젝트의 주소를 입력하고,
-// MSA일 경우 게이트웨이의 주소를 입력하면 됩니다.
+// OpenAPI 설정
 openapi3 {
 	servers = [
 			{
@@ -81,13 +90,9 @@ openapi3 {
 	format = 'json'
 }
 
-// task를 만듭니다.
+// 문서 생성 태스크
 tasks.register('setDocs') {
-	// openapi3 태스크를 먼저 실행합니다.
 	dependsOn 'openapi3'
-	// 문서가 다 생성되면 build 파일에 복사합니다.
-	// MSA일 경우 파일명이 중복될 수 있으므로,
-	// 파일명 뒤에 서비스명을 붙여줍시다.
 	doLast {
 		copy {
 			from "build/api-spec"
@@ -106,12 +111,10 @@ tasks.register('setDocs') {
 	}
 }
 
-// bootRun 실행 시 문서 생성 태스크를 실행합니다.
 bootRun {
 	dependsOn 'setDocs'
 }
 
-// bootJar 실행 시 문서 생성 태스크를 실행합니다.
 bootJar {
 	dependsOn 'setDocs'
 }

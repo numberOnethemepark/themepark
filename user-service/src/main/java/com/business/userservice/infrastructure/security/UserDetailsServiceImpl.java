@@ -23,4 +23,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new UserDetailsImpl(user);
     }
+
+    public UserDetails loadUserById(Long id) {
+        UserEntity user = userRepository.findById(id)
+            .orElseThrow(() -> new CustomException(UserExceptionCode.USER_NOT_FOUND));
+
+        return new UserDetailsImpl(user);
+    }
 }

@@ -25,7 +25,7 @@ Content-Type: application/json
     "name": "입장권",
     "description": "일반 입장권",
     "productType": "TICKET",
-    "price": 25000,
+    "price": 30000,
     "limitQuantity": -1,
     "eventStartAt": "9999-12-31T23:59:00",
     "eventEndAt": "9999-12-31T23:59:00"
@@ -42,7 +42,7 @@ Content-Type: application/json
     "name": "회원권",
     "description": "연 회원권",
     "productType": "MEMBERSHIP",
-    "price": 25000,
+    "price": 250000,
     "limitQuantity": -1,
     "eventStartAt": "9999-12-31T23:59:00",
     "eventEndAt": "9999-12-31T23:59:00"
@@ -50,22 +50,22 @@ Content-Type: application/json
 }
 
 ### 4. 상품 단건 조회
-GET http://localhost:8080/v1/products/8982c5ab-1fb0-4989-a812-167587843a68
+GET http://localhost:8080/v1/products/e61caf66-b5c0-4e23-bb9f-fd75821efc67
 
 ### 5. 상품 정보 수정
-PUT http://localhost:8080/v1/products/895a3f93-5f84-4c5c-977d-630a325f6ae3
+PUT http://localhost:8080/v1/products/e61caf66-b5c0-4e23-bb9f-fd75821efc67
 Authorization: Bearer jwt_token_string
 Content-Type: application/json
 
 {
   "product": {
-    "name": "할인 이용권 수정1",
-    "description": "할인 이용권 수정1",
-    "productType": "EVENT",
+    "name": "입장권",
+    "description": "일반 입장권",
+    "productType": "TICKET",
     "price": 30000,
-    "limitQuantity": 150,
-    "eventStartAt": "2025-05-01T09:00:00",
-    "eventEndAt": "2025-05-31T23:59:59",
+    "limitQuantity": -1,
+    "eventStartAt": "9999-12-31T23:59:00",
+    "eventEndAt": "9999-12-31T23:59:00",
     "productStatus": "OPEN"
   }
 }
@@ -74,8 +74,11 @@ Content-Type: application/json
 DELETE http://localhost:8080/v1/products/48aa06d0-f865-4a49-acf6-64c13adb389c
 
 ### 7. 상품 검색 조회
-GET http://localhost:8080/v1/products?name=할인 이용권 수정1&productStatus=OPEN
+GET http://localhost:8080/v1/products
 
 ### 8. 상품 재고 차감 (내부 호출용) - 선착순 1인 1예매
-POST localhost:8080/v1/products/8982c5ab-1fb0-4989-a812-167587843a68/stocks-decrease
+POST http://localhost:8080/v1/products/330592a8-f6ab-465c-833e-c108e4b56e10/stocks-decrease
+
+### 9. 상품 재고 복구 (내부 호출용) - 주문, 결제 실패 시 호출
+POST http://localhost:8080/v1/products/330592a8-f6ab-465c-833e-c108e4b56e10/stocks-restore
 

@@ -1,6 +1,7 @@
-package com.business.userservice.infrastructure.auth;
+package com.business.userservice.infrastructure.security;
 
 import com.business.userservice.domain.user.entity.UserEntity;
+import com.business.userservice.domain.user.vo.RoleType;
 import java.util.Collection;
 import java.util.List;
 import lombok.Getter;
@@ -12,41 +13,33 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserDetailsImpl implements UserDetails {
     private final Long id;
     private final String username;
-    private final String role;
+    private final RoleType role;
     private final Boolean isBlacklisted;
     private final String password;
+    private final Collection<? extends GrantedAuthority> authorities;
 
-    // JWT 인증용
-    public UserDetailsImpl(Long id, String username, String role, Boolean isBlacklisted) {
-        this.id = id;
-        this.username = username;
-        this.role = role;
-        this.isBlacklisted = isBlacklisted;
-        this.password = null;
-    }
-
-    // DB 인증용
     public UserDetailsImpl(UserEntity user) {
         this.id = user.getId();
         this.username = user.getUsername();
-        this.role = user.getRole().toString();
+        this.role = user.getRole();
         this.isBlacklisted = user.getIsBlacklisted();
         this.password = user.getPassword();
+        this.authorities = generateAuthorities(role);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     @Override
@@ -69,4 +62,7 @@ public class UserDetailsImpl implements UserDetails {
         return !isBlacklisted;
     }
 
+    private Collection<GrantedAuthority> generateAuthorities(RoleType role) {
+        return List.of(new SimpleGrantedAuthority(role.getAuthority()));
+    }
 }

@@ -46,4 +46,8 @@ public class StockEntity extends BaseEntity {
         this.stock--;
     }
 
+    public void restore(){
+        this.stock++;
+    }
+
 }

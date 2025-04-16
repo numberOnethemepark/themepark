@@ -126,9 +126,9 @@ public class ProductControllerApiV1 {
 
         @PostMapping("/{id}/stocks-restore")
         public ResponseEntity<ResDTO<Object>> postRestoreById(
-                @PathVariable("id") UUID id,
-                @Valid @RequestBody ReqStockRestorePostDTOApiV1 dto
+                @PathVariable("id") UUID id
         ){
+                productServiceApiV1.postRestoreById(id);
                 return new ResponseEntity<>(
                         ResDTO.builder()
                                 .code(0)

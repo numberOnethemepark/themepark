@@ -3,9 +3,11 @@ package com.business.userservice.application.service;
 import com.business.userservice.application.dto.request.ReqAuthPostJoinDTOApiV1;
 import com.business.userservice.application.dto.request.ReqAuthPostJoinDTOApiV1.User;
 import com.business.userservice.application.dto.response.ResAuthPostJoinDTOApiV1;
+import com.business.userservice.application.exception.AuthExceptionCode;
 import com.business.userservice.domain.user.entity.UserEntity;
 import com.business.userservice.domain.user.repository.UserRepository;
 import com.business.userservice.domain.user.vo.RoleType;
+import com.github.themepark.common.application.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,7 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
             user.getUsername(),
             passwordEncoder.encode(user.getPassword()),
             user.getSlackId(),
-            RoleType.ROLE_USER
+            RoleType.USER
         );
 
         UserEntity savedUser = userRepository.save(saveUser);
@@ -40,11 +42,11 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
     private void validateDuplicateUser(String username, String slackId) {
         userRepository.findByUsername(username)
             .ifPresent(userEntity -> {
-                throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
+                throw new CustomException(AuthExceptionCode.DUPLICATE_USERNAME);
             });
         userRepository.findBySlackId(slackId)
             .ifPresent(userEntity -> {
-                throw new IllegalArgumentException("이미 존재하는 Slack ID입니다.");
+                throw new CustomException(AuthExceptionCode.DUPLICATE_SLACK_ID);
             });
     }
 }

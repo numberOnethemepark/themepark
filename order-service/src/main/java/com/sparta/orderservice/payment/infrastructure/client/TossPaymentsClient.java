@@ -14,5 +14,5 @@ import org.springframework.web.bind.annotation.RequestBody;
         configuration = TossFeignConfig.class)
 public interface TossPaymentsClient {
     @PostMapping("/confirm")
-    ResponseEntity<ResPaymentTossDto> confirmPayment(@RequestBody ReqPaymentTossDto request);
+    ResPaymentTossDto confirmPayment(@RequestBody ReqPaymentTossDto request);
 }

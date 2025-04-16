@@ -50,4 +50,8 @@ public class WaitingEntity extends BaseEntity {
     public void updateWaitingLeft(int waitingLeft) {
         this.waitingLeft = waitingLeft;
     }
+
+    public void postDone() {
+        this.waitingStatus = WaitingStatus.DONE;
+    }
 }

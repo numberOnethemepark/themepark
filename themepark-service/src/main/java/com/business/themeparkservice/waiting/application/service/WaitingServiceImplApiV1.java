@@ -4,6 +4,7 @@ import com.business.themeparkservice.themepark.infastructure.persistence.themepa
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingGetByIdDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDTOApiV1;
+import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDoneDTOApiV1;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,6 +51,13 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
         waitingEntity.updateWaitingLeft(waitingLeft);
 
         return ResWaitingGetByIdDTOApiV1.of(waitingEntity);
+    }
+
+    @Override
+    public ResWaitingPostDoneDTOApiV1 postDoneBy(UUID id) {
+        WaitingEntity waitingEntity = findWaitingById(id);
+        waitingEntity.postDone();
+        return ResWaitingPostDoneDTOApiV1.of(waitingEntity);
     }
 
 

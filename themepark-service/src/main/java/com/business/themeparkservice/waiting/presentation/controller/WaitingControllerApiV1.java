@@ -80,7 +80,7 @@ public class WaitingControllerApiV1 {
                 ResDTO.<ResWaitingPostDoneDTOApiV1>builder()
                         .code(0)
                         .message("대기가 완료 되었습니다.")
-                        .data(ResWaitingPostDoneDTOApiV1.of(id))
+                        .data(waitingService.postDoneBy(id))
                         .build(),
                 HttpStatus.OK
         );

@@ -4,10 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import com.github.themepark.common.domain.entity.BaseEntity;
-import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
@@ -16,6 +14,8 @@ import java.util.UUID;
 @Getter
 @Builder
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "p_orders")
 public class Order extends BaseEntity {
     @Id
@@ -32,9 +32,6 @@ public class Order extends BaseEntity {
     @Column(name = "product_id", nullable = false)
     private UUID productId;
 
-    @Column(name = "order_quantity", nullable = false)
-    private Integer orderQuantity;
-
     @Column(name = "amount", nullable = false)
     private Integer amount;
 
@@ -44,7 +41,4 @@ public class Order extends BaseEntity {
     @Column(name = "payment_id")
     private UUID paymentId;
 
-    public Order() {
-
-    }
 }

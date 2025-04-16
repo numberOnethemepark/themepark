@@ -7,14 +7,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JpaOrderRepository implements OrderRepository {
 
-    private final SpringDataJpaOrderRepository jpaRepository;
+    private final SpringDataJpaOrderRepository jpaOrderRepository;
 
-    public JpaOrderRepository(SpringDataJpaOrderRepository jpaRepository) {
-        this.jpaRepository = jpaRepository;
+    public JpaOrderRepository(SpringDataJpaOrderRepository jpaOrderRepository) {
+        this.jpaOrderRepository = jpaOrderRepository;
     }
 
     @Override
     public void save(Order order){
-        jpaRepository.save(order);
+        jpaOrderRepository.save(order);
     }
 }

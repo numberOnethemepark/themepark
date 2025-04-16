@@ -19,3 +19,6 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+toss:
+  secretKey: test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm

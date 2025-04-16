@@ -5,19 +5,25 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "p_payments")
 public class Payment extends BaseEntity {
+
     @Id
-    @UuidGenerator
     @Column(name = "payment_id", nullable = false)
-    private UUID paymentId;
+    private String paymentKey;
 
     @Column(name = "order_id", nullable = false)
     private UUID orderId;
@@ -25,9 +31,9 @@ public class Payment extends BaseEntity {
     @Column(name = "payment_status", nullable = false)
     private String paymentStatus;
 
-    @Column(name = "payment_number", nullable = true)
-    private String paymentNumber;
+    @Column(name = "card_number", nullable = true)
+    private String cardNumber;
 
     @Column(name = "amount", nullable = false)
-    private Integer amount;
+    private Number amount;
 }

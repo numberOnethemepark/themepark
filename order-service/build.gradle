@@ -25,6 +25,7 @@ clean {
 	delete file(querydslSrcDir)
 }
 
+
 dependencies {
 	//eureka client
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -50,11 +51,14 @@ dependencies {
 	annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+	//toss
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.3'
+
 	// common
-	implementation 'com.github.numberOnethemepark:common:0.0.6'
+	implementation 'com.github.numberOnethemepark:common:0.0.7'
 }
 
 // 컴파일 시 빌드 폴더를 지웁니다.

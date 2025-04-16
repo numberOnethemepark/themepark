@@ -22,9 +22,6 @@ public class ReqOrdersPostDtoApiV1 {
         @NotBlank(message = "슬랙 정보를 입력해주세요.")
         private String slackId;
 
-        @NotBlank(message = "주문제품의 수량을 입력해주세요.")
-        private Integer orderQuantity;
-
         @NotBlank(message = "상품의 정보를 입력해주세요.")
         private UUID productId;
 

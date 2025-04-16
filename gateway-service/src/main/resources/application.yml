@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: gateway-service
+  jwt:
+    secret: "MeyhsO2FjOuniO2MjO2BrOyLnO2BrOumv+2CpOyeheuLiOuLpOyVhOyVhOyVhOyVhOyVhOyVhA=="
   #  profiles:
   #    active: local
   main:

@@ -1,17 +1,13 @@
-package com.business.userservice.application.service;
+package com.business.userservice.infrastructure.security;
 
 import com.business.userservice.domain.user.entity.UserEntity;
 import com.business.userservice.domain.user.repository.UserRepository;
-import com.business.userservice.infrastructure.auth.UserDetailsImpl;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -20,10 +16,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> optionalUser = userRepository.findByUsername(username);
-        if (!optionalUser.isPresent()) {
-            throw new UsernameNotFoundException("사용자 없음: " + username);
-        }
-        return new UserDetailsImpl(optionalUser.get());
+        UserEntity user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
+
+        return new UserDetailsImpl(user);
     }
 }

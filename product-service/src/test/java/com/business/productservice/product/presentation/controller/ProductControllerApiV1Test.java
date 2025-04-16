@@ -4,6 +4,8 @@ import com.business.productservice.application.dto.request.ReqProductPostDTOApiV
 import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1;
 import com.business.productservice.application.dto.request.ReqStockDecreasePostDTOApiV1;
 import com.business.productservice.application.dto.request.ReqStockRestorePostDTOApiV1;
+import com.business.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
+import com.business.productservice.application.service.ProductServiceApiV1;
 import com.business.productservice.domain.product.vo.ProductStatus;
 import com.business.productservice.domain.product.vo.ProductType;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,6 +30,7 @@ import java.util.UUID;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 
 @SpringBootTest
@@ -42,6 +46,10 @@ public class ProductControllerApiV1Test {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @SuppressWarnings("removal")
+    @MockBean
+    private ProductServiceApiV1 productService;
+
     @Test
     public void testProductPostSuccess() throws Exception {
         ReqProductPostDTOApiV1 dto = ReqProductPostDTOApiV1.builder()
@@ -50,10 +58,10 @@ public class ProductControllerApiV1Test {
                                 .name("20% 할인권")
                                 .description("할인권 설명입니다.")
                                 .productType(ProductType.EVENT)
-                                .price(30000L)
+                                .price(30000)
                                 .limitQuantity(100)
                                 .eventStartAt(LocalDateTime.now())
-                                .eventEndAt(LocalDateTime.MAX)
+                                .eventEndAt(LocalDateTime.now().plusDays(1))
                                 .build()
                 )
                 .build();
@@ -80,8 +88,28 @@ public class ProductControllerApiV1Test {
 
     @Test
     public void testProductGetByIdSuccess() throws Exception {
+        UUID testId = UUID.randomUUID();
+
+        ResProductGetByIdDTOApiV1 responseDto = ResProductGetByIdDTOApiV1.builder()
+                .product(
+                        ResProductGetByIdDTOApiV1.Product.builder()
+                                .name("테스트 상품")
+                                .description("테스트 설명")
+                                .productType(ProductType.EVENT)
+                                .price(15000)
+                                .limitQuantity(30)
+                                .eventStartAt(LocalDateTime.now())
+                                .eventEndAt(LocalDateTime.now().plusDays(7))
+                                .productStatus(ProductStatus.DRAFT)
+                                .build()
+                )
+                .build();
+
+        // Mocking: 해당 ID로 호출 시 응답 DTO 리턴
+        when(productService.getBy(testId)).thenReturn(responseDto);
+
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/v1/products/{id}", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.get("/v1/products/{id}", testId)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -129,11 +157,11 @@ public class ProductControllerApiV1Test {
                                 .name("상품 이름")
                                 .description("상품 설명")
                                 .productType(ProductType.EVENT)
-                                .price(35000L)
+                                .price(35000)
                                 .limitQuantity(100)
                                 .eventStartAt(LocalDateTime.now())
-                                .eventEndAt(LocalDateTime.MAX)
-                                .status(ProductStatus.CLOSED)
+                                .eventEndAt(LocalDateTime.now().plusDays(1))
+                                .productStatus(ProductStatus.CLOSED)
                                 .build()
                 )
                 .build();

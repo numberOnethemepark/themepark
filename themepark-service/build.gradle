@@ -1,6 +1,7 @@
-import org.springframework.boot.gradle.tasks.bundling.BootJar
-
 plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'com.epages.restdocs-api-spec' version "0.19.2"
 }
 
@@ -11,18 +12,27 @@ tasks.withType(Test).configureEach {
 group = 'com.business'
 version = '0.0.1-SNAPSHOT'
 
-
-tasks.withType(BootJar).configureEach {
-    enabled = false
-}
-
 ext {
-    set('querydslVersion', "5.0.0") // QueryDSL 버전 명시적으로 설정
+    set('springCloudVersion', "2024.0.0")
+    set('querydslVersion', "5.0.0")
 }
 
 def querydslSrcDir = 'src/main/generated'
+
 clean {
     delete file(querydslSrcDir)
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 
@@ -36,8 +46,9 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
     testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
 
-    implementation 'com.github.numberOnethemepark:common:0.0.6'
-
+    implementation 'com.github.numberOnethemepark:common:0.0.7'
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
     //feignClient
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     //querydsl

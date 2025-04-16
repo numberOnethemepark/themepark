@@ -30,11 +30,11 @@ public class ReqProductPutDTOApiV1 {
         private String name;
         private String description;
         private ProductType productType;
-        private Long price;
+        private Integer price;
         private Integer limitQuantity;
         private LocalDateTime eventStartAt;
         private LocalDateTime eventEndAt;
-        private ProductStatus status;
+        private ProductStatus productStatus;
 
     }
 }

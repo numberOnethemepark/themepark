@@ -6,24 +6,30 @@ import com.business.themeparkservice.hashtag.application.dto.response.ResHashtag
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagGetDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPostDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPutDTOApiV1;
+import com.business.themeparkservice.hashtag.application.service.HashtagServiceApiV1;
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
-import com.business.themeparkservice.themepark.common.dto.ResDTO;
+import com.github.themepark.common.application.dto.ResDTO;
+import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/hashtags")
+@RequiredArgsConstructor
 public class HashtagControllerApiV1 {
+
+    private final HashtagServiceApiV1 hashtagService;
 
     @PostMapping
     public ResponseEntity<ResDTO<ResHashtagPostDTOApiV1>> postBy(@Valid @RequestBody ReqHashtagPostDTOApiV1 reqDto){
@@ -31,7 +37,7 @@ public class HashtagControllerApiV1 {
                 ResDTO.<ResHashtagPostDTOApiV1>builder()
                         .code(0)
                         .message("해시태그 생성을 성공했습니다.")
-                        .data(ResHashtagPostDTOApiV1.of(reqDto))
+                        .data(hashtagService.postBy(reqDto))
                         .build(),
                 HttpStatus.CREATED
         );
@@ -43,7 +49,7 @@ public class HashtagControllerApiV1 {
                 ResDTO.<ResHashtagGetByIdDTOApiV1>builder()
                         .code(0)
                         .message("해시태그 조회에 성공했습니다.")
-                        .data(ResHashtagGetByIdDTOApiV1.of(id))
+                        .data(hashtagService.getBy(id))
                         .build(),
                 HttpStatus.OK
         );
@@ -51,23 +57,15 @@ public class HashtagControllerApiV1 {
 
     @GetMapping
     public ResponseEntity<ResDTO<ResHashtagGetDTOApiV1>> getBy(
-            @RequestParam(required = false) String name,
+            @QuerydslPredicate(root = HashtagEntity.class) Predicate predicate,
             @PageableDefault(page = 0, size = 10, sort = "createdAt") Pageable pageable
     ){
-        List<HashtagEntity> tempHashtags = List.of(
-                new HashtagEntity(),
-                new HashtagEntity()
-        );
-
-        Page<HashtagEntity> tempHashtagPage = new PageImpl<>(
-                tempHashtags, pageable, tempHashtags.size()
-        );
 
         return new ResponseEntity<>(
                 ResDTO.<ResHashtagGetDTOApiV1>builder()
                         .code(0)
                         .message("해시태그 검색에 성공했습니다.")
-                        .data(ResHashtagGetDTOApiV1.of(tempHashtagPage))
+                        .data(hashtagService.getBy(predicate,pageable))
                         .build(),
                 HttpStatus.OK
         );
@@ -82,7 +80,7 @@ public class HashtagControllerApiV1 {
                 ResDTO.<ResHashtagPutDTOApiV1>builder()
                         .code(0)
                         .message("해시태그 수정을 성공했습니다.")
-                        .data(ResHashtagPutDTOApiV1.of(id,reqDto))
+                        .data(hashtagService.putBy(id,reqDto))
                         .build(),
                 HttpStatus.OK
         );
@@ -90,6 +88,7 @@ public class HashtagControllerApiV1 {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id){
+        hashtagService.deleteBy(id);
         return new ResponseEntity<>(
                 ResDTO.builder()
                         .code(0)

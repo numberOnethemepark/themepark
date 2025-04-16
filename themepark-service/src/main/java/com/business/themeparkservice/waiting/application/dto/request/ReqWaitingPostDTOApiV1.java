@@ -1,5 +1,6 @@
 package com.business.themeparkservice.waiting.application.dto.request;
 
+import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +19,16 @@ public class ReqWaitingPostDTOApiV1 {
     @Valid
     @NotNull(message = "대기정보를 입력해주세요")
     private Waiting waiting;
+
+    public WaitingEntity createWaiting(int waitingNumber, int waitingLeft) {
+        return WaitingEntity.builder()
+                .userId(waiting.userId)
+                .themeparkId(waiting.themeparkId)
+                .waitingLeft(waitingLeft)
+                .waitingNumber(waitingNumber)
+                .build();
+    }
+
 
     @Getter
     @Builder

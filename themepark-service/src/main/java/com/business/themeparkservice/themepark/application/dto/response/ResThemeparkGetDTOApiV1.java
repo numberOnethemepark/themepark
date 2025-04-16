@@ -10,6 +10,7 @@ import org.springframework.data.web.PagedModel;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Getter
@@ -20,19 +21,19 @@ public class ResThemeparkGetDTOApiV1 {
 
     private ThemeparkPage themeparkPage;
 
-    public static ResThemeparkGetDTOApiV1 of(Page<ThemeparkEntity> themeparkEntityPage){
+    public static ResThemeparkGetDTOApiV1 of(Page<ThemeparkEntity> themeparkEntityPage, Map<UUID, List<String>> hashtagMap){
         return ResThemeparkGetDTOApiV1.builder()
-                .themeparkPage(new ThemeparkPage(themeparkEntityPage))
+                .themeparkPage(new ThemeparkPage(themeparkEntityPage, hashtagMap))
                 .build();
     }
 
     @Getter
     @ToString
     public static class ThemeparkPage extends PagedModel<ThemeparkPage.Themepark> {
-        public ThemeparkPage(Page<ThemeparkEntity> themeparkEntityPage) {
+        public ThemeparkPage(Page<ThemeparkEntity> themeparkEntityPage, Map<UUID, List<String>> hashtagMap) {
             super(
                     new PageImpl<>(
-                            Themepark.from(themeparkEntityPage.getContent()),
+                            Themepark.from(themeparkEntityPage.getContent(),hashtagMap),
                             themeparkEntityPage.getPageable(),
                             themeparkEntityPage.getTotalElements()
                     )
@@ -59,25 +60,27 @@ public class ResThemeparkGetDTOApiV1 {
             private Boolean supervisor;
             private List<Hashtag> hashtagList;
 
-            public static List<Themepark> from(List<ThemeparkEntity> themeparkEntityList) {
+            public static List<Themepark> from(List<ThemeparkEntity> themeparkEntityList,Map<UUID, List<String>> hashtagMap) {
                 return themeparkEntityList.stream()
-                        .map(Themepark::from)
+                        .map(themepark -> Themepark.from(
+                                themepark,
+                                hashtagMap.getOrDefault(themepark.getId(), List.of())//id가 존재하는경우 해시태그 값을 가져오도록
+                        ))
                         .toList();
             }
 
-            public static Themepark from(ThemeparkEntity entity) {
-                List<String> stringList = List.of("신나는","즐거운");
+            public static Themepark from(ThemeparkEntity themeparkEntity, List<String> hashtagNames) {
 
                 return Themepark.builder()
-                        .id(UUID.fromString("f5e49e7d-3baf-478f-bb36-d73b66330f79"))
-                        .name("놀이기구1")
-                        .description("슝슝 놀이기구입니다.")
-                        .type(ThemeparkType.valueOf("RIDE"))
-                        .operationStartTime(LocalTime.parse("10:00"))
-                        .operationEndTime(LocalTime.parse("18:00"))
-                        .heightLimit("130~180cm")
-                        .supervisor(true)
-                        .hashtagList(Hashtag.from(stringList))
+                        .id(themeparkEntity.getId())
+                        .name(themeparkEntity.getName())
+                        .description(themeparkEntity.getDescription())
+                        .type(themeparkEntity.getType())
+                        .operationStartTime(themeparkEntity.getOperationStartTime())
+                        .operationEndTime(themeparkEntity.getOperationEndTime())
+                        .heightLimit(themeparkEntity.getHeightLimit())
+                        .supervisor(themeparkEntity.isSupervisor())
+                        .hashtagList(Hashtag.from(hashtagNames))
                         .build();
             }
 
@@ -96,9 +99,9 @@ public class ResThemeparkGetDTOApiV1 {
                             .build();
                 }
 
-                public static List<Hashtag> from(List<String> nameList) {
-                    return nameList.stream()
-                            .map(name-> Hashtag.from(name))
+                public static List<Hashtag> from(List<String> hashtagNames) {
+                    return hashtagNames.stream()
+                            .map(Hashtag::from)
                             .toList();
                 }
             }

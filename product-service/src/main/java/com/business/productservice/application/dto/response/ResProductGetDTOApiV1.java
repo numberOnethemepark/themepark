@@ -49,7 +49,7 @@ public class ResProductGetDTOApiV1 {
             private String name;
             private String description;
             private ProductType productType;
-            private Long price;
+            private Integer price;
             private Integer limitQuantity;
             private LocalDateTime eventStartAt;
             private LocalDateTime eventEndAt;
@@ -62,15 +62,15 @@ public class ResProductGetDTOApiV1 {
             }
             public static Product from(ProductEntity entity) {
                 return Product.builder()
-                        .id(UUID.fromString("0d47686e-c73c-4d70-80ae-ef51ea4bfed3"))
-                        .name("20% 할인 이벤트")
-                        .description("설명입니다.")
-                        .productType(ProductType.EVENT)
-                        .price(30000L)
-                        .limitQuantity(100)
-                        .eventStartAt(LocalDateTime.now())
-                        .eventEndAt(LocalDateTime.now())
-                        .productStatus(ProductStatus.OPEN)
+                        .id(entity.getId())
+                        .name(entity.getName())
+                        .description(entity.getDescription())
+                        .productType(entity.getProductType())
+                        .price(entity.getPrice())
+                        .limitQuantity(entity.getLimitQuantity())
+                        .eventStartAt(entity.getEventStartAt())
+                        .eventEndAt(entity.getEventEndAt())
+                        .productStatus(entity.getProductStatus())
                         .build();
             }
 

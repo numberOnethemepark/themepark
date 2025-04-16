@@ -1,5 +1,6 @@
 package com.business.themeparkservice.waiting.application.dto.response;
 
+import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +16,9 @@ import java.util.UUID;
 public class ResWaitingPostCancelDTOApiV1 {
     private Waiting waiting;
 
-    public static ResWaitingPostCancelDTOApiV1 of(UUID id) {
+    public static ResWaitingPostCancelDTOApiV1 of(WaitingEntity waitingEntity) {
         return ResWaitingPostCancelDTOApiV1.builder()
-                .waiting(Waiting.from(id))
+                .waiting(Waiting.from(waitingEntity))
                 .build();
     }
 
@@ -33,14 +34,14 @@ public class ResWaitingPostCancelDTOApiV1 {
         private Integer waitingLeft;
         private WaitingStatus status;
 
-        public static Waiting from(UUID id) {
+        public static Waiting from(WaitingEntity waitingEntity) {
             return Waiting.builder()
-                    .id(id)
-                    .userId(3)
-                    .themeparkId(UUID.fromString("f5e49e7d-3baf-478f-bb36-d73b66330f79"))
-                    .waitingNumber(2)
-                    .waitingLeft(1)
-                    .status(WaitingStatus.CANCELLED)
+                    .id(waitingEntity.getId())
+                    .userId(waitingEntity.getUserId())
+                    .themeparkId(waitingEntity.getThemeparkId())
+                    .waitingNumber(waitingEntity.getWaitingNumber())
+                    .waitingLeft(waitingEntity.getWaitingLeft())
+                    .status(waitingEntity.getWaitingStatus())
                     .build();
         }
     }

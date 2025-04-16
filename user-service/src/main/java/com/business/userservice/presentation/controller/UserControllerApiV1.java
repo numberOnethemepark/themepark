@@ -4,15 +4,15 @@ import com.business.userservice.application.dto.request.ReqUserDeleteDTOApiV1;
 import com.business.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetDTOApiV1;
-import com.business.userservice.common.dto.ResDTO;
+import com.business.userservice.application.service.UserServiceApiV1;
 import com.business.userservice.domain.user.entity.UserEntity;
+import com.github.themepark.common.application.dto.ResDTO;
+import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,11 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/users")
 public class UserControllerApiV1 {
 
+    private final UserServiceApiV1 userService;
+
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> putBy(
         @PathVariable Long id,
         @Valid @RequestBody ReqUserPutDTOApiV1 dto
     ) {
+        userService.putBy(id, dto);
+
         return new ResponseEntity<>(
             ResDTO.builder()
                 .code(0)
@@ -49,12 +52,12 @@ public class UserControllerApiV1 {
     public ResponseEntity<ResDTO<ResUserGetByIdDTOApiV1>> getBy(
         @PathVariable Long id
     ) {
-        ResUserGetByIdDTOApiV1 tempResDto = ResUserGetByIdDTOApiV1.of("username", "slack-id");
+        ResUserGetByIdDTOApiV1 data = userService.getBy(id);
         return new ResponseEntity<>(
             ResDTO.<ResUserGetByIdDTOApiV1>builder()
                 .code(0)
                 .message("회원 조회에 성공하였습니다.")
-                .data(tempResDto)
+                .data(data)
                 .build(),
             HttpStatus.OK
         );
@@ -62,20 +65,16 @@ public class UserControllerApiV1 {
 
     @GetMapping
     public ResponseEntity<ResDTO<ResUserGetDTOApiV1>> getBy(
-        @RequestParam(required = false) String searchValue,
+        @QuerydslPredicate(root = UserEntity.class) Predicate predicate,
         @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable
     ) {
-        List<UserEntity> tempUsers = List.of(
-            new UserEntity(),
-            new UserEntity()
-        );
-        Page<UserEntity> tempUserPage = new PageImpl<>(tempUsers, pageable, tempUsers.size());
-        ResUserGetDTOApiV1 tempResDto = ResUserGetDTOApiV1.of(tempUserPage);
+        ResUserGetDTOApiV1 data = userService.getBy(predicate, pageable);
+
         return new ResponseEntity<>(
             ResDTO.<ResUserGetDTOApiV1>builder()
                 .code(0)
                 .message("회원 리스트 조회에 성공했습니다.")
-                .data(tempResDto)
+                .data(data)
                 .build(),
             HttpStatus.OK
         );
@@ -86,6 +85,8 @@ public class UserControllerApiV1 {
         @PathVariable Long id,
         @RequestBody ReqUserDeleteDTOApiV1 dto
     ) {
+        userService.deleteById(id, dto);
+
         return new ResponseEntity<>(
             ResDTO.builder()
                 .code(0)

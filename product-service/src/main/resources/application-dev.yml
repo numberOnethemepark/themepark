@@ -4,12 +4,12 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/themepark
     username: postgres
-    password: hello12
+    password: 1234
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:

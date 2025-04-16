@@ -53,16 +53,12 @@ public class ResHashtagGetDTOApiV1 {
 
             public static Hashtag from(HashtagEntity entity) {
                 return Hashtag.builder()
-                        .id(UUID.fromString("f5e49e5d-3baf-478f-bb36-d70b66330f79"))
-                        .name("신나는")
+                        .id(entity.getId())
+                        .name(entity.getName())
                         .build();
             }
 
         }
-
-
-
-
 
     }
 }

@@ -1,0 +1,81 @@
+### 1. 이벤트 상품 생성
+POST http://localhost:8080/v1/products
+Authorization: Bearer jwt_token_string
+Content-Type: application/json
+
+{
+  "product": {
+    "name": "할인 이용권",
+    "description": "5월 한정 20% 할인",
+    "productType": "EVENT",
+    "price": 25000,
+    "limitQuantity": 100,
+    "eventStartAt": "2025-05-01T09:00:00",
+    "eventEndAt": "2025-05-31T23:59:59"
+  }
+}
+
+### 2. 일반 입장권 상품 생성
+POST http://localhost:8080/v1/products
+Authorization: Bearer jwt_token_string
+Content-Type: application/json
+
+{
+  "product": {
+    "name": "입장권",
+    "description": "일반 입장권",
+    "productType": "TICKET",
+    "price": 25000,
+    "limitQuantity": -1,
+    "eventStartAt": "9999-12-31T23:59:00",
+    "eventEndAt": "9999-12-31T23:59:00"
+  }
+}
+
+### 3. 연회원권 상품 생성
+POST http://localhost:8080/v1/products
+Authorization: Bearer jwt_token_string
+Content-Type: application/json
+
+{
+  "product": {
+    "name": "회원권",
+    "description": "연 회원권",
+    "productType": "MEMBERSHIP",
+    "price": 25000,
+    "limitQuantity": -1,
+    "eventStartAt": "9999-12-31T23:59:00",
+    "eventEndAt": "9999-12-31T23:59:00"
+  }
+}
+
+### 4. 상품 단건 조회
+GET http://localhost:8080/v1/products/8982c5ab-1fb0-4989-a812-167587843a68
+
+### 5. 상품 정보 수정
+PUT http://localhost:8080/v1/products/895a3f93-5f84-4c5c-977d-630a325f6ae3
+Authorization: Bearer jwt_token_string
+Content-Type: application/json
+
+{
+  "product": {
+    "name": "할인 이용권 수정1",
+    "description": "할인 이용권 수정1",
+    "productType": "EVENT",
+    "price": 30000,
+    "limitQuantity": 150,
+    "eventStartAt": "2025-05-01T09:00:00",
+    "eventEndAt": "2025-05-31T23:59:59",
+    "productStatus": "OPEN"
+  }
+}
+
+### 6. 상품 삭제
+DELETE http://localhost:8080/v1/products/48aa06d0-f865-4a49-acf6-64c13adb389c
+
+### 7. 상품 검색 조회
+GET http://localhost:8080/v1/products?name=할인 이용권 수정1&productStatus=OPEN
+
+### 8. 상품 재고 차감 (내부 호출용) - 선착순 1인 1예매
+POST localhost:8080/v1/products/8982c5ab-1fb0-4989-a812-167587843a68/stocks-decrease
+

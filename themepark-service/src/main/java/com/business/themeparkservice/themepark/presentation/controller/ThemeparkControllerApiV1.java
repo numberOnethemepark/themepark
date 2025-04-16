@@ -1,17 +1,22 @@
 package com.business.themeparkservice.themepark.presentation.controller;
 
+import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPutDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkGetByIdDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkGetDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPostDTOApiv1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPutDTOApiV1;
-import com.business.themeparkservice.themepark.common.dto.ResDTO;
+import com.business.themeparkservice.themepark.application.service.ThemeparkServiceApiV1;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
+import com.github.themepark.common.application.dto.ResDTO;
+import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +27,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/themeparks")
+@RequiredArgsConstructor
 public class ThemeparkControllerApiV1 {
+
+    private final ThemeparkServiceApiV1 themeparkService;
 
     @PostMapping
     public ResponseEntity<ResDTO<ResThemeparkPostDTOApiv1>> postBy(
@@ -32,7 +40,7 @@ public class ThemeparkControllerApiV1 {
                 ResDTO.<ResThemeparkPostDTOApiv1>builder()
                         .code(0)
                         .message("테마파크 생성을 성공했습니다.")
-                        .data(ResThemeparkPostDTOApiv1.of())
+                        .data(themeparkService.postBy(reqDto))
                         .build(),
                 HttpStatus.CREATED
         );
@@ -44,7 +52,7 @@ public class ThemeparkControllerApiV1 {
                 ResDTO.<ResThemeparkGetByIdDTOApiV1>builder()
                         .code(0)
                         .message("테마파크 조회에 성공했습니다.")
-                        .data(ResThemeparkGetByIdDTOApiV1.of(id))
+                        .data(themeparkService.getBy(id))
                         .build(),
                 HttpStatus.OK
         );
@@ -52,23 +60,15 @@ public class ThemeparkControllerApiV1 {
 
     @GetMapping
     public ResponseEntity<ResDTO<ResThemeparkGetDTOApiV1>> getBy(
-            @RequestParam(required = false) String searchValue,
+            @QuerydslPredicate(root = ThemeparkEntity.class) Predicate predicate,
             @PageableDefault(page = 0, size = 10, sort = "createdAt") Pageable pageable
     ){
-        List<ThemeparkEntity> tempThemeparks = List.of(
-                new ThemeparkEntity(),
-                new ThemeparkEntity()
-        );
-
-        Page<ThemeparkEntity> tempThemeparkPage = new PageImpl<>(
-                tempThemeparks, pageable, tempThemeparks.size()
-        );
 
         return new ResponseEntity<>(
                 ResDTO.<ResThemeparkGetDTOApiV1>builder()
                         .code(0)
                         .message("테마파크 검색에 성공했습니다.")
-                        .data(ResThemeparkGetDTOApiV1.of(tempThemeparkPage))
+                        .data(themeparkService.getBy(predicate,pageable))
                         .build(),
                 HttpStatus.OK
         );
@@ -84,7 +84,7 @@ public class ThemeparkControllerApiV1 {
                 ResDTO.<ResThemeparkPutDTOApiV1>builder()
                         .code(0)
                         .message("테마파크 수정을 성공했습니다.")
-                        .data(ResThemeparkPutDTOApiV1.of(reqDto,id))
+                        .data(themeparkService.putBy(id,reqDto))
                         .build(),
                 HttpStatus.OK
         );
@@ -92,6 +92,7 @@ public class ThemeparkControllerApiV1 {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id){
+        themeparkService.deleteBy(id);
         return new ResponseEntity<>(
                 ResDTO.builder()
                         .code(0)

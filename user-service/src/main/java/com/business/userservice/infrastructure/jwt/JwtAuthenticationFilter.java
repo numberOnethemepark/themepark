@@ -2,9 +2,11 @@ package com.business.userservice.infrastructure.jwt;
 
 import com.business.userservice.application.dto.request.ReqAuthPostLoginDTOApiV1;
 import com.business.userservice.application.dto.response.ResAuthPostLoginDTOApiV1;
+import com.business.userservice.application.exception.AuthExceptionCode;
 import com.business.userservice.domain.user.vo.RoleType;
 import com.business.userservice.infrastructure.security.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.themepark.common.application.exception.CustomException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,10 +45,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 ReqAuthPostLoginDTOApiV1 reqDto = new ObjectMapper().readValue(request.getInputStream(), ReqAuthPostLoginDTOApiV1.class);
                 username = reqDto.getUser().getUsername();
                 password = reqDto.getUser().getPassword();
-                log.info("username: {}, password: {}", username, password);
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new RuntimeException("Failed to parse JSON request", e);
+                throw new CustomException(AuthExceptionCode.INVALID_REQUEST_BODY);
             }
         } else {
             // Form 요청 처리
@@ -55,11 +56,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
 
         if (username == null || password == null) {
-            throw new RuntimeException("Username or Password is missing");
+            throw new CustomException(AuthExceptionCode.MISSING_USERNAME_OR_PASSWORD);
         }
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-        log.info("authToken: {}", authToken);
 
         return getAuthenticationManager().authenticate(authToken);
     }
@@ -77,10 +77,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         FilterChain chain,
         Authentication authResult
     ) {
-        log.info("successfulAuthentication!!!");
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
-
 
         Long userId = userDetails.getId();
         RoleType role = userDetails.getRole();
@@ -103,7 +100,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             response.getWriter().write(mapper.writeValueAsString(dto));
         } catch (IOException e) {
-            log.error("Failed to write response: {}", e.getMessage());
+            throw new CustomException(AuthExceptionCode.RESPONSE_WRITE_FAIL);
         }
     }
 
@@ -113,8 +110,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         HttpServletResponse response,
         AuthenticationException failed
     ) {
-        log.warn("Authentication failed for user: {}", request.getParameter("username"));
-        response.setStatus(401);
+        throw new CustomException(AuthExceptionCode.AUTHENTICATION_FAILED);
     }
 
     private Cookie createCookie(String name, String value) {

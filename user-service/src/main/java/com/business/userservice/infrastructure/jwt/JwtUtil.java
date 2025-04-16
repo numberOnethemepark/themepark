@@ -1,11 +1,13 @@
 package com.business.userservice.infrastructure.jwt;
 
 
+import com.business.userservice.application.exception.AuthExceptionCode;
 import com.business.userservice.domain.user.entity.RefreshTokenEntity;
 import com.business.userservice.domain.user.repository.RefreshTokenRepository;
 import com.business.userservice.domain.user.vo.RoleType;
 import com.business.userservice.infrastructure.security.UserDetailsImpl;
 import com.business.userservice.infrastructure.security.UserDetailsServiceImpl;
+import com.github.themepark.common.application.exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -79,7 +81,7 @@ public class JwtUtil {
     public String validateRefreshToken(String accessToken, String refreshToken) {
         RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByRefreshToken(
                 refreshToken)
-            .orElseThrow(() -> new RuntimeException("존재하지 않는 refresh token 입니다."));
+            .orElseThrow(() -> new CustomException(AuthExceptionCode.REFRESH_TOKEN_NOT_FOUND));
 
         String subject;
 
@@ -97,8 +99,7 @@ public class JwtUtil {
 
         // 만료된 accessToken 의 주인과 입력한 refreshToken 의 유저가 같은지 확인
         if (!subject.equals(refreshTokenEntity.getUserId().toString())) {
-            throw new IllegalArgumentException(
-                "만료된 access token의 user와 요청한 refresh token의 유저가 동일하지 않습니다.");
+            throw new CustomException(AuthExceptionCode.REFRESH_TOKEN_USER_MISMATCH);
         }
 
         // refresh token이 유효하지 않은 경우 (만료기간이 지난 경우)

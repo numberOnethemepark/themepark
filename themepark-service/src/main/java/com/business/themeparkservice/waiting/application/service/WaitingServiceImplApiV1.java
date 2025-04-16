@@ -2,16 +2,16 @@ package com.business.themeparkservice.waiting.application.service;
 
 import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkJpaRepository;
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
-import com.business.themeparkservice.waiting.application.dto.response.ResWaitingGetByIdDTOApiV1;
-import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostCancelDTOApiV1;
-import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDTOApiV1;
-import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDoneDTOApiV1;
+import com.business.themeparkservice.waiting.application.dto.response.*;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
+import com.querydsl.core.types.Predicate;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +53,12 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
         waitingEntity.updateWaitingLeft(waitingLeft);
 
         return ResWaitingGetByIdDTOApiV1.of(waitingEntity);
+    }
+
+    @Override
+    public ResWaitingGetDTOApiV1 getBy(Predicate predicate, Pageable pageable) {
+        Page<WaitingEntity> waitingEntityPage = waitingRepository.findAll(predicate,pageable);
+        return ResWaitingGetDTOApiV1.of(waitingEntityPage);
     }
 
     @Override

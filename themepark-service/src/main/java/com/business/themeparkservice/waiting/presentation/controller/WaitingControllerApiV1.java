@@ -1,15 +1,18 @@
 package com.business.themeparkservice.waiting.presentation.controller;
 
+import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.*;
 import com.business.themeparkservice.waiting.application.service.WaitingServiceApiV1;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.github.themepark.common.application.dto.ResDTO;
+import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,23 +55,15 @@ public class WaitingControllerApiV1 {
 
     @GetMapping
     public ResponseEntity<ResDTO<ResWaitingGetDTOApiV1>> getBy(
-            @PathVariable(required = false) String searchValue,
+            @QuerydslPredicate(root = ThemeparkEntity.class) Predicate predicate,
             @PageableDefault(page = 0, size = 10, sort = "createdAt") Pageable pageable)
     {
-        List<WaitingEntity> tempWaitings = List.of(
-                new WaitingEntity(),
-                new WaitingEntity()
-        );
-
-        Page<WaitingEntity> tempWaitingPage = new PageImpl<>(
-                tempWaitings, pageable, tempWaitings.size()
-        );
 
         return new ResponseEntity<>(
                 ResDTO.<ResWaitingGetDTOApiV1>builder()
                         .code(0)
                         .message("대기정보 검색에 성공했습니다.")
-                        .data(ResWaitingGetDTOApiV1.of(tempWaitingPage))
+                        .data(waitingService.getBy(predicate,pageable))
                         .build(),
                 HttpStatus.OK
         );

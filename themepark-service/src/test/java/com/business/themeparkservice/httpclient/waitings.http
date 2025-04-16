@@ -14,7 +14,7 @@ GET http://localhost:8080/v1/waitings/684704d1-38d5-4837-acb6-3dbc70fa5481
 
 ###
 
-GET http://localhost:8080/v1/waitings
+GET http://localhost:8080/v1/waitings?themeparkId=f5220852-59fe-4894-8fc4-200bd1419872
 
 ###
 

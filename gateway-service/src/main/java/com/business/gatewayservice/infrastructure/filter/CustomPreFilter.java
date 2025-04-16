@@ -46,7 +46,8 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
     // JWT 인증을 적용하지 않을 경로 목록
     private static final List<String> EXCLUDED_PATHS = List.of(
         "/v1/auth/join",
-        "/v1/auth/login"
+        "/v1/auth/login",
+        "/v1/auth/refresh"
     );
 
     @Override

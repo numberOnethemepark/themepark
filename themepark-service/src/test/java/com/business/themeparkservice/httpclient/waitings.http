@@ -3,14 +3,14 @@ Content-Type: application/json
 
 {
   "waiting": {
-    "userId": 9,
+    "userId": 6,
     "themeparkId": "f5220852-59fe-4894-8fc4-200bd1419872"
   }
 }
 
 ###
 
-GET http://localhost:8080/v1/waitings/7d8199fe-3afd-491b-84eb-ea38cc9798ef
+GET http://localhost:8080/v1/waitings/684704d1-38d5-4837-acb6-3dbc70fa5481
 
 ###
 
@@ -22,7 +22,7 @@ POST http://localhost:8080/v1/waitings/37cba726-3fca-4d51-bd96-f0d4724424de/done
 
 ###
 
-POST http://localhost:8080/v1/waitings/f5e49e7d-3baf-478f-bb36-d70b66330f79/cancel
+POST http://localhost:8080/v1/waitings/684704d1-38d5-4837-acb6-3dbc70fa5481/cancel
 
 ###
 

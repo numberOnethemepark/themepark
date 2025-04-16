@@ -1,11 +1,14 @@
 package com.business.themeparkservice.waiting.application.service;
 
+import com.business.themeparkservice.themepark.application.exception.ThemeparkExceptionCode;
 import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkJpaRepository;
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.*;
+import com.business.themeparkservice.waiting.application.exception.WaitingExceptionCode;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
+import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
@@ -83,7 +86,7 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     private WaitingEntity findByIdAndStatus(UUID id, WaitingStatus waitingStatus) {
         return waitingRepository.findByIdAndWaitingStatus(id,waitingStatus)
-                .orElseThrow(() -> new RuntimeException("요청하신 대기정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(WaitingExceptionCode.WAITING_NOT_FOUND));
     }
 
 
@@ -94,6 +97,6 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     private void ThemeparkChecking(@NotNull(message = "테마파크번호를 입력해주세요") UUID themeparkId) {
         themeparkRepository.findById(themeparkId).orElseThrow(
-                ()->new EntityNotFoundException("Themepark not found"));
+                ()->new CustomException(ThemeparkExceptionCode.THEMEPARK_NOT_FOUND));
     }
 }

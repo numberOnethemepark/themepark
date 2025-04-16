@@ -7,6 +7,7 @@ import com.business.themeparkservice.waiting.application.dto.response.ResWaiting
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.ResWaitingPostDoneDTOApiV1;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
+import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
@@ -45,7 +46,7 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     @Override
     public ResWaitingGetByIdDTOApiV1 getBy(UUID id) {
-        WaitingEntity waitingEntity = findWaitingById(id);
+        WaitingEntity waitingEntity = findByIdAndStatus(id,WaitingStatus.WAITING);
         int waitingLeft = waitingRepository
                 .checkingMyWaitingLeft(waitingEntity.getWaitingNumber(),waitingEntity.getThemeparkId());
 
@@ -56,22 +57,29 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     @Override
     public ResWaitingPostDoneDTOApiV1 postDoneBy(UUID id) {
-        WaitingEntity waitingEntity = findWaitingById(id);
+        WaitingEntity waitingEntity = findByIdAndStatus(id,WaitingStatus.WAITING);
         waitingEntity.postDone();
         return ResWaitingPostDoneDTOApiV1.of(waitingEntity);
     }
 
     @Override
     public ResWaitingPostCancelDTOApiV1 postCancelBy(UUID id) {
-        WaitingEntity waitingEntity = findWaitingById(id);
+        WaitingEntity waitingEntity = findByIdAndStatus(id,WaitingStatus.WAITING);
         waitingEntity.postCancel();
         return ResWaitingPostCancelDTOApiV1.of(waitingEntity);
     }
 
-
-    private WaitingEntity findWaitingById(UUID id) {
-        return waitingRepository.findById(id).orElseThrow(()->new RuntimeException(" waiting notfound"));
+    @Override
+    public void deleteBy(UUID id) {
+        WaitingEntity waitingEntity = findByIdAndStatus(id,WaitingStatus.CANCELLED);
+        waitingEntity.deletedBy(1L);
     }
+
+    private WaitingEntity findByIdAndStatus(UUID id, WaitingStatus waitingStatus) {
+        return waitingRepository.findByIdAndWaitingStatus(id,waitingStatus)
+                .orElseThrow(() -> new RuntimeException("요청하신 대기정보를 찾을 수 없습니다."));
+    }
+
 
     private int WaitingChecking(ReqWaitingPostDTOApiV1 reqDto) {
         return waitingRepository

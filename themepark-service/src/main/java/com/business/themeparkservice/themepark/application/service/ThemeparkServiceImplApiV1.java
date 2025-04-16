@@ -1,5 +1,6 @@
 package com.business.themeparkservice.themepark.application.service;
 
+import com.business.themeparkservice.hashtag.application.exception.HashtagExceptionCode;
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import com.business.themeparkservice.hashtag.infastructure.persistence.hashtag.HashtagJpaRepository;
 import com.business.themeparkservice.themepark.application.dto.request.ReqThemeparkPostDTOApiV1;
@@ -8,10 +9,12 @@ import com.business.themeparkservice.themepark.application.dto.response.ResTheme
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkGetDTOApiV1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPostDTOApiv1;
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPutDTOApiV1;
+import com.business.themeparkservice.themepark.application.exception.ThemeparkExceptionCode;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkHashtagEntity;
 import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkHashtagJpaRepository;
 import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkJpaRepository;
+import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -90,9 +93,7 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
         List<ThemeparkHashtagEntity> themeparkHashtagEntityList = new ArrayList<>();
 
         for (ReqThemeparkPutDTOApiV1.ThemePark.Hashtag tagDto : reqDto.getThemepark().getHashtagList()) {
-
-            HashtagEntity hashtagEntity = hashtagRepository.findById(tagDto.getHashtagId())
-                    .orElseThrow(()->new EntityNotFoundException("Hashtag not found"));
+            HashtagEntity hashtagEntity = findHashtag(tagDto.getHashtagId());
 
             ThemeparkHashtagEntity themeparkHashtagEntity =
                     ThemeparkHashtagEntity.builder()
@@ -116,9 +117,7 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
         List<ThemeparkHashtagEntity> themeparkHashtagEntityList = new ArrayList<>();
 
         for (ReqThemeparkPostDTOApiV1.ThemePark.Hashtag tagDto : reqDto.getThemepark().getHashtagList()) {
-
-            HashtagEntity hashtagEntity = hashtagRepository.findById(tagDto.getHashtagId())
-                    .orElseThrow(()->new EntityNotFoundException("Hashtag not found"));
+            HashtagEntity hashtagEntity = findHashtag(tagDto.getHashtagId());
 
             ThemeparkHashtagEntity themeparkHashtagEntity =
                     ThemeparkHashtagEntity.builder()
@@ -145,8 +144,7 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
 
 
         for (ThemeparkHashtagEntity themeparkHashtagEntity : themeparkHashtagEntityList) {
-            HashtagEntity hashtag = hashtagRepository.findById(themeparkHashtagEntity.getHashtag().getId())
-                    .orElseThrow(()->new EntityNotFoundException("Hashtag not found"));
+            HashtagEntity hashtag = findHashtag(themeparkHashtagEntity.getHashtag().getId());
 
             hashtagEntityList.add(hashtag);
         }
@@ -156,9 +154,14 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
                 .toList();
     }
 
+    private HashtagEntity findHashtag(UUID id) {
+        return hashtagRepository.findById(id)
+                .orElseThrow(()->new CustomException(HashtagExceptionCode.HASHTAG_NOT_FOUND));
+    }
+
 
     private ThemeparkEntity findThemepark(UUID id) {
         return themeparkRepository.findById(id)
-                .orElseThrow(()->new EntityNotFoundException("Themepark not found"));
+                .orElseThrow(()->new CustomException(ThemeparkExceptionCode.THEMEPARK_NOT_FOUND));
     }
 }

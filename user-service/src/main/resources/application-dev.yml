@@ -2,7 +2,7 @@ spring:
   application:
     name: user-service
   jwt:
-    secret: "MeyhsO2FjOuniO2MjO2BrO2Mn+2MhQ=="
+    secret: "MeyhsO2FjOuniO2MjO2BrOyLnO2BrOumv+2CpOyeheuLiOuLpOyVhOyVhOyVhOyVhOyVhOyVhA=="
   datasource:
     url: jdbc:postgresql://localhost:5432/themepark
     username:

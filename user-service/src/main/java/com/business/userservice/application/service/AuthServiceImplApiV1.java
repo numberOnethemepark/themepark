@@ -30,7 +30,7 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
             user.getUsername(),
             passwordEncoder.encode(user.getPassword()),
             user.getSlackId(),
-            RoleType.ROLE_USER
+            RoleType.USER
         );
 
         UserEntity savedUser = userRepository.save(saveUser);

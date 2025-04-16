@@ -17,4 +17,6 @@ public interface WaitingServiceApiV1 {
     ResWaitingPostDoneDTOApiV1 postDoneBy(UUID id);
 
     ResWaitingPostCancelDTOApiV1 postCancelBy(UUID id);
+
+    void deleteBy(UUID id);
 }

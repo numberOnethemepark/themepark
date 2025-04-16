@@ -100,6 +100,7 @@ public class WaitingControllerApiV1 {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id){
+        waitingService.deleteBy(id);
         return new ResponseEntity<>(
                 ResDTO.builder()
                         .code(0)

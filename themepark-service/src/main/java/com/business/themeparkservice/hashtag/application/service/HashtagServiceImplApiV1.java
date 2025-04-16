@@ -6,8 +6,10 @@ import com.business.themeparkservice.hashtag.application.dto.response.ResHashtag
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagGetDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPostDTOApiV1;
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPutDTOApiV1;
+import com.business.themeparkservice.hashtag.application.exception.HashtagExceptionCode;
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
 import com.business.themeparkservice.hashtag.infastructure.persistence.hashtag.HashtagJpaRepository;
+import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -57,6 +59,6 @@ public class HashtagServiceImplApiV1 implements HashtagServiceApiV1{
     }
 
     private HashtagEntity getHashtag(UUID id) {
-        return hashtagRepository.findById(id).orElseThrow(() -> new RuntimeException("Hashtag not found"));
+        return hashtagRepository.findById(id).orElseThrow(() -> new CustomException(HashtagExceptionCode.HASHTAG_NOT_FOUND));
     }
 }

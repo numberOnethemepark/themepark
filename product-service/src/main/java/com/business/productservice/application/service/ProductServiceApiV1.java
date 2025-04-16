@@ -24,4 +24,6 @@ public interface ProductServiceApiV1 {
     void deleteBy(UUID id);
 
     void postDecreaseById(UUID id);
+
+    void postRestoreById(UUID id);
 }

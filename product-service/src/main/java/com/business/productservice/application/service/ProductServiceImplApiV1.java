@@ -95,4 +95,12 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
         stockEntity.decrease();
     }
 
+    @Override
+    public void postRestoreById(UUID id) {
+        StockEntity stockEntity = stockRepository.findByIdWithPessimisticLock(id)
+                .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
+
+        stockEntity.restore();
+    }
+
 }

@@ -1,0 +1,22 @@
+### 1. 회원 가입
+POST http://localhost:8080/v1/auth/join
+Content-Type: application/json
+
+{
+    "user": {
+        "username": "test5",
+        "password": "passworddddddddd",
+        "slackId": "010xxxx1234"
+    }
+}
+
+### 2. 로그인
+POST http://localhost:8080/v1/auth/login
+Content-Type: application/json
+
+{
+  "user": {
+    "username": "test5",
+    "password": "passworddddddddd"
+  }
+}

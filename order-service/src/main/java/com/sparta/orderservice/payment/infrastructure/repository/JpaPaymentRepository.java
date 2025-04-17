@@ -4,6 +4,8 @@ import com.sparta.orderservice.payment.domain.entity.PaymentEntity;
 import com.sparta.orderservice.payment.domain.repository.PaymentRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
 public class JpaPaymentRepository implements PaymentRepository {
 
@@ -17,5 +19,8 @@ public class JpaPaymentRepository implements PaymentRepository {
     public void save(PaymentEntity paymentEntity){
         jpaPaymentRepository.save(paymentEntity);
     }
+
+    @Override
+    public PaymentEntity findById(UUID paymentId) { return jpaPaymentRepository.findById(paymentId).orElse(null); }
 
 }

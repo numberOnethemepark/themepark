@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +26,6 @@ public class PaymentService implements PaymentUseCase {
     @Override
     public void createPayment(ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1){
 
-        System.out.println("결제 서비스 입성");
-
         ResPaymentTossDto tossRes = tossPaymentsClient.confirmPayment(ReqPaymentTossDto
                 .of(reqPaymentPostDtoApiV1.getPayment().getOrderId()
                         , reqPaymentPostDtoApiV1.getPayment().getAmount()
@@ -37,7 +36,6 @@ public class PaymentService implements PaymentUseCase {
         if (tossRes.getFailure() != null){
             throw new RuntimeException("데이터가 존재하지 않습니다.");
         }
-        System.out.println("1번까지");
 
         // 결제 객체 저장
         PaymentEntity paymentEntity = PaymentEntity.createPayment(tossRes);
@@ -50,11 +48,12 @@ public class PaymentService implements PaymentUseCase {
                         .build())
                 .build();
 
-        System.out.println("2번까지");
 
         // 주문 객체 수정 -> 결제상태 / 결제 ID
         orderFacade.updateOrder(reqOrderPutDtoApiV1, reqPaymentPostDtoApiV1.getPayment().getOrderId());
+    }
 
-        System.out.println("3번까지");
+    public PaymentEntity getBy(UUID paymentId) {
+        return paymentRepository.findById(paymentId);
     }
 }

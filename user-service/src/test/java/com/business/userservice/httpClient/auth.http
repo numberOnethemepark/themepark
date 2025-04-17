@@ -20,3 +20,8 @@ Content-Type: application/json
     "password": "passworddddddddd"
   }
 }
+
+> {%
+  client.global.set("accessToken", response.body.accessJwt);
+  client.log("accessToken : " + client.global.get("accessToken"));
+%}

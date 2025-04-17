@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface WaitingServiceApiV1 {
-    ResWaitingPostDTOApiV1 postBy(@Valid ReqWaitingPostDTOApiV1 reqDto);
+    ResWaitingPostDTOApiV1 postBy(@Valid ReqWaitingPostDTOApiV1 reqDto,Long userId);
 
     ResWaitingGetByIdDTOApiV1 getBy(UUID id);
 
@@ -19,5 +19,5 @@ public interface WaitingServiceApiV1 {
 
     ResWaitingPostCancelDTOApiV1 postCancelBy(UUID id);
 
-    void deleteBy(UUID id);
+    void deleteBy(UUID id, Long userId);
 }

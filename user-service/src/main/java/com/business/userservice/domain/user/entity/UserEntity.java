@@ -78,4 +78,9 @@ public class UserEntity extends BaseEntity {
     public boolean isPasswordMatch(String rawPassword, PasswordEncoder encoder) {
         return encoder.matches(rawPassword, this.password);
     }
+
+    public boolean blacklist() {
+        isBlacklisted = !isBlacklisted;
+        return isBlacklisted;
+    }
 }

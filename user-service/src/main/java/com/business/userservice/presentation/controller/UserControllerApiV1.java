@@ -107,10 +107,9 @@ public class UserControllerApiV1 {
     public ResponseEntity<ResDTO<Object>> blacklistById(
         @PathVariable Long id
     ) {
-        String message = "";
-        boolean isBlacklisted = false;
-        if(isBlacklisted) message = "블랙리스트 되었습니다.";
-        else message = "블랙리스트 해제 되었습니다.";
+        boolean isBlacklisted = userService.blacklistById(id);
+        String message = isBlacklisted ? "블랙리스트 되었습니다." : "블랙리스트 해제 되었습니다.";
+
         return new ResponseEntity<>(
             ResDTO.builder()
                 .code(0)

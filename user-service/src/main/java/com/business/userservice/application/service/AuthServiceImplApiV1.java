@@ -1,12 +1,13 @@
 package com.business.userservice.application.service;
 
 import com.business.userservice.application.dto.request.ReqAuthPostJoinDTOApiV1;
-import com.business.userservice.application.dto.request.ReqAuthPostJoinDTOApiV1.User;
+import com.business.userservice.application.dto.request.JoinRequest;
+import com.business.userservice.application.dto.request.ReqAuthPostManagerJoinDTOApiV1;
 import com.business.userservice.application.dto.response.ResAuthPostJoinDTOApiV1;
+import com.business.userservice.application.dto.response.ResAuthPostManagerJoinDTOApiV1;
 import com.business.userservice.application.exception.AuthExceptionCode;
 import com.business.userservice.domain.user.entity.UserEntity;
 import com.business.userservice.domain.user.repository.UserRepository;
-import com.business.userservice.domain.user.vo.RoleType;
 import com.business.userservice.infrastructure.jwt.JwtUtil;
 import com.github.themepark.common.application.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -26,24 +27,34 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
     @Transactional
     @Override
     public ResAuthPostJoinDTOApiV1 joinBy(ReqAuthPostJoinDTOApiV1 dto) {
-        User user = dto.getUser();
-
-        validateDuplicateUser(user.getUsername(), user.getSlackId());
-
-        UserEntity saveUser = UserEntity.of(
-            user.getUsername(),
-            passwordEncoder.encode(user.getPassword()),
-            user.getSlackId(),
-            RoleType.USER
-        );
-
-        UserEntity savedUser = userRepository.save(saveUser);
+        UserEntity savedUser = saveUser(dto.getUser());
         return ResAuthPostJoinDTOApiV1.of(savedUser);
     }
 
+    @Transactional
     @Override
     public String refreshToken(String accessToken, String refreshToken) {
         return jwtUtil.validateRefreshToken(accessToken, refreshToken);
+    }
+
+    @Transactional
+    @Override
+    public ResAuthPostManagerJoinDTOApiV1 managerJoinBy(ReqAuthPostManagerJoinDTOApiV1 dto) {
+        UserEntity savedUser = saveUser(dto.getUser());
+        return ResAuthPostManagerJoinDTOApiV1.of(savedUser);
+    }
+
+    private UserEntity saveUser(JoinRequest dto) {
+        validateDuplicateUser(dto.getUsername(), dto.getSlackId());
+
+        UserEntity newUser = UserEntity.of(
+            dto.getUsername(),
+            passwordEncoder.encode(dto.getPassword()),
+            dto.getSlackId(),
+            dto.getRole()
+        );
+
+        return userRepository.save(newUser);
     }
 
     private void validateDuplicateUser(String username, String slackId) {

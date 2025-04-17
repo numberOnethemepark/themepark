@@ -1,9 +1,13 @@
 package com.business.userservice.presentation.controller;
 
 import com.business.userservice.application.dto.request.ReqAuthPostJoinDTOApiV1;
+import com.business.userservice.application.dto.request.ReqAuthPostManagerJoinDTOApiV1;
 import com.business.userservice.application.dto.response.ResAuthGetRefreshDTOApiV1;
 import com.business.userservice.application.dto.response.ResAuthPostJoinDTOApiV1;
+import com.business.userservice.application.dto.response.ResAuthPostManagerJoinDTOApiV1;
 import com.business.userservice.application.service.AuthServiceApiV1;
+import com.github.themepark.common.application.aop.annotation.ApiPermission;
+import com.github.themepark.common.application.aop.annotation.ApiPermission.Role;
 import com.github.themepark.common.application.dto.ResDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +28,14 @@ public class AuthControllerApiV1 {
     private final AuthServiceApiV1 authServiceApiV1;
 
     @PostMapping("/join")
-    public ResponseEntity<ResDTO<Object>> joinBy(
+    public ResponseEntity<ResDTO<ResAuthPostJoinDTOApiV1>> joinBy(
         @Valid
         @RequestBody ReqAuthPostJoinDTOApiV1 dto
     ) {
         ResAuthPostJoinDTOApiV1 data = authServiceApiV1.joinBy(dto);
 
         return new ResponseEntity<>(
-            ResDTO.builder()
+            ResDTO.<ResAuthPostJoinDTOApiV1>builder()
                 .code(0)
                 .message("회원가입에 성공하였습니다.")
                 .data(data)
@@ -66,5 +70,23 @@ public class AuthControllerApiV1 {
                 HttpStatus.OK
             );
         }
+    }
+
+    @ApiPermission(roles = {Role.MASTER})
+    @PostMapping("/manager/join")
+    public ResponseEntity<ResDTO<ResAuthPostManagerJoinDTOApiV1>> managerJoinBy(
+        @Valid
+        @RequestBody ReqAuthPostManagerJoinDTOApiV1 dto
+    ) {
+        ResAuthPostManagerJoinDTOApiV1 data = authServiceApiV1.managerJoinBy(dto);
+
+        return new ResponseEntity<>(
+            ResDTO.<ResAuthPostManagerJoinDTOApiV1>builder()
+                .code(0)
+                .message("매니저 회원가입에 성공하였습니다.")
+                .data(data)
+                .build(),
+            HttpStatus.OK
+        );
     }
 }

@@ -54,8 +54,8 @@ public class HashtagServiceImplApiV1 implements HashtagServiceApiV1{
     }
 
     @Override
-    public void deleteBy(UUID id) {
-        getHashtag(id).deletedBy(1L);
+    public void deleteBy(UUID id, Long userId) {
+        getHashtag(id).deletedBy(userId);
     }
 
     private HashtagEntity getHashtag(UUID id) {

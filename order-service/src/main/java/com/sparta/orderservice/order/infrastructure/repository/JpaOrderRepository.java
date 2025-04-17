@@ -1,20 +1,20 @@
 package com.sparta.orderservice.order.infrastructure.repository;
 
-import com.sparta.orderservice.order.domain.entity.Order;
+import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.order.domain.repository.OrderRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class JpaOrderRepository implements OrderRepository {
 
-    private final SpringDataJpaOrderRepository jpaRepository;
+    private final SpringDataJpaOrderRepository jpaOrderRepository;
 
-    public JpaOrderRepository(SpringDataJpaOrderRepository jpaRepository) {
-        this.jpaRepository = jpaRepository;
+    public JpaOrderRepository(SpringDataJpaOrderRepository jpaOrderRepository) {
+        this.jpaOrderRepository = jpaOrderRepository;
     }
 
     @Override
-    public void save(Order order){
-        jpaRepository.save(order);
+    public void save(OrderEntity orderEntity){
+        jpaOrderRepository.save(orderEntity);
     }
 }

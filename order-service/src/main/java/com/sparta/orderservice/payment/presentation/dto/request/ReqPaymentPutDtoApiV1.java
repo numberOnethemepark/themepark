@@ -26,5 +26,4 @@ public class ReqPaymentPutDtoApiV1 {
         @NotBlank(message = "결제 상태를 입력해주세요.")
         private String paymentStatus;
     }
-
 }

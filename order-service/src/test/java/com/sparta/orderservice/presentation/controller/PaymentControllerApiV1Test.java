@@ -68,7 +68,6 @@ public class PaymentControllerApiV1Test {
                 .payment(ReqPaymentPostDtoApiV1.Payment.builder()
                         .amount(100)
                         .orderId(UUID.randomUUID())
-                        .cardNumber("1234")
                         .build())
                 .build();
 

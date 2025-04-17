@@ -1,6 +1,8 @@
 package com.sparta.orderservice.order.presentation.controller;
 
 import com.sparta.orderservice.order.application.facade.OrderFacade;
+import com.sparta.orderservice.order.domain.entity.OrderEntity;
+import com.sparta.orderservice.order.presentation.dto.response.ResOrderPostDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrdersGetByIdDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoApiV1;
@@ -10,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -21,15 +25,17 @@ public class OrderControllerApiV1 {
     private final OrderFacade orderFacade;
 
     @PostMapping
-    public ResponseEntity<ResDTO<Object>> createOrder(
-           @RequestBody ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1) {
+    public ResponseEntity<ResDTO<ResOrderPostDtoApiV1>> createOrder(
+           @RequestBody ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1,
+           HttpServletResponse response) throws IOException {
 
-        orderFacade.createOrder(reqOrdersPostDtoApiV1);
+        OrderEntity orderEntity = orderFacade.createOrder(reqOrdersPostDtoApiV1);
 
         return new ResponseEntity<>(
-                ResDTO.builder()
-                        .code(0) //Ok 코드
+                ResDTO.<ResOrderPostDtoApiV1>builder()
+                        .code(0)
                         .message("주문을 생성하였습니다!")
+                        .data(ResOrderPostDtoApiV1.of(orderEntity))
                         .build(),
                 HttpStatus.CREATED
         );

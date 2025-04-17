@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <button id="postOrder">
+        주문하기
+    </button>
+</body>
+<script>
+    document.getElementById("postOrder").addEventListener("click", () => {
+       fetch("http://localhost:8002/v1/orders", {
+           method : 'POST',
+           headers: {
+               'Content-type' : 'application/json'
+           },
+           body: JSON.stringify({
+                order : {
+                    slackId : "1234",
+                    amount : 10000,
+                    productId : "9f5a7c38-24b9-4e4f-b56e-3c3a9b7d871a"
+                }
+           })
+       })
+           .then(response => response.json())
+           .then(data => {
+                    location.href = `http://localhost:8002/payments.html?orderId=${data.data.order.orderId}&amount=${data.data.order.amount}`;
+               });
+    });
+</script>
+</html>

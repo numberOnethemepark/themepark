@@ -30,5 +30,8 @@ public class ReqPaymentPostDtoApiV1 {
 
         @NotBlank(message = "총금액을 입력해주세요.")
         public Integer amount;
+
+        @NotBlank(message = "결제 key 를 입력해주세요.")
+        public String paymentKey;
     }
 }

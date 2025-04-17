@@ -1,7 +1,9 @@
 package com.sparta.orderservice.payment.presentation.controller;
 
+import com.sparta.orderservice.payment.application.service.PaymentService;
 import com.sparta.orderservice.payment.presentation.dto.request.ReqPaymentPostDtoApiV1;
 import com.github.themepark.common.application.dto.ResDTO;
+import com.sparta.orderservice.payment.presentation.dto.request.ReqPaymentPutDtoApiV1;
 import com.sparta.orderservice.payment.presentation.dto.response.ResPaymentGetDtoApiV1;
 import com.sparta.orderservice.payment.presentation.dto.response.ResPaymentPostDtoApiV1;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +18,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PaymentControllerApiV1 {
 
+    private final PaymentService paymentService;
+
     @PostMapping()
     public ResponseEntity<ResDTO<ResPaymentPostDtoApiV1>> postBy(
             @RequestBody ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1
     ){
+        paymentService.createPayment(reqPaymentPostDtoApiV1); // 결제에서 어차피 하니까 나중에 분리를 해도 서비스로 해도된다.
+
         return new ResponseEntity<>(
                 ResDTO.<ResPaymentPostDtoApiV1>builder()
                         .code(0)
@@ -32,7 +38,7 @@ public class PaymentControllerApiV1 {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> updateBy(
-            @RequestBody ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1,
+            @RequestBody ReqPaymentPutDtoApiV1 reqPaymentPutDtoApiV1,
             @PathVariable("id") UUID id
     ){
         return new ResponseEntity<>(

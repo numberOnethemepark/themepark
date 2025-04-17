@@ -98,7 +98,6 @@ public class OrderControllerApiV1Test {
                 .order(
                 ReqOrdersPostDtoApiV1.Order.builder()
                         .slackId("1234")
-                        .orderQuantity(100)
                         .productId(UUID.randomUUID())
                         .build()
                 )

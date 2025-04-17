@@ -83,9 +83,9 @@ public class ThemeparkServiceImplApiV1 implements ThemeparkServiceApiV1 {
     }
 
     @Override
-    public void deleteBy(UUID id) {
+    public void deleteBy(UUID id,Long userId) {
         ThemeparkEntity themeparkEntity = findThemepark(id);
-        themeparkEntity.deletedBy(1L);
+        themeparkEntity.deletedBy(userId);
         themeparkEntity.getThemeparkHashtagEntityList().clear();
     }
 

@@ -6,6 +6,8 @@ import com.business.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetDTOApiV1;
 import com.business.userservice.application.service.UserServiceApiV1;
 import com.business.userservice.domain.user.entity.UserEntity;
+import com.github.themepark.common.application.aop.annotation.ApiPermission;
+import com.github.themepark.common.application.aop.annotation.ApiPermission.Role;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
@@ -32,6 +34,7 @@ public class UserControllerApiV1 {
 
     private final UserServiceApiV1 userService;
 
+    @ApiPermission(roles = {Role.USER})
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> putBy(
         @PathVariable Long id,
@@ -48,6 +51,7 @@ public class UserControllerApiV1 {
         );
     }
 
+    @ApiPermission(roles = {Role.USER, Role.MANAGER, Role.MASTER})
     @GetMapping("/{id}")
     public ResponseEntity<ResDTO<ResUserGetByIdDTOApiV1>> getBy(
         @PathVariable Long id
@@ -63,6 +67,7 @@ public class UserControllerApiV1 {
         );
     }
 
+    @ApiPermission(roles = {Role.MANAGER, Role.MASTER})
     @GetMapping
     public ResponseEntity<ResDTO<ResUserGetDTOApiV1>> getBy(
         @QuerydslPredicate(root = UserEntity.class) Predicate predicate,
@@ -80,6 +85,7 @@ public class UserControllerApiV1 {
         );
     }
 
+    @ApiPermission(roles = {Role.USER})
     @PostMapping("/{id}/delete")
     public ResponseEntity<ResDTO<Object>> deleteById(
         @PathVariable Long id,
@@ -96,6 +102,7 @@ public class UserControllerApiV1 {
         );
     }
 
+    @ApiPermission(roles = {Role.MANAGER, Role.MASTER})
     @PatchMapping("/{id}/is-blacklisted")
     public ResponseEntity<ResDTO<Object>> blacklistById(
         @PathVariable Long id

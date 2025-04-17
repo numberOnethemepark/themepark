@@ -41,12 +41,13 @@ public class OrderControllerApiV1 {
         );
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> updateBy(
             @PathVariable("id") UUID id,
             @RequestBody ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1
     ) {
+        orderFacade.updateOrder(reqOrderPutDtoApiV1, id);
+
         return new ResponseEntity<>(
                 ResDTO.builder()
                         .code(0) //Ok 코드

@@ -49,7 +49,8 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
     private static final List<String> EXCLUDED_PATHS = List.of(
         "/v1/auth/join",
         "/v1/auth/login",
-        "/v1/auth/refresh"
+        "/v1/auth/refresh",
+        "/springdoc/openapi3-user-service.json"
     );
 
     @Override

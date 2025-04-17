@@ -1,21 +1,21 @@
 spring:
   application:
     name: user-service
-  jwt:
-    secret: "MeyhsO2FjOuniO2MjO2BrOyLnO2BrOumv+2CpOyeheuLiOuLpOyVhOyVhOyVhOyVhOyVhOyVhA=="
   datasource:
-    url: jdbc:postgresql://localhost:5432/themepark
-    username:
-    password:
+    url: jdbc:postgresql://localhost:5430/themeparkdb
+    username: admin
+    password: 12345
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: user_service
+  jwt:
+    secret: "MeyhsO2FjOuniO2MjO2BrOyLnO2BrOumv+2CpOyeheuLiOuLpOyVhOyVhOyVhOyVhOyVhOyVhA=="
 
 eureka:
   client:

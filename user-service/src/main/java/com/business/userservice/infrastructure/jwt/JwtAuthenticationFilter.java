@@ -83,7 +83,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         RoleType role = userDetails.getRole();
 
         String accessToken = jwtUtil.createAccessToken(userId, role);
-        String refreshToken = jwtUtil.createRefreshToken(userId, role);
+        String refreshToken = jwtUtil.createRefreshToken(accessToken);
 
         ResAuthPostLoginDTOApiV1 dto = ResAuthPostLoginDTOApiV1.of(accessToken, refreshToken);
 

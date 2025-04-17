@@ -7,6 +7,7 @@ import com.business.userservice.application.exception.AuthExceptionCode;
 import com.business.userservice.domain.user.entity.UserEntity;
 import com.business.userservice.domain.user.repository.UserRepository;
 import com.business.userservice.domain.user.vo.RoleType;
+import com.business.userservice.infrastructure.jwt.JwtUtil;
 import com.github.themepark.common.application.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,7 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     @Override
@@ -37,6 +39,11 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
 
         UserEntity savedUser = userRepository.save(saveUser);
         return ResAuthPostJoinDTOApiV1.of(savedUser);
+    }
+
+    @Override
+    public String refreshToken(String accessToken, String refreshToken) {
+        return jwtUtil.validateRefreshToken(accessToken, refreshToken);
     }
 
     private void validateDuplicateUser(String username, String slackId) {

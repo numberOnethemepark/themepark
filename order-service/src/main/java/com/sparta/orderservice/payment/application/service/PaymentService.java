@@ -7,6 +7,7 @@ import com.sparta.orderservice.payment.application.dto.response.ResPaymentTossDt
 import com.sparta.orderservice.payment.application.usercase.PaymentUseCase;
 import com.sparta.orderservice.payment.domain.entity.PaymentEntity;
 import com.sparta.orderservice.payment.domain.repository.PaymentRepository;
+import com.sparta.orderservice.payment.domain.vo.PaymentStatus;
 import com.sparta.orderservice.payment.infrastructure.feign.TossPaymentsClient;
 import com.sparta.orderservice.payment.presentation.dto.request.ReqPaymentPostDtoApiV1;
 import lombok.RequiredArgsConstructor;
@@ -43,14 +44,14 @@ public class PaymentService implements PaymentUseCase {
 
         ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1 = ReqOrderPutDtoApiV1.builder()
                 .order(ReqOrderPutDtoApiV1.Order.builder()
-                        .paymentStatus(1)
+                        .paymentStatus(PaymentStatus.PAID)
                         .paymentId(paymentEntity.getPaymentId())
                         .build())
                 .build();
 
 
         // 주문 객체 수정 -> 결제상태 / 결제 ID
-        orderFacade.updateOrder(reqOrderPutDtoApiV1, reqPaymentPostDtoApiV1.getPayment().getOrderId());
+        orderFacade.updateBy(reqOrderPutDtoApiV1, reqPaymentPostDtoApiV1.getPayment().getOrderId());
     }
 
     public PaymentEntity getBy(UUID paymentId) {

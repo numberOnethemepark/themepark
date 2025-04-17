@@ -2,10 +2,7 @@ package com.sparta.orderservice.payment.domain.entity;
 
 import com.github.themepark.common.domain.entity.BaseEntity;
 import com.sparta.orderservice.payment.application.dto.response.ResPaymentTossDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

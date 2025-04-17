@@ -1,6 +1,7 @@
 package com.sparta.orderservice.order.presentation.dto.response;
 
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
+import com.sparta.orderservice.payment.domain.vo.PaymentStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -56,10 +57,10 @@ public class ResOrdersGetByIdDtoApiV1 {
         public static class Payments {
 
             private Integer amount;
-            private Integer paymentStatus;
+            private PaymentStatus paymentStatus;
             private String paymentCardNumber;
 
-            public static Payments from(Integer amount, Integer paymentStatus) {
+            public static Payments from(Integer amount, PaymentStatus paymentStatus) {
                 return Payments.builder()
                         .amount(amount)
                         .paymentStatus(paymentStatus)

@@ -2,10 +2,8 @@ package com.sparta.orderservice.order.domain.entity;
 
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoApiV1;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.sparta.orderservice.payment.domain.vo.PaymentStatus;
+import jakarta.persistence.*;
 import lombok.*;
 import com.github.themepark.common.domain.entity.BaseEntity;
 import org.hibernate.annotations.UuidGenerator;
@@ -35,19 +33,20 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "amount", nullable = false)
     private Integer amount;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false)
-    private Integer paymentStatus;
+    private PaymentStatus paymentStatus;
 
     @Column(name = "payment_id")
     private UUID paymentId;
 
-    public static OrderEntity createOrder(ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1){
+    public static OrderEntity createOrder(ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1, Long userId){
         OrderEntity orderEntity = new OrderEntity();
-        orderEntity.userId = 1L;
+        orderEntity.userId = userId;
         orderEntity.productId = reqOrdersPostDtoApiV1.getOrder().getProductId();
         orderEntity.amount = reqOrdersPostDtoApiV1.getOrder().getAmount();
         orderEntity.slackId = reqOrdersPostDtoApiV1.getOrder().getSlackId();
-        orderEntity.paymentStatus = 0;
+        orderEntity.paymentStatus = PaymentStatus.NOT_PAID;
         orderEntity.paymentId = null;
 
         return orderEntity;

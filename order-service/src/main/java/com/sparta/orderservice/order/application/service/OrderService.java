@@ -24,16 +24,16 @@ public class OrderService implements OrderUseCase {
     private final OrderRepository orderRepository;
 
     @Override
-    public OrderEntity createOrder(ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1){
+    public OrderEntity postBy(ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1, Long userId){
 
-        OrderEntity orderEntity = OrderEntity.createOrder(reqOrdersPostDtoApiV1);
+        OrderEntity orderEntity = OrderEntity.createOrder(reqOrdersPostDtoApiV1, userId);
         orderRepository.save(orderEntity);
 
         return orderEntity;
     }
 
     @Override
-    public void updateOrder(ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1, UUID orderId) {
+    public void updateBy(ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1, UUID orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId);
         OrderEntity.updateOrder(orderEntity, reqOrderPutDtoApiV1);
     }

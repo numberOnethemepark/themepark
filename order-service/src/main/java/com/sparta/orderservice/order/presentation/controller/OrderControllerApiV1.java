@@ -26,11 +26,12 @@ public class OrderControllerApiV1 {
     private final OrderFacade orderFacade;
 
     @PostMapping
-    public ResponseEntity<ResDTO<ResOrderPostDtoApiV1>> createOrder(
+    public ResponseEntity<ResDTO<ResOrderPostDtoApiV1>> postBy(
            @RequestBody ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1,
-           HttpServletResponse response) throws IOException {
+           @RequestHeader("X-User-Id") Long userId
+           )  {
 
-        OrderEntity orderEntity = orderFacade.createOrder(reqOrdersPostDtoApiV1);
+        OrderEntity orderEntity = orderFacade.postBy(reqOrdersPostDtoApiV1, userId);
 
         return new ResponseEntity<>(
                 ResDTO.<ResOrderPostDtoApiV1>builder()
@@ -47,7 +48,7 @@ public class OrderControllerApiV1 {
             @PathVariable("id") UUID id,
             @RequestBody ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1
     ) {
-        orderFacade.updateOrder(reqOrderPutDtoApiV1, id);
+        orderFacade.updateBy(reqOrderPutDtoApiV1, id);
 
         return new ResponseEntity<>(
                 ResDTO.builder()

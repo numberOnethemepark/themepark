@@ -1,6 +1,6 @@
 package com.business.userservice.presentation.controller;
 
-import com.business.userservice.application.dto.request.ReqUserDeleteDTOApiV1;
+import com.business.userservice.application.dto.request.ReqUserPostDeleteDTOApiV1;
 import com.business.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetDTOApiV1;
@@ -89,7 +89,7 @@ public class UserControllerApiV1 {
     @PostMapping("/{id}/delete")
     public ResponseEntity<ResDTO<Object>> deleteById(
         @PathVariable Long id,
-        @RequestBody ReqUserDeleteDTOApiV1 dto
+        @RequestBody ReqUserPostDeleteDTOApiV1 dto
     ) {
         userService.deleteById(id, dto);
 

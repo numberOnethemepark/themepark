@@ -5,10 +5,10 @@ import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoApiV1;
 
-import com.sparta.orderservice.order.presentation.dto.response.ResOrdersGetByIdDtoApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
 
 import java.util.UUID;
 
@@ -18,12 +18,12 @@ public class OrderFacade {
 
     private final OrderUseCase orderUseCase;
 
-    public OrderEntity createOrder(ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1) {
-        return orderUseCase.createOrder(reqOrdersPostDtoApiV1);
+    public OrderEntity postBy(ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1, Long userId) {
+        return orderUseCase.postBy(reqOrdersPostDtoApiV1, userId);
     }
 
-    public void updateOrder(ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1, UUID orderId) {
-        orderUseCase.updateOrder(reqOrderPutDtoApiV1, orderId);
+    public void updateBy(ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1, UUID orderId) {
+        orderUseCase.updateBy(reqOrderPutDtoApiV1, orderId);
     }
 
     public OrderEntity getOrderBy(UUID orderId){

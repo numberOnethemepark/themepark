@@ -1,5 +1,6 @@
 package com.sparta.orderservice.order.presentation.dto.request;
 
+import com.sparta.orderservice.payment.domain.vo.PaymentStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,7 +27,7 @@ public class ReqOrderPutDtoApiV1 {
         private String slackId;
 
         @NotBlank(message = "주문상태를 입력해주세요.")
-        private Integer paymentStatus;
+        private PaymentStatus paymentStatus;
 
         private UUID paymentId;
     }

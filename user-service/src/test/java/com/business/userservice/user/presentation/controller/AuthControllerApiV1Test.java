@@ -8,10 +8,13 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import com.business.userservice.application.dto.request.ReqAuthPostJoinDTOApiV1;
 import com.business.userservice.application.dto.request.ReqAuthPostLoginDTOApiV1;
 import com.business.userservice.application.dto.request.ReqAuthPostLoginDTOApiV1.User;
+import com.business.userservice.domain.user.vo.RoleType;
+import com.business.userservice.infrastructure.jwt.JwtUtil;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,6 +38,9 @@ public class AuthControllerApiV1Test {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Mock
+    private JwtUtil jwtUtil;
 
     @Test
     public void testAuthPostJoinSuccess() throws Exception {
@@ -111,7 +117,31 @@ public class AuthControllerApiV1Test {
             );
     }
 
+    @Test
+    public void testAuthGetRefreshSuccess() throws Exception {
+        String accessJwt = jwtUtil.createToken("ACCESS", 1L, RoleType.USER, 0L);
+        String refreshJwt = jwtUtil.createRefreshToken(accessJwt);
+
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.get("/v1/auth/refresh?accessToken=" + accessJwt + "&refreshToken=" + refreshJwt)
+            )
+            .andExpectAll(
+                MockMvcResultMatchers.status().isOk()
+            )
+            .andDo(
+                MockMvcRestDocumentationWrapper.document("토큰 재발급 성공",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    resource(ResourceSnippetParameters.builder()
+                        .tag("AUTH v1")
+                        .build()
+                    )
+                )
+            );
+    }
+
     private String dtoToJson(Object dto) throws Exception {
         return objectMapper.writeValueAsString(dto);
     }
 }
+

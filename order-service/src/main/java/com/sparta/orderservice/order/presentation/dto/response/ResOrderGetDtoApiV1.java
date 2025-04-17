@@ -1,6 +1,7 @@
 package com.sparta.orderservice.order.presentation.dto.response;
 
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
+import com.sparta.orderservice.payment.domain.vo.PaymentStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -37,7 +38,7 @@ public class ResOrderGetDtoApiV1 {
 
         public static Order from(OrderEntity orderEntity){
             return Order.builder()
-                    .orderer(Orderer.from(1,"admin",orderEntity.getSlackId()))
+                    .orderer(Orderer.from(1,orderEntity.getSlackId()))
                     .payments(Payments.from(orderEntity.getAmount(), orderEntity.getPaymentStatus(), "1234"))
                     .build();
         }
@@ -47,13 +48,11 @@ public class ResOrderGetDtoApiV1 {
         public static class Orderer {
 
             private Integer userId;
-            private String role;
             private String slackId;
 
-            public static Orderer from(Integer userId, String role, String slackId) {
+            public static Orderer from(Integer userId, String slackId) {
                 return Orderer.builder()
                         .userId(userId)
-                        .role(role)
                         .slackId(slackId)
                         .build();
             }
@@ -64,10 +63,10 @@ public class ResOrderGetDtoApiV1 {
         public static class Payments {
 
             private Integer amount;
-            private Integer paymentStatus;
+            private PaymentStatus paymentStatus;
             private String paymentCardNumber;
 
-            public static Payments from(Integer amount, Integer paymentStatus, String paymentCardNumber) {
+            public static Payments from(Integer amount, PaymentStatus paymentStatus, String paymentCardNumber) {
                 return Payments.builder()
                         .amount(amount)
                         .paymentStatus(paymentStatus)

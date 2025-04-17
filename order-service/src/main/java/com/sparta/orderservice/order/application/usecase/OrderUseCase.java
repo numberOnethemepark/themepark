@@ -11,10 +11,10 @@ import java.util.UUID;
 
 public interface OrderUseCase {
     @Transactional
-    OrderEntity createOrder(ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1);
+    OrderEntity postBy(ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1, Long userId);
 
     @Transactional
-    void updateOrder(ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1, UUID orderId);
+    void updateBy(ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1, UUID orderId);
 
     @Transactional
     OrderEntity getOrderBy(UUID orderId);

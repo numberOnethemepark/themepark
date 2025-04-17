@@ -52,7 +52,7 @@ public class PaymentControllerApiV1 {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResDTO<ResPaymentGetDtoApiV1>> getPayment(
+    public ResponseEntity<ResDTO<ResPaymentGetDtoApiV1>> getBy(
             @PathVariable("id") UUID id
     ){
 

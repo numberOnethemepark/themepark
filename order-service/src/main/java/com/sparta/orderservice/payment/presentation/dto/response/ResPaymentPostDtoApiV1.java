@@ -30,6 +30,4 @@ public class ResPaymentPostDtoApiV1 {
         @NotBlank(message = "카드번호를 입력해주세요.")
         private String cardNumber;
     }
-
-
 }

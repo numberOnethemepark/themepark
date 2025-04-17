@@ -29,10 +29,10 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
     private final ThemeparkJpaRepository themeparkRepository;
 
     @Override
-    public ResWaitingPostDTOApiV1 postBy(ReqWaitingPostDTOApiV1 reqDto) {
+    public ResWaitingPostDTOApiV1 postBy(ReqWaitingPostDTOApiV1 reqDto,Long userId) {
         ThemeparkChecking(reqDto.getWaiting().getThemeparkId());
 
-        if(WaitingChecking(reqDto) == 1){
+        if(WaitingChecking(reqDto,userId) == 1){
             throw new RuntimeException("대기정보가 존재합니다.");
         }
 
@@ -40,7 +40,7 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
         int waitingNumber=waitingRepository.findLastWaitingNumber(reqDto.getWaiting().getThemeparkId())+1;
 
-        WaitingEntity waitingEntity = reqDto.createWaiting(waitingNumber,waitingLeft);
+        WaitingEntity waitingEntity = reqDto.createWaiting(waitingNumber,waitingLeft,userId);
         waitingRepository.save(waitingEntity);
 
         return ResWaitingPostDTOApiV1.of(waitingEntity);
@@ -78,9 +78,9 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
     }
 
     @Override
-    public void deleteBy(UUID id) {
+    public void deleteBy(UUID id,Long userId) {
         WaitingEntity waitingEntity = findByIdAndStatus(id,WaitingStatus.CANCELLED);
-        waitingEntity.deletedBy(1L);
+        waitingEntity.deletedBy(userId);
     }
 
     private WaitingEntity findByIdAndStatus(UUID id, WaitingStatus waitingStatus) {
@@ -89,9 +89,9 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
     }
 
 
-    private int WaitingChecking(ReqWaitingPostDTOApiV1 reqDto) {
+    private int WaitingChecking(ReqWaitingPostDTOApiV1 reqDto, Long userId) {
         return waitingRepository
-                .countByThemeparkIdAndUserId(reqDto.getWaiting().getThemeparkId(),reqDto.getWaiting().getUserId());
+                .countByThemeparkIdAndUserId(reqDto.getWaiting().getThemeparkId(),userId);
     }
 
     private void ThemeparkChecking(@NotNull(message = "테마파크번호를 입력해주세요") UUID themeparkId) {

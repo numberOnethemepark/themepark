@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
@@ -26,7 +25,9 @@ import java.util.UUID;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,9 +42,27 @@ public class ThemeparkControllerApiV1Test {
     @Autowired
     private ObjectMapper objectMapper;
 
+//    private String cachedJwtToken;
+
+//    @Autowired
+//    private WebApplicationContext context;
+//    private static final String SECRET = "MeyhsO2FjOuniO2MjO2BrOyLnO2BrOumv+2CpOyeheuLiOuLpOyVhOyVhOyVhOyVhOyVhOyVhA==";
+//    private static final Key key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET));
+//
+//    @BeforeEach
+//    public void setup() throws Exception {
+//        cachedJwtToken = Jwts.builder()
+//                .setSubject("manager1")
+//                .claim("roles", List.of("MASTER"))
+//                .signWith(key)
+//                .compact();
+//
+//
+//    }
+
+
     @Test
     public void testThemeparkPostSuccess() throws Exception{
-
 
         List<ReqThemeparkPostDTOApiV1.ThemePark.Hashtag> hashtags = Arrays.asList(
                 ReqThemeparkPostDTOApiV1.ThemePark.Hashtag.builder()
@@ -72,13 +91,12 @@ public class ThemeparkControllerApiV1Test {
         String reqDtoJson = objectMapper.writeValueAsString(reqThemeparkPostDTOApiV1);
 
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.post("/v1/themeparks")
+                        post("/v1/themeparks")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .header("X-User-Id",1)
                                 .content(reqDtoJson)
                 )
                 .andExpectAll(
-                        MockMvcResultMatchers.status().isCreated()
+                        status().isCreated()
                 )
                 .andDo(
                         MockMvcRestDocumentationWrapper.document("Themepark 생성 성공",
@@ -98,7 +116,7 @@ public class ThemeparkControllerApiV1Test {
                         RestDocumentationRequestBuilders.get("/v1/themeparks/{id}", "0ad6129e-540c-45da-b389-34d69114cd95")
                 )
                 .andExpectAll(
-                        MockMvcResultMatchers.status().isOk()
+                        status().isOk()
                 )
                 .andDo(
                         MockMvcRestDocumentationWrapper.document("Themepark 개별 조회 성공",
@@ -121,7 +139,7 @@ public class ThemeparkControllerApiV1Test {
                         RestDocumentationRequestBuilders.get("/v1/themeparks")
                 )
                 .andExpectAll(
-                        MockMvcResultMatchers.status().isOk()
+                        status().isOk()
                 )
                 .andDo(
                         MockMvcRestDocumentationWrapper.document("Themepark 전체 조회 성공",
@@ -155,7 +173,7 @@ public class ThemeparkControllerApiV1Test {
                             .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpectAll(
-                        MockMvcResultMatchers.status().isOk()
+                        status().isOk()
                 )
               .andDo(
                         MockMvcRestDocumentationWrapper.document("Themepark 수정 성공",
@@ -179,7 +197,7 @@ public class ThemeparkControllerApiV1Test {
                         .header("X-User-Id",1)
                 )
                 .andExpectAll(
-                        MockMvcResultMatchers.status().isOk()
+                        status().isOk()
                 )
               .andDo(
                         MockMvcRestDocumentationWrapper.document("Themepark 삭제 성공",

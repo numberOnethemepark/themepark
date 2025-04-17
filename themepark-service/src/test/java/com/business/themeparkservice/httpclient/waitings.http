@@ -1,5 +1,21 @@
+POST http://localhost:8080/v1/auth/login
+Content-Type:application/json
+
+{
+  "user": {
+    "username": "asdf",
+    "password": "asdkasjdh1123"
+  }
+}
+> {%
+    client.global.set("access_token", response.headers.valueOf("ACCESS_TOKEN"))
+%}
+
+###
+
 POST http://localhost:8080/v1/waitings
 Content-Type: application/json
+Authorization: {{access_token}}
 
 {
   "waiting": {
@@ -11,19 +27,24 @@ Content-Type: application/json
 ###
 
 GET http://localhost:8080/v1/waitings/684704d1-38d5-4837-acb6-3dbc70fa5481
+Authorization: {{access_token}}
 
 ###
 
 GET http://localhost:8080/v1/waitings?themeparkId=f5220852-59fe-4894-8fc4-200bd1419872
+Authorization: {{access_token}}
 
 ###
 
 POST http://localhost:8080/v1/waitings/37cba726-3fca-4d51-bd96-f0d4724424de/done
+Authorization: {{access_token}}
 
 ###
 
 POST http://localhost:8080/v1/waitings/684704d1-38d5-4837-acb6-3dbc70fa5481/cancel
+Authorization: {{access_token}}
 
 ###
 
 DELETE http://localhost:8080/v1/waitings/b96e4e42-c327-427c-b191-f7efe4920caa
+Authorization: {{access_token}}

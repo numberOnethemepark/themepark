@@ -20,9 +20,9 @@ public class ReqWaitingPostDTOApiV1 {
     @NotNull(message = "대기정보를 입력해주세요")
     private Waiting waiting;
 
-    public WaitingEntity createWaiting(int waitingNumber, int waitingLeft) {
+    public WaitingEntity createWaiting(int waitingNumber, int waitingLeft,Long userId) {
         return WaitingEntity.builder()
-                .userId(waiting.userId)
+                .userId(userId)
                 .themeparkId(waiting.themeparkId)
                 .waitingLeft(waitingLeft)
                 .waitingNumber(waitingNumber)
@@ -35,8 +35,6 @@ public class ReqWaitingPostDTOApiV1 {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Waiting{
-        @NotNull(message = "회원번호를 입력해주세요")
-        private Integer userId;
 
         @NotNull(message = "테마파크번호를 입력해주세요")
         private UUID themeparkId;

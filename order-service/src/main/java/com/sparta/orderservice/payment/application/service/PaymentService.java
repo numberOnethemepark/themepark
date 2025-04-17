@@ -1,18 +1,13 @@
 package com.sparta.orderservice.payment.application.service;
 
-import com.github.themepark.common.application.exception.ExceptionResponse;
-import com.github.themepark.common.application.exception.GlobalExceptionCode;
 import com.sparta.orderservice.payment.application.dto.request.ReqPaymentTossDto;
 import com.sparta.orderservice.payment.application.dto.response.ResPaymentTossDto;
 import com.sparta.orderservice.payment.application.usercase.PaymentUseCase;
 import com.sparta.orderservice.payment.domain.entity.Payment;
 import com.sparta.orderservice.payment.domain.repository.PaymentRepository;
-import com.sparta.orderservice.payment.infrastructure.client.TossPaymentsClient;
+import com.sparta.orderservice.payment.infrastructure.feign.TossPaymentsClient;
 import com.sparta.orderservice.payment.presentation.dto.request.ReqPaymentPostDtoApiV1;
-import jdk.jshell.spi.ExecutionControl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;

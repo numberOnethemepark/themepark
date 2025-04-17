@@ -5,7 +5,12 @@ import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.order.domain.repository.OrderRepository;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.response.ResOrdersGetByIdDtoApiV1;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +36,17 @@ public class OrderService implements OrderUseCase {
     public void updateOrder(ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1, UUID orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId);
         OrderEntity.updateOrder(orderEntity, reqOrderPutDtoApiV1);
+    }
+
+    @Override
+    public OrderEntity getOrderBy(UUID orderId) {
+        return orderRepository.findById(orderId);
+    }
+
+    @Override
+    public Page<OrderEntity> getOrdersByUserId(Long userId, int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return orderRepository.findByUserId(userId, pageable);
     }
 
 }

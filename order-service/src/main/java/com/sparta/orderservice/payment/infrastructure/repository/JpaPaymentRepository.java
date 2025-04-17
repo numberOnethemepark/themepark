@@ -1,6 +1,6 @@
 package com.sparta.orderservice.payment.infrastructure.repository;
 
-import com.sparta.orderservice.payment.domain.entity.Payment;
+import com.sparta.orderservice.payment.domain.entity.PaymentEntity;
 import com.sparta.orderservice.payment.domain.repository.PaymentRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,8 +14,8 @@ public class JpaPaymentRepository implements PaymentRepository {
     }
 
     @Override
-    public void save(Payment payment){
-        jpaPaymentRepository.save(payment);
+    public void save(PaymentEntity paymentEntity){
+        jpaPaymentRepository.save(paymentEntity);
     }
 
 }

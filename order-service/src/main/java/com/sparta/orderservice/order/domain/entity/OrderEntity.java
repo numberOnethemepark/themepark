@@ -56,6 +56,7 @@ public class OrderEntity extends BaseEntity {
     public static void updateOrder(OrderEntity orderEntity, ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1) {
         if(reqOrderPutDtoApiV1.getOrder().getPaymentStatus() != null) {orderEntity.paymentStatus = reqOrderPutDtoApiV1.getOrder().getPaymentStatus();}
         if(reqOrderPutDtoApiV1.getOrder().getSlackId() != null) {orderEntity.slackId = reqOrderPutDtoApiV1.getOrder().getSlackId();}
+        if(reqOrderPutDtoApiV1.getOrder().getPaymentId() != null) {orderEntity.paymentId = reqOrderPutDtoApiV1.getOrder().getPaymentId();}
     }
 
 }

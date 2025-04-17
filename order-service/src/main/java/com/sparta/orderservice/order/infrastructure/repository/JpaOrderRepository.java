@@ -2,6 +2,8 @@ package com.sparta.orderservice.order.infrastructure.repository;
 
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.order.domain.repository.OrderRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
@@ -22,4 +24,7 @@ public class JpaOrderRepository implements OrderRepository {
 
     @Override
     public OrderEntity findById(UUID orderId) { return jpaOrderRepository.findById(orderId).orElse(null);}
+
+    @Override
+    public Page<OrderEntity> findByUserId(Long userId, Pageable pageable){return jpaOrderRepository.findByUserId(userId, pageable);}
 }

@@ -1,12 +1,12 @@
 package com.sparta.orderservice.payment.domain.entity;
 
 import com.github.themepark.common.domain.entity.BaseEntity;
+import com.sparta.orderservice.payment.application.dto.response.ResPaymentTossDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
@@ -15,11 +15,10 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "p_payments")
-public class Payment extends BaseEntity {
+public class PaymentEntity extends BaseEntity {
 
     @Id
     @UuidGenerator
@@ -39,4 +38,15 @@ public class Payment extends BaseEntity {
 
     @Column(name = "amount", nullable = false)
     private Integer amount;
+
+   public static PaymentEntity createPayment(ResPaymentTossDto tossRes){
+       PaymentEntity paymentEntity = new PaymentEntity();
+       paymentEntity.paymentKey = tossRes.getPaymentKey();
+       paymentEntity.orderId = tossRes.getOrderId();
+       paymentEntity.paymentStatus = tossRes.getStatus();
+       paymentEntity.cardNumber = tossRes.getCard().getNumber();
+       paymentEntity.amount = tossRes.getCard().getAmount();
+
+       return paymentEntity;
+   }
 }

@@ -36,6 +36,8 @@ configurations {
 
 dependencies {
 
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
@@ -56,8 +58,11 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
     testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
 
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
     //common
-    implementation 'com.github.numberOnethemepark:common:0.0.7'
+    implementation 'com.github.numberOnethemepark:common:0.1.0'
 
     //querydsl
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"

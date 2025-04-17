@@ -22,5 +22,5 @@ public interface ThemeparkServiceApiV1 {
 
     ResThemeparkPutDTOApiV1 putBy(UUID id, ReqThemeparkPutDTOApiV1 reqDto);
 
-    void deleteBy(UUID id);
+    void deleteBy(UUID id,Long userId);
 }

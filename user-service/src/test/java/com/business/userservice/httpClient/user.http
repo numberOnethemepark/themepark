@@ -1,0 +1,36 @@
+### 1. 회원 정보 수정
+PUT http://localhost:8080/v1/users/1
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+    "user": {
+        "username": "updateusername"
+    }
+}
+
+### 2. 회원 단일 조회
+GET http://localhost:8080/v1/users/1
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+### 3. 회원 리스트 조회
+GET http://localhost:8080/v1/users
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+### 4. 회원 탈퇴
+POST http://localhost:8080/v1/users/1/delete
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+  "user": {
+    "password": "passworddddddddd"
+  }
+}
+
+### 5. 회원 블랙리스트 설정
+PATCH http://localhost:8080/v1/users/1/is-blacklisted
+Content-Type: application/json
+Authorization: {{accessToken}}

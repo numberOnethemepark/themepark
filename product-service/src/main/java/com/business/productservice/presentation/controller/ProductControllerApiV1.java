@@ -137,4 +137,19 @@ public class ProductControllerApiV1 {
                         HttpStatus.OK
                 );
         }
+
+        @GetMapping("/{id}/stock")
+        public ResponseEntity<ResDTO<ResStockGetByIdDTOApiv1>> getStockById(
+                @PathVariable("id") UUID id
+        ){
+                ResStockGetByIdDTOApiv1 responseDto = productServiceApiV1.getStockById(id);
+                return new ResponseEntity<>(
+                        ResDTO.<ResStockGetByIdDTOApiv1>builder()
+                                .code(0)
+                                .message("상품 재고 조회에 성공했습니다.")
+                                .data(responseDto)
+                                .build(),
+                        HttpStatus.OK
+                );
+        }
 }

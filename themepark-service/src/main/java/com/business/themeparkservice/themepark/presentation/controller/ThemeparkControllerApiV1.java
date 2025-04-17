@@ -9,6 +9,7 @@ import com.business.themeparkservice.themepark.application.dto.response.ResTheme
 import com.business.themeparkservice.themepark.application.dto.response.ResThemeparkPutDTOApiV1;
 import com.business.themeparkservice.themepark.application.service.ThemeparkServiceApiV1;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
+import com.github.themepark.common.application.aop.annotation.ApiPermission;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
@@ -32,6 +33,7 @@ public class ThemeparkControllerApiV1 {
 
     private final ThemeparkServiceApiV1 themeparkService;
 
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @PostMapping
     public ResponseEntity<ResDTO<ResThemeparkPostDTOApiv1>> postBy(
             @Valid @RequestBody ReqThemeparkPostDTOApiV1 reqDto){
@@ -75,6 +77,7 @@ public class ThemeparkControllerApiV1 {
 
     }
 
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<ResThemeparkPutDTOApiV1>> putBy(
             @PathVariable UUID id,
@@ -90,9 +93,10 @@ public class ThemeparkControllerApiV1 {
         );
     }
 
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id){
-        themeparkService.deleteBy(id);
+    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id,@RequestHeader("X-User-Id")Long userId){
+        themeparkService.deleteBy(id,userId);
         return new ResponseEntity<>(
                 ResDTO.builder()
                         .code(0)

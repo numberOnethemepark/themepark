@@ -22,5 +22,5 @@ public interface HashtagServiceApiV1 {
 
     ResHashtagPutDTOApiV1 putBy(UUID id, ReqHashtagPutDTOApiV1 reqDto);
 
-    void deleteBy(UUID id);
+    void deleteBy(UUID id,Long userId);
 }

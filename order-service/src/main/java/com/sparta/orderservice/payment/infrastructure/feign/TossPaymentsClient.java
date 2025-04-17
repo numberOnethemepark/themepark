@@ -1,10 +1,9 @@
-package com.sparta.orderservice.payment.infrastructure.client;
+package com.sparta.orderservice.payment.infrastructure.feign;
 
 import com.sparta.orderservice.payment.application.dto.request.ReqPaymentTossDto;
 import com.sparta.orderservice.payment.application.dto.response.ResPaymentTossDto;
 import com.sparta.orderservice.payment.infrastructure.config.TossFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 

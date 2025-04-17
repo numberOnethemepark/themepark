@@ -1,7 +1,7 @@
 package com.sparta.orderservice.payment.domain.repository;
 
-import com.sparta.orderservice.payment.domain.entity.Payment;
+import com.sparta.orderservice.payment.domain.entity.PaymentEntity;
 
 public interface PaymentRepository {
-    void save(Payment payment);
+    void save(PaymentEntity paymentEntity);
 }

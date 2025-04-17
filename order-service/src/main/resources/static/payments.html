@@ -11,11 +11,11 @@
     <label for="coupon-box"> 5,000원 쿠폰 적용 </label>
 </div>
 <!-- 결제 UI -->
-<div id="payment-method"></div>
+<div id="paymentEntity-method"></div>
 <!-- 이용약관 UI -->
 <div id="agreement"></div>
 <!-- 결제하기 버튼 -->
-<button class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
+<button class="button" id="paymentEntity-button" style="margin-top: 30px">결제하기</button>
 
 <script>
     main();
@@ -26,7 +26,7 @@
         const amount = parseInt(queryParams.get("amount"));
 
 
-        const button = document.getElementById("payment-button");
+        const button = document.getElementById("paymentEntity-button");
         const coupon = document.getElementById("coupon-box");
         // ------  결제위젯 초기화 ------
         const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
@@ -48,7 +48,7 @@
         await Promise.all([
             // ------  결제 UI 렌더링 ------
             widgets.renderPaymentMethods({
-                selector: "#payment-method",
+                selector: "#paymentEntity-method",
                 variantKey: "DEFAULT",
             }),
             // ------  이용약관 UI 렌더링 ------

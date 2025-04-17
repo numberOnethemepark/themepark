@@ -9,6 +9,7 @@ import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoAp
 import com.github.themepark.common.application.dto.ResDTO;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrderGetDtoApiV1;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -41,12 +42,13 @@ public class OrderControllerApiV1 {
         );
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> updateBy(
             @PathVariable("id") UUID id,
             @RequestBody ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1
     ) {
+        orderFacade.updateOrder(reqOrderPutDtoApiV1, id);
+
         return new ResponseEntity<>(
                 ResDTO.builder()
                         .code(0) //Ok 코드
@@ -64,7 +66,7 @@ public class OrderControllerApiV1 {
                 ResDTO.<ResOrderGetDtoApiV1>builder()
                         .code(0)
                         .message("주문정보를 조회하였습니다!")
-                        .data(ResOrderGetDtoApiV1.of(id))
+                        .data(ResOrderGetDtoApiV1.of(orderFacade.getOrderBy(id)))
                         .build(),
                 HttpStatus.OK
         );
@@ -72,15 +74,17 @@ public class OrderControllerApiV1 {
 
     @GetMapping("")
     public ResponseEntity<ResDTO<ResOrdersGetByIdDtoApiV1>> getBy(
-            @RequestParam(name = "userId", required = false) UUID id,
+            @RequestParam(name = "userId", required = false) Long id,
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "10") int size
     ){
+        Page<OrderEntity> orderPage = orderFacade.getOrdersByUserId(id, page, size);
+
         return new ResponseEntity<>(
                 ResDTO.<ResOrdersGetByIdDtoApiV1>builder()
                         .code(0)
                         .message("주문목록을 조회하였습니다!")
-                        .data(ResOrdersGetByIdDtoApiV1.of(id, page, size))
+                        .data(ResOrdersGetByIdDtoApiV1.of(orderPage))
                         .build(),
                 HttpStatus.OK
         );

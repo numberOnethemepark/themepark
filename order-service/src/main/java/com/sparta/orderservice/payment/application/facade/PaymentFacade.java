@@ -1,8 +1,6 @@
 package com.sparta.orderservice.payment.application.facade;
 
-import com.sparta.orderservice.payment.application.service.PaymentService;
 import com.sparta.orderservice.payment.application.usercase.PaymentUseCase;
-import com.sparta.orderservice.payment.domain.entity.Payment;
 import com.sparta.orderservice.payment.presentation.dto.request.ReqPaymentPostDtoApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

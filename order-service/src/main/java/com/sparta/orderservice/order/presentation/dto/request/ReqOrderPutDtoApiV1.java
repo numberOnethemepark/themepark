@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @Builder
 public class ReqOrderPutDtoApiV1 {
@@ -24,7 +26,9 @@ public class ReqOrderPutDtoApiV1 {
         private String slackId;
 
         @NotBlank(message = "주문상태를 입력해주세요.")
-        private String orderStatus;
+        private Integer paymentStatus;
+
+        private UUID paymentId;
     }
 
 }

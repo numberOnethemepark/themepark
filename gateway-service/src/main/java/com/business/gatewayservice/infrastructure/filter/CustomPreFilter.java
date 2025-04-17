@@ -1,5 +1,7 @@
 package com.business.gatewayservice.infrastructure.filter;
 
+import com.business.gatewayservice.application.exception.GatewayExceptionCode;
+import com.github.themepark.common.application.exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -105,16 +107,16 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
             parseClaims(token);
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT token 입니다.");
-            throw new IllegalArgumentException("만료된 JWT token");
+            throw new CustomException(GatewayExceptionCode.EXPIRED_JWT);
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
-            throw new IllegalArgumentException("Invalid JWT signature");
+            throw new CustomException(GatewayExceptionCode.INVALID_SIGNATURE);
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
-            throw new IllegalArgumentException("Unsupported JWT token");
+            throw new CustomException(GatewayExceptionCode.UNSUPPORTED_JWT);
         } catch (IllegalArgumentException e) {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-            throw new IllegalArgumentException("JWT claims is empty");
+            throw new CustomException(GatewayExceptionCode.EMPTY_CLAIMS);
         }
     }
 
@@ -130,12 +132,12 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
         List<String> authorizations = exchange.getRequest().getHeaders()
             .get(HttpHeaders.AUTHORIZATION);
         if (authorizations == null || authorizations.isEmpty()) {
-            throw new Exception("오류");
+            throw new CustomException(GatewayExceptionCode.AUTH_HEADER_MISSING);
         }
         return authorizations.stream()
             .filter(this::isBearerType)
             .findFirst()
-            .orElseThrow(() -> new Exception("오류"));
+            .orElseThrow(() -> new CustomException(GatewayExceptionCode.BEARER_TOKEN_NOT_FOUND));
     }
 
     private boolean isExcludedPath(String path) {

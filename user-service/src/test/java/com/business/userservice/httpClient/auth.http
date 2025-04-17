@@ -25,3 +25,16 @@ Content-Type: application/json
   client.global.set("accessToken", response.body.accessJwt);
   client.log("accessToken : " + client.global.get("accessToken"));
 %}
+
+### 3. 매니저 회원가입
+POST http://localhost:8080/v1/auth/manager/join
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+  "user": {
+    "username": "manager",
+    "password": "passworddddddddd",
+    "slackId": "manager-slack-id"
+  }
+}

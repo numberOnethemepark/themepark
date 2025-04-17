@@ -33,7 +33,7 @@ public class ThemeparkControllerApiV1 {
 
     private final ThemeparkServiceApiV1 themeparkService;
 
-//    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @PostMapping
     public ResponseEntity<ResDTO<ResThemeparkPostDTOApiv1>> postBy(
             @Valid @RequestBody ReqThemeparkPostDTOApiV1 reqDto){
@@ -77,7 +77,7 @@ public class ThemeparkControllerApiV1 {
 
     }
 
-//    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<ResThemeparkPutDTOApiV1>> putBy(
             @PathVariable UUID id,
@@ -93,7 +93,7 @@ public class ThemeparkControllerApiV1 {
         );
     }
 
-//    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @DeleteMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id,@RequestHeader("X-User-Id")Long userId){
         themeparkService.deleteBy(id,userId);

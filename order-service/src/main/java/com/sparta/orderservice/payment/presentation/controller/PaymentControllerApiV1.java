@@ -64,5 +64,4 @@ public class PaymentControllerApiV1 {
                 HttpStatus.OK
         );
     }
-
 }

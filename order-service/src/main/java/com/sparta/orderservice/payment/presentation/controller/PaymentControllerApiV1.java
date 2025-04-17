@@ -1,6 +1,7 @@
 package com.sparta.orderservice.payment.presentation.controller;
 
 import com.sparta.orderservice.payment.application.service.PaymentService;
+import com.sparta.orderservice.payment.domain.entity.PaymentEntity;
 import com.sparta.orderservice.payment.presentation.dto.request.ReqPaymentPostDtoApiV1;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.sparta.orderservice.payment.presentation.dto.request.ReqPaymentPutDtoApiV1;
@@ -24,7 +25,6 @@ public class PaymentControllerApiV1 {
     public ResponseEntity<ResDTO<ResPaymentPostDtoApiV1>> postBy(
             @RequestBody ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1
     ){
-        System.out.println("결제 컨트롤러 입성");
         paymentService.createPayment(reqPaymentPostDtoApiV1);
 
         return new ResponseEntity<>(
@@ -52,17 +52,17 @@ public class PaymentControllerApiV1 {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResDTO<ResPaymentGetDtoApiV1>> getPayment(
+    public ResponseEntity<ResDTO<ResPaymentGetDtoApiV1>> getBy(
             @PathVariable("id") UUID id
     ){
+
         return new ResponseEntity<>(
                 ResDTO.<ResPaymentGetDtoApiV1>builder()
                         .code(0)
                         .message("결제정보를 조회하였습니다.")
-                        .data(ResPaymentGetDtoApiV1.of(id))
+                        .data(ResPaymentGetDtoApiV1.of(paymentService.getBy(id)))
                         .build(),
                 HttpStatus.OK
         );
     }
-
 }

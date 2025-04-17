@@ -1,5 +1,6 @@
 package com.sparta.orderservice.payment.presentation.dto.response;
 
+import com.sparta.orderservice.payment.domain.entity.PaymentEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,10 +20,10 @@ public class ResPaymentGetDtoApiV1 {
     @Valid
     private Payment payment;
 
-    public static ResPaymentGetDtoApiV1 of(UUID id) {
+    public static ResPaymentGetDtoApiV1 of(PaymentEntity paymentEntity) {
         return ResPaymentGetDtoApiV1
                 .builder()
-                .payment(Payment.from(id))
+                .payment(Payment.from(paymentEntity))
                 .build();
     }
 
@@ -35,11 +36,11 @@ public class ResPaymentGetDtoApiV1 {
         public Integer amount;
         public String paymentStatus;
 
-        public static Payment from(UUID id){
+        public static Payment from(PaymentEntity paymentEntity){
             return Payment.builder()
-                    .orderId(id)
-                    .amount(100)
-                    .paymentStatus("결제 완료")
+                    .orderId(paymentEntity.getOrderId())
+                    .amount(paymentEntity.getAmount())
+                    .paymentStatus(paymentEntity.getPaymentStatus())
                     .build();
         }
     }

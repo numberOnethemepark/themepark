@@ -8,12 +8,11 @@ import com.business.themeparkservice.hashtag.application.dto.response.ResHashtag
 import com.business.themeparkservice.hashtag.application.dto.response.ResHashtagPutDTOApiV1;
 import com.business.themeparkservice.hashtag.application.service.HashtagServiceApiV1;
 import com.business.themeparkservice.hashtag.domain.entity.HashtagEntity;
+import com.github.themepark.common.application.aop.annotation.ApiPermission;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
@@ -21,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,6 +29,7 @@ public class HashtagControllerApiV1 {
 
     private final HashtagServiceApiV1 hashtagService;
 
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @PostMapping
     public ResponseEntity<ResDTO<ResHashtagPostDTOApiV1>> postBy(@Valid @RequestBody ReqHashtagPostDTOApiV1 reqDto){
         return new ResponseEntity<>(
@@ -72,6 +71,7 @@ public class HashtagControllerApiV1 {
 
     }
 
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<ResHashtagPutDTOApiV1>> putBy(
             @PathVariable UUID id, @RequestBody ReqHashtagPutDTOApiV1 reqDto){
@@ -86,6 +86,7 @@ public class HashtagControllerApiV1 {
         );
     }
 
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @DeleteMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id,@RequestHeader("X-User-Id")Long userId){
         hashtagService.deleteBy(id,userId);

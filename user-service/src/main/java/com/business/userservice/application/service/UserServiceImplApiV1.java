@@ -51,6 +51,13 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
         userEntity.deletedBy(id);
     }
 
+    @Transactional
+    @Override
+    public boolean blacklistById(Long id) {
+        UserEntity userEntity = findById(id);
+        return userEntity.blacklist();
+    }
+
     private UserEntity findById(Long id) {
         return userRepository.findById(id)
             .orElseThrow(() -> new CustomException(UserExceptionCode.USER_NOT_FOUND));

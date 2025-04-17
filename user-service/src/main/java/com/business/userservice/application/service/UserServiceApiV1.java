@@ -16,4 +16,6 @@ public interface UserServiceApiV1 {
     void putBy(Long id, @Valid ReqUserPutDTOApiV1 dto);
 
     void deleteById(Long id, ReqUserPostDeleteDTOApiV1 dto);
+
+    boolean blacklistById(Long id);
 }

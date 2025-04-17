@@ -1,6 +1,7 @@
 package com.business.userservice.presentation.controller;
 
 import com.business.userservice.application.dto.request.ReqAuthPostJoinDTOApiV1;
+import com.business.userservice.application.dto.response.ResAuthGetRefreshDTOApiV1;
 import com.business.userservice.application.dto.response.ResAuthPostJoinDTOApiV1;
 import com.business.userservice.application.service.AuthServiceApiV1;
 import com.github.themepark.common.application.dto.ResDTO;
@@ -40,12 +41,15 @@ public class AuthControllerApiV1 {
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<ResDTO<Object>> refreshToken(@RequestParam String accessToken, @RequestParam String refreshToken) {
+    public ResponseEntity<ResDTO<ResAuthGetRefreshDTOApiV1>> refreshToken(
+        @RequestParam String accessToken,
+        @RequestParam String refreshToken
+    ) {
         String newAccessToken = authServiceApiV1.refreshToken(accessToken, refreshToken);
 
         if (newAccessToken.equals(HttpStatus.UNAUTHORIZED.toString())) {
             return new ResponseEntity<>(
-                ResDTO.builder()
+                ResDTO.<ResAuthGetRefreshDTOApiV1>builder()
                     .code(0)
                     .message("만료된 Refresh Token 입니다. 재로그인을 요청해주세요.")
                     .data(null)
@@ -54,10 +58,10 @@ public class AuthControllerApiV1 {
             );
         } else {
             return new ResponseEntity<>(
-                ResDTO.builder()
+                ResDTO.<ResAuthGetRefreshDTOApiV1>builder()
                     .code(0)
                     .message("Access Token 재발급 성공했습니다.")
-                    .data(newAccessToken)
+                    .data(ResAuthGetRefreshDTOApiV1.of(newAccessToken))
                     .build(),
                 HttpStatus.OK
             );

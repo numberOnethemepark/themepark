@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ReqUserDeleteDTOApiV1 {
+public class ReqUserPostDeleteDTOApiV1 {
     private User user;
 
     @Getter

@@ -6,7 +6,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
-import com.business.userservice.application.dto.request.ReqUserDeleteDTOApiV1;
+import com.business.userservice.application.dto.request.ReqUserPostDeleteDTOApiV1;
 import com.business.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
@@ -118,9 +118,9 @@ public class UserControllerApiV1Test {
 
     @Test
     public void testUserPostDeleteByIdSuccess() throws Exception {
-        ReqUserDeleteDTOApiV1 dto = ReqUserDeleteDTOApiV1.builder()
+        ReqUserPostDeleteDTOApiV1 dto = ReqUserPostDeleteDTOApiV1.builder()
             .user(
-                ReqUserDeleteDTOApiV1.User.builder()
+                ReqUserPostDeleteDTOApiV1.User.builder()
                     .password("password1234")
                     .build()
             )

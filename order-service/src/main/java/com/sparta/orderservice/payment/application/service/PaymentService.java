@@ -1,9 +1,11 @@
 package com.sparta.orderservice.payment.application.service;
 
+import com.sparta.orderservice.order.application.facade.OrderFacade;
+import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
 import com.sparta.orderservice.payment.application.dto.request.ReqPaymentTossDto;
 import com.sparta.orderservice.payment.application.dto.response.ResPaymentTossDto;
 import com.sparta.orderservice.payment.application.usercase.PaymentUseCase;
-import com.sparta.orderservice.payment.domain.entity.Payment;
+import com.sparta.orderservice.payment.domain.entity.PaymentEntity;
 import com.sparta.orderservice.payment.domain.repository.PaymentRepository;
 import com.sparta.orderservice.payment.infrastructure.feign.TossPaymentsClient;
 import com.sparta.orderservice.payment.presentation.dto.request.ReqPaymentPostDtoApiV1;
@@ -18,9 +20,13 @@ public class PaymentService implements PaymentUseCase {
 
     private final TossPaymentsClient tossPaymentsClient;
     private final PaymentRepository paymentRepository;
+    private final OrderFacade orderFacade;
 
     @Override
     public void createPayment(ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1){
+
+        System.out.println("결제 서비스 입성");
+
         ResPaymentTossDto tossRes = tossPaymentsClient.confirmPayment(ReqPaymentTossDto
                 .of(reqPaymentPostDtoApiV1.getPayment().getOrderId()
                         , reqPaymentPostDtoApiV1.getPayment().getAmount()
@@ -31,15 +37,24 @@ public class PaymentService implements PaymentUseCase {
         if (tossRes.getFailure() != null){
             throw new RuntimeException("데이터가 존재하지 않습니다.");
         }
+        System.out.println("1번까지");
 
-        Payment payment = Payment.builder()
-                .paymentKey(Objects.requireNonNull(tossRes).getPaymentKey())
-                .orderId(tossRes.getOrderId())
-                .paymentStatus(tossRes.getStatus())
-                .cardNumber(tossRes.getCard().getNumber())
-                .amount(tossRes.getCard().getAmount())
+        // 결제 객체 저장
+        PaymentEntity paymentEntity = PaymentEntity.createPayment(tossRes);
+        paymentRepository.save(paymentEntity);
+
+        ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1 = ReqOrderPutDtoApiV1.builder()
+                .order(ReqOrderPutDtoApiV1.Order.builder()
+                        .paymentStatus(1)
+                        .paymentId(paymentEntity.getPaymentId())
+                        .build())
                 .build();
 
-        paymentRepository.save(payment);
+        System.out.println("2번까지");
+
+        // 주문 객체 수정 -> 결제상태 / 결제 ID
+        orderFacade.updateOrder(reqOrderPutDtoApiV1, reqPaymentPostDtoApiV1.getPayment().getOrderId());
+
+        System.out.println("3번까지");
     }
 }

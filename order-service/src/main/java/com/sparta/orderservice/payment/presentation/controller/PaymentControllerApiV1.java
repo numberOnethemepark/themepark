@@ -24,7 +24,8 @@ public class PaymentControllerApiV1 {
     public ResponseEntity<ResDTO<ResPaymentPostDtoApiV1>> postBy(
             @RequestBody ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1
     ){
-        paymentService.createPayment(reqPaymentPostDtoApiV1); // 결제에서 어차피 하니까 나중에 분리를 해도 서비스로 해도된다.
+        System.out.println("결제 컨트롤러 입성");
+        paymentService.createPayment(reqPaymentPostDtoApiV1);
 
         return new ResponseEntity<>(
                 ResDTO.<ResPaymentPostDtoApiV1>builder()

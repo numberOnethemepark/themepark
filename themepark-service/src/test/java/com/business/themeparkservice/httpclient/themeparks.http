@@ -1,5 +1,21 @@
+POST http://localhost:8080/v1/auth/login
+Content-Type:application/json
+
+{
+  "user": {
+    "username": "asdf",
+    "password": "asdkasjdh1123"
+  }
+}
+> {%
+    client.global.set("access_token", response.headers.valueOf("ACCESS_TOKEN"))
+%}
+
+###
+
 POST http://localhost:8080/v1/themeparks
 Content-Type: application/json
+Authorization: {{access_token}}
 
 {
   "themepark":
@@ -12,10 +28,10 @@ Content-Type: application/json
       "operationEndTime": "18:00",
       "supervisor": true,
       "hashtagList": [{
-        "hashtagId": "b79fe1c3-3fb3-47e5-aa31-c7a8cb79a99a",
+        "hashtagId": "314202c4-ae6a-4d0b-997d-95057b520748",
         "name": "신나는"
       },{
-        "hashtagId": "f5e49e5d-3baf-478f-bb36-d70b66330f79",
+        "hashtagId": "58d75bbe-61cc-46eb-8419-d0ef49a952fe",
         "name": "짜릿한"
       }
       ]
@@ -34,6 +50,7 @@ GET http://localhost:8080/v1/themeparks?description=슝슝 놀이기구입니다
 
 PUT http://localhost:8080/v1/themeparks/1ebb0dfa-1266-4736-a71b-4ee8b953a6b8
 Content-Type: application/json
+Authorization: {{access_token}}
 
 {
   "themepark": {
@@ -54,3 +71,4 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:8080/v1/themeparks/1bce86d2-1afb-4e80-994e-a1fb4d92aaf9
+Authorization: {{access_token}}

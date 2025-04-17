@@ -10,16 +10,14 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ReqAuthPostJoinDTOApiV1 {
-
+public class ReqAuthPostManagerJoinDTOApiV1 {
     @Valid
-    @NotNull(message = "회원 정보를 입력해주세요.")
+    @NotNull
     private User user;
 
     @Getter
     @Builder
     public static class User implements JoinRequest {
-
         @NotBlank(message = "아이디를 입력해주세요.")
         @Size(max = 20, message = "이름은 20자까지 가능합니다.")
         private String username;
@@ -31,7 +29,7 @@ public class ReqAuthPostJoinDTOApiV1 {
 
         @Override
         public RoleType getRole() {
-            return RoleType.USER;
+            return RoleType.MANAGER;
         }
     }
 }

@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +22,12 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
@@ -39,6 +42,7 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
     private String secretKey;
     private static final String BEARER_PREFIX = "Bearer ";
 
+    private final AntPathMatcher matcher = new AntPathMatcher();
 
     private SecretKey getSecretKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -46,20 +50,29 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
     }
 
     // JWT 인증을 적용하지 않을 경로 목록
-    private static final List<String> EXCLUDED_PATHS = List.of(
-        "/v1/auth/join",
-        "/v1/auth/login",
-        "/v1/auth/refresh",
-        "/springdoc/openapi3-user-service.json"
+    private static final Map<HttpMethod, List<String>> EXCLUDED_PATHS_BY_METHOD = Map.of(
+        HttpMethod.GET, List.of(
+            "/v1/products/*",
+            "/v1/themeparks/**",
+            "/v1/hashtags/**",
+            "/v1/auth/refresh",
+            "/springdoc/openapi3-user-service.json"
+        ),
+        HttpMethod.POST, List.of(
+            "/v1/auth/join",
+            "/v1/auth/login"
+        )
     );
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         String path = exchange.getRequest().getURI().getPath();
-        log.info("요청 경로 {}", path);
+        HttpMethod method = exchange.getRequest().getMethod();
 
-        if (isExcludedPath(path)) {
+        log.info("요청 경로 {}, 메소드 {}", path, method);
+
+        if (isExcludedPath(path, method)) {
             return chain.filter(exchange);
         }
 
@@ -141,8 +154,10 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
             .orElseThrow(() -> new CustomException(GatewayExceptionCode.BEARER_TOKEN_NOT_FOUND));
     }
 
-    private boolean isExcludedPath(String path) {
-        return EXCLUDED_PATHS.stream().anyMatch(path::contains);
+    private boolean isExcludedPath(String path, HttpMethod method) {
+        List<String> excludedPaths = EXCLUDED_PATHS_BY_METHOD.get(method);
+        if (excludedPaths == null || excludedPaths.isEmpty()) return false;
+        return excludedPaths.stream().anyMatch(pattern -> matcher.match(pattern, path));
     }
 
     private String getUserIdFromToken(String jwtToken) {
@@ -173,7 +188,6 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
             .wrap(errorBody.getBytes(StandardCharsets.UTF_8));
         return response.writeWith(Flux.just(buffer));
     }
-
 
     private String parseAuthorizationToken(String authorization) {
         return authorization.replace(BEARER_PREFIX, "").trim();

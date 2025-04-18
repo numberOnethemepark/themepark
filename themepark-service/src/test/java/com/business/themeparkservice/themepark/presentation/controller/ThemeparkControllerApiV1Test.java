@@ -92,6 +92,7 @@ public class ThemeparkControllerApiV1Test {
 
         mockMvc.perform(
                         post("/v1/themeparks")
+                                .header("X-User-Role","MASTER")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(reqDtoJson)
                 )
@@ -169,6 +170,7 @@ public class ThemeparkControllerApiV1Test {
         mockMvc.perform(
                         RestDocumentationRequestBuilders.put("/v1/themeparks/{id}", "0ad6129e-540c-45da-b389-34d69114cd95")
                             .header("X-User-Id",1)
+                            .header("X-User-Role","MASTER")
                             .content(reqDtoJson)
                             .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -195,6 +197,7 @@ public class ThemeparkControllerApiV1Test {
         mockMvc.perform(
                         RestDocumentationRequestBuilders.delete("/v1/themeparks/{id}", "0ad6129e-540c-45da-b389-34d69114cd95")
                         .header("X-User-Id",1)
+                        .header("X-User-Role","MASTER")
                 )
                 .andExpectAll(
                         status().isOk()

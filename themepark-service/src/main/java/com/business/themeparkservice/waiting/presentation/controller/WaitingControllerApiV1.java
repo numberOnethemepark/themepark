@@ -91,7 +91,6 @@ public class WaitingControllerApiV1 {
         );
     }
 
-    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @DeleteMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id,@RequestHeader("X-User-Id")Long userId){
         waitingService.deleteBy(id,userId);

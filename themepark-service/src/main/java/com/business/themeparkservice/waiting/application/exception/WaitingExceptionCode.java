@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum WaitingExceptionCode implements ExceptionCode {
-    WAITING_NOT_FOUND("W101","존재하지않는 대기열입니다.", HttpStatus.NOT_FOUND);
+    WAITING_NOT_FOUND("W101","존재하지않는 대기열입니다.", HttpStatus.NOT_FOUND),
+    WAITING_STILL_HERE("W102","이미 대기중 입니다.", HttpStatus.CONFLICT);
 
     private final String code;
     private final String message;

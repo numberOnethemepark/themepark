@@ -43,10 +43,6 @@ public class PaymentService implements PaymentUseCase {
         paymentRepository.save(paymentEntity);
 
 
-        // 결제 객체 저장
-        PaymentEntity paymentEntity = PaymentEntity.createPayment(tossRes);
-        paymentRepository.save(paymentEntity);
-
         ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1 = ReqOrderPutDtoApiV1.builder()
                 .order(ReqOrderPutDtoApiV1.Order.builder()
                         .paymentStatus(PaymentStatus.PAID)
@@ -56,17 +52,8 @@ public class PaymentService implements PaymentUseCase {
 
 
         // 주문 객체 수정 -> 결제상태 / 결제 ID
-        orderFacade.updateOrder(reqOrderPutDtoApiV1, reqPaymentPostDtoApiV1.getPayment().getOrderId());
-    }
-
-    public PaymentEntity getBy(UUID paymentId) {
-        return paymentRepository.findById(paymentId);
-
-
-        // 주문 객체 수정 -> 결제상태 / 결제 ID
         orderFacade.updateBy(reqOrderPutDtoApiV1, reqPaymentPostDtoApiV1.getPayment().getOrderId());
     }
-
 
     public PaymentEntity getBy(UUID paymentId) {
         return paymentRepository.findById(paymentId);

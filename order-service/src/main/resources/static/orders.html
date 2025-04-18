@@ -11,10 +11,11 @@
 </body>
 <script>
     document.getElementById("postOrder").addEventListener("click", () => {
-       fetch("http://localhost:8002/v1/orders", {
+       fetch("http://localhost:8080/v1/orders", {
            method : 'POST',
            headers: {
-               'Content-type' : 'application/json'
+               'Content-type' : 'application/json',
+               'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiY2F0ZWdvcnkiOiJBQ0NFU1MiLCJ1c2VySWQiOiI2Iiwicm9sZSI6Ik1BU1RFUiIsImV4cCI6MTc0NTAyNzA2MCwiaWF0IjoxNzQ0OTQwNjYwfQ.YkqudgoTOaqrbadrrAe3vFGjNOnowTZTWPRa-qvIo-Q'
            },
            body: JSON.stringify({
                 order : {

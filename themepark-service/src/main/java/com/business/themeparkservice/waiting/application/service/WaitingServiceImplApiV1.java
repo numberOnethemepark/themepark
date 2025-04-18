@@ -31,12 +31,9 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
     @Override
     public ResWaitingPostDTOApiV1 postBy(ReqWaitingPostDTOApiV1 reqDto,Long userId) {
         ThemeparkChecking(reqDto.getWaiting().getThemeparkId());
+        WaitingChecking(reqDto,userId);
 
-        if(WaitingChecking(reqDto,userId) == 1){
-            throw new RuntimeException("대기정보가 존재합니다.");
-        }
-
-        int waitingLeft = waitingRepository.countByThemeparkId(reqDto.getWaiting().getThemeparkId());
+        int waitingLeft = waitingRepository.countByThemeparkIdAndWaitingStatus(reqDto.getWaiting().getThemeparkId(),WaitingStatus.WAITING);
 
         int waitingNumber=waitingRepository.findLastWaitingNumber(reqDto.getWaiting().getThemeparkId())+1;
 
@@ -89,9 +86,11 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
     }
 
 
-    private int WaitingChecking(ReqWaitingPostDTOApiV1 reqDto, Long userId) {
-        return waitingRepository
-                .countByThemeparkIdAndUserId(reqDto.getWaiting().getThemeparkId(),userId);
+    private void WaitingChecking(ReqWaitingPostDTOApiV1 reqDto, Long userId) {
+        if(waitingRepository.countByThemeparkIdAndUserIdAndWaitingStatus(
+                reqDto.getWaiting().getThemeparkId(),userId,WaitingStatus.WAITING)!= 0){
+            throw new CustomException(WaitingExceptionCode.WAITING_STILL_HERE);
+        }
     }
 
     private void ThemeparkChecking(@NotNull(message = "테마파크번호를 입력해주세요") UUID themeparkId) {

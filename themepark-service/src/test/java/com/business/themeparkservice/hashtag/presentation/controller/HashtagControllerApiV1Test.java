@@ -53,6 +53,7 @@ public class HashtagControllerApiV1Test {
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/hashtags")
                         .header("X-User-Id",1)
+                        .header("X-User-Role","MASTER")
                         .content(reqDtoJson)
                         .contentType(MediaType.APPLICATION_JSON)
         )
@@ -128,6 +129,7 @@ public class HashtagControllerApiV1Test {
         mockMvc.perform(
                 RestDocumentationRequestBuilders.put("/v1/hashtags/{id}", "ccf32034-8056-4e02-b269-277c8d2c383c")
                         .header("X-User-Id",1)
+                        .header("X-User-Role","MASTER")
                         .content(reqDtoJson)
                         .contentType(MediaType.APPLICATION_JSON)
         )
@@ -153,6 +155,7 @@ public class HashtagControllerApiV1Test {
         mockMvc.perform(
                 RestDocumentationRequestBuilders.delete("/v1/hashtags/{id}", "ccf32034-8056-4e02-b269-277c8d2c383c")
                         .header("X-User-Id",1)
+                        .header("X-User-Role","MASTER")
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()

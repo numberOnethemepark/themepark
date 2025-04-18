@@ -41,7 +41,7 @@ public class WaitingControllerApiV1Test {
         ReqWaitingPostDTOApiV1 reqWaitingPostDTOApiV1 =
                 ReqWaitingPostDTOApiV1.builder().waiting(
                         ReqWaitingPostDTOApiV1.Waiting.builder()
-                                .themeparkId(UUID.randomUUID())
+                                .themeparkId(UUID.fromString("0ad6129e-540c-45da-b389-34d69114cd95"))
                                 .build()
                 ).build();
 
@@ -51,6 +51,7 @@ public class WaitingControllerApiV1Test {
                 RestDocumentationRequestBuilders.post("/v1/waitings")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-User-Id", 1)
+                        .header("X-User-Role","USER")
                         .content(reqJsonDto)
         )
                 .andExpectAll(
@@ -112,6 +113,7 @@ public class WaitingControllerApiV1Test {
     public void testWaitingPostDoneSuccess() throws Exception{
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/waitings/{id}/done", UUID.randomUUID())
+                        .header("X-User-Role","MASTER")
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -134,6 +136,7 @@ public class WaitingControllerApiV1Test {
     public void testWaitingPostCancelSuccess() throws Exception{
         mockMvc.perform(
                         RestDocumentationRequestBuilders.post("/v1/waitings/{id}/cancel", UUID.randomUUID())
+                        .header("X-User-Role","MASTER")
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -157,6 +160,7 @@ public class WaitingControllerApiV1Test {
         mockMvc.perform(
                 RestDocumentationRequestBuilders.delete("/v1/waitings/{id}", UUID.randomUUID())
                         .header("X-User-Id", 1)
+                        .header("X-User-Role","MASTER")
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()

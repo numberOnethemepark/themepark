@@ -53,8 +53,8 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
     private static final Map<HttpMethod, List<String>> EXCLUDED_PATHS_BY_METHOD = Map.of(
         HttpMethod.GET, List.of(
             "/v1/products/*",
-            "/v1/themeparks/**",
-            "/v1/hashtags/**",
+            "/v1/themeparks/*",
+            "/v1/hashtags/*",
             "/v1/auth/refresh",
             "/springdoc/openapi3-user-service.json"
         ),

@@ -19,7 +19,6 @@ Authorization: {{access_token}}
 
 {
   "waiting": {
-    "userId": 2,
     "themeparkId": "f5220852-59fe-4894-8fc4-200bd1419872"
   }
 }

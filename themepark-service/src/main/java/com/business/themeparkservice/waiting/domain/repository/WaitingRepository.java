@@ -10,7 +10,8 @@ import java.util.UUID;
 
 public interface WaitingRepository {
     int countByThemeparkId(@NotNull(message = "테마파크번호를 입력해주세요") UUID themeparkId);
-    int countByThemeparkIdAndUserId(UUID themeparkId, Integer userId);
+
+    int countByThemeparkIdAndUserId(UUID themeparkId, Long userId);
 
     @Query("select count(*) from WaitingEntity w " +
             "where w.waitingNumber < :waitingNumber AND w.themeparkId = :themeparkId AND w.waitingStatus = 'WAITING'")

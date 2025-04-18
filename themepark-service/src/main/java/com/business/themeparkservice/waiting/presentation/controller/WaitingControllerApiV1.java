@@ -4,13 +4,11 @@ import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.*;
 import com.business.themeparkservice.waiting.application.service.WaitingServiceApiV1;
-import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
+import com.github.themepark.common.application.aop.annotation.ApiPermission;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
@@ -18,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 @RestController
 @RequestMapping("/v1/waitings")
@@ -26,16 +23,16 @@ import java.util.UUID;
 public class WaitingControllerApiV1 {
 
     private final WaitingServiceApiV1 waitingService;
-
+    @ApiPermission(roles = {ApiPermission.Role.USER})
     @PostMapping
     public ResponseEntity<ResDTO<ResWaitingPostDTOApiV1>> postBy(
-            @Valid @RequestBody ReqWaitingPostDTOApiV1 reqDto){
+            @Valid @RequestBody ReqWaitingPostDTOApiV1 reqDto,@RequestHeader("X-User-Id")Long userId){
 
         return new ResponseEntity<>(
                 ResDTO.<ResWaitingPostDTOApiV1>builder()
                         .code(0)
                         .message("대기열 생성을 성공했습니다.")
-                        .data(waitingService.postBy(reqDto))
+                        .data(waitingService.postBy(reqDto,userId))
                         .build(),
                 HttpStatus.CREATED
         );
@@ -69,6 +66,7 @@ public class WaitingControllerApiV1 {
         );
     }
 
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @PostMapping("/{id}/done")
     public ResponseEntity<ResDTO<ResWaitingPostDoneDTOApiV1>> postDoneBy(@PathVariable UUID id){
         return new ResponseEntity<>(
@@ -93,9 +91,10 @@ public class WaitingControllerApiV1 {
         );
     }
 
+    @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id){
-        waitingService.deleteBy(id);
+    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID id,@RequestHeader("X-User-Id")Long userId){
+        waitingService.deleteBy(id,userId);
         return new ResponseEntity<>(
                 ResDTO.builder()
                         .code(0)

@@ -28,7 +28,7 @@ public class ResWaitingPostDoneDTOApiV1 {
     @NoArgsConstructor
     public static class Waiting{
         private UUID id;
-        private Integer userId;
+        private Long userId;
         private UUID themeparkId;
         private Integer waitingNumber;
         private Integer waitingLeft;

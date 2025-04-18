@@ -24,7 +24,7 @@ public class WaitingEntity extends BaseEntity {
     private UUID id;
 
     @Column(name = "user_id",nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @Column(name = "themepark_id",nullable = false)
     private UUID themeparkId;
@@ -40,7 +40,7 @@ public class WaitingEntity extends BaseEntity {
     private WaitingStatus waitingStatus = WaitingStatus.WAITING;
 
     @Builder
-    public WaitingEntity(Integer userId, UUID themeparkId, Integer waitingNumber, Integer waitingLeft) {
+    public WaitingEntity(Long userId, UUID themeparkId, Integer waitingNumber, Integer waitingLeft) {
         this.userId = userId;
         this.themeparkId = themeparkId;
         this.waitingNumber = waitingNumber;

@@ -22,7 +22,6 @@ public class SecurityConfig {
                     config.addAllowedMethod(HttpMethod.GET); // GET 요청 허용
                     config.addAllowedMethod(HttpMethod.POST); // POST 요청 허용
                     config.addAllowedMethod(HttpMethod.PUT); // PUT 요청 허용
-                    config.addAllowedMethod(HttpMethod.DELETE); // DELETE 요청 허용
                     config.addAllowedHeader("*"); // 모든 헤더 허용
                     return config;
                 }))
@@ -34,6 +33,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
 }

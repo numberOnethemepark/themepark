@@ -52,6 +52,7 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
     // JWT 인증을 적용하지 않을 경로 목록
     private static final Map<HttpMethod, List<String>> EXCLUDED_PATHS_BY_METHOD = Map.of(
         HttpMethod.GET, List.of(
+            "/v1/products",
             "/v1/products/*",
             "/v1/themeparks/*",
             "/v1/hashtags/*",
@@ -156,7 +157,11 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
 
     private boolean isExcludedPath(String path, HttpMethod method) {
         List<String> excludedPaths = EXCLUDED_PATHS_BY_METHOD.get(method);
-        if (excludedPaths == null || excludedPaths.isEmpty()) return false;
+        if (excludedPaths == null || excludedPaths.isEmpty()) {
+            log.info("excludedPaths NULL");
+            return false;
+        }
+        log.info("excludedPaths.stream().anyMatch(pattern -> matcher.match(pattern, path)): {}", excludedPaths.stream().anyMatch(pattern -> matcher.match(pattern, path)));
         return excludedPaths.stream().anyMatch(pattern -> matcher.match(pattern, path));
     }
 

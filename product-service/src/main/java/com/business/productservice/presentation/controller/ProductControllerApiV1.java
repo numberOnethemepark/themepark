@@ -2,17 +2,14 @@ package com.business.productservice.presentation.controller;
 
 import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1;
-import com.business.productservice.application.dto.request.ReqStockDecreasePostDTOApiV1;
-import com.business.productservice.application.dto.request.ReqStockRestorePostDTOApiV1;
 import com.business.productservice.application.dto.response.*;
 import com.business.productservice.application.service.ProductServiceApiV1;
 import com.business.productservice.domain.product.entity.ProductEntity;
+import com.github.themepark.common.application.aop.annotation.ApiPermission;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
@@ -21,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,6 +28,7 @@ public class ProductControllerApiV1 {
 
         private final ProductServiceApiV1 productServiceApiV1;
 
+        @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
         @PostMapping
         public ResponseEntity<ResDTO<ResProductPostDTOApiV1>> postBy(
                 @Valid @RequestBody ReqProductPostDTOApiV1 dto
@@ -80,6 +77,7 @@ public class ProductControllerApiV1 {
                 );
         }
 
+        @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
         @PutMapping("/{id}")
         public ResponseEntity<ResDTO<ResProductPutDTOApiV1>> putBy(
                 @PathVariable("id") UUID id,
@@ -96,6 +94,7 @@ public class ProductControllerApiV1 {
                 );
         }
 
+        @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
         @DeleteMapping("/{id}")
         public ResponseEntity<ResDTO<Object>> deleteBy(
                 @PathVariable("id") UUID id
@@ -110,7 +109,8 @@ public class ProductControllerApiV1 {
                 );
         }
 
-        @PostMapping("/{id}/stocks-decrease")
+        @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
+        @PostMapping("internal/{id}/stocks-decrease")
         public ResponseEntity<ResDTO<Object>> postDecreaseById(
                 @PathVariable("id") UUID id
         ){
@@ -124,7 +124,8 @@ public class ProductControllerApiV1 {
                 );
         }
 
-        @PostMapping("/{id}/stocks-restore")
+        @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
+        @PostMapping("internal/{id}/stocks-restore")
         public ResponseEntity<ResDTO<Object>> postRestoreById(
                 @PathVariable("id") UUID id
         ){
@@ -138,6 +139,7 @@ public class ProductControllerApiV1 {
                 );
         }
 
+        @ApiPermission(roles = {ApiPermission.Role.USER, ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
         @GetMapping("/{id}/stock")
         public ResponseEntity<ResDTO<ResStockGetByIdDTOApiv1>> getStockById(
                 @PathVariable("id") UUID id

@@ -68,6 +68,7 @@ public class ProductControllerApiV1Test {
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/products")
+                        .header("X-User-Role","MASTER")
                         .content(dtoToJson(dto))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -225,7 +226,8 @@ public class ProductControllerApiV1Test {
                 .build();
 
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.post("/v1/products/{id}/stocks-decrease", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.post("/v1/products/internal/{id}/stocks-decrease", UUID.randomUUID())
+                                .header("X-User-Role","MASTER")
                                 .content(dtoToJson(dto))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -258,26 +260,27 @@ public class ProductControllerApiV1Test {
                 )
                 .build();
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.post("/v1/products/{id}/stocks-restore", UUID.randomUUID())
-                        .content(dtoToJson(dto))
-                        .contentType(MediaType.APPLICATION_JSON)
+                        RestDocumentationRequestBuilders.post("/v1/products/internal/{id}/stocks-restore", UUID.randomUUID())
+                                .header("X-User-Role","MASTER")
+                                .content(dtoToJson(dto))
+                                .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpectAll(
-                        MockMvcResultMatchers.status().isOk()
-                )
-                .andDo(
-                        MockMvcRestDocumentationWrapper.document("상품 재고 복구 성공",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                resource(ResourceSnippetParameters.builder()
-                                        .tag("Product v1")
-                                        .pathParameters(
-                                                parameterWithName("id").type(SimpleType.STRING).description("상품 ID")
-                                        )
-                                        .build()
-                                )
+                        .andExpectAll(
+                                MockMvcResultMatchers.status().isOk()
                         )
-                );
+                        .andDo(
+                                MockMvcRestDocumentationWrapper.document("상품 재고 복구 성공",
+                                        preprocessRequest(prettyPrint()),
+                                        preprocessResponse(prettyPrint()),
+                                        resource(ResourceSnippetParameters.builder()
+                                                .tag("Product v1")
+                                                .pathParameters(
+                                                        parameterWithName("id").type(SimpleType.STRING).description("상품 ID")
+                                                )
+                                                .build()
+                                        )
+                                )
+                        );
 
     }
 

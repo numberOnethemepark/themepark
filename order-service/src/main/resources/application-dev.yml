@@ -3,9 +3,9 @@ spring:
     name: order-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/order-payment
-    username: dj
-    password: 1234
+    url: jdbc:postgresql://localhost:5430/themeparkdb
+    username: admin
+    password: 12345
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

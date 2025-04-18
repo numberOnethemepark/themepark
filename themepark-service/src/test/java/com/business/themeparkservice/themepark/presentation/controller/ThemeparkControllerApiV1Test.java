@@ -42,24 +42,6 @@ public class ThemeparkControllerApiV1Test {
     @Autowired
     private ObjectMapper objectMapper;
 
-//    private String cachedJwtToken;
-
-//    @Autowired
-//    private WebApplicationContext context;
-//    private static final String SECRET = "MeyhsO2FjOuniO2MjO2BrOyLnO2BrOumv+2CpOyeheuLiOuLpOyVhOyVhOyVhOyVhOyVhOyVhA==";
-//    private static final Key key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET));
-//
-//    @BeforeEach
-//    public void setup() throws Exception {
-//        cachedJwtToken = Jwts.builder()
-//                .setSubject("manager1")
-//                .claim("roles", List.of("MASTER"))
-//                .signWith(key)
-//                .compact();
-//
-//
-//    }
-
 
     @Test
     public void testThemeparkPostSuccess() throws Exception{

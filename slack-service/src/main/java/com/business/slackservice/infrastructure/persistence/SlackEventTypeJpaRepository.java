@@ -4,8 +4,9 @@ import com.business.slackservice.domain.slack.entity.SlackEventTypeEntity;
 import com.business.slackservice.domain.slack.repository.SlackEventTypeRepository;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 public interface SlackEventTypeJpaRepository extends JpaRepository<SlackEventTypeEntity, UUID>,
-    SlackEventTypeRepository {
+    SlackEventTypeRepository, QuerydslPredicateExecutor<SlackEventTypeEntity> {
 
 }

@@ -1,15 +1,17 @@
 package com.business.slackservice.domain.slack.entity;
 
-import com.business.slackservice.domain.slack.vo.EventType;
 import com.business.slackservice.domain.slack.vo.SlackStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -25,9 +27,9 @@ public class SlackEntity {
     @Column(name = "slack_id")
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "event_type", nullable = false)
-    private EventType eventType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "slack_event_type_id")
+    private SlackEventTypeEntity eventTypeId;
 
     @Column(name = "trigger_id", nullable = false)
     private UUID triggerId;

@@ -51,7 +51,6 @@ Content-Type: application/json
 
 ### 4. 상품 단건 조회
 GET http://localhost:8080/v1/products/e61caf66-b5c0-4e23-bb9f-fd75821efc67
-Authorization: Bearer jwt_token_string
 Content-Type: application/json
 
 ### 5. 상품 정보 수정
@@ -80,7 +79,6 @@ Content-Type: application/json
 
 ### 7. 상품 검색 조회
 GET http://localhost:8080/v1/products
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiY2F0ZWdvcnkiOiJBQ0NFU1MiLCJ1c2VySWQiOiIxIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3NDQ5NjI5NjMsImlhdCI6MTc0NDg3NjU2M30.Glc8KGKh5TJpRi419MmKf_YHu19FXn-ZiLfXUCcuJ5M
 Content-Type: application/json
 
 ### 8. 상품 재고 차감 (내부 호출용) - 선착순 1인 1예매

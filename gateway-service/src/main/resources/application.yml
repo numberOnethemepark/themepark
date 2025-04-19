@@ -36,6 +36,11 @@ spring:
           uri: lb://order-service
           predicates:
             - Path=/v1/orders/**, /springdoc/openapi3-order-service.json
+
+        - id: slack-service
+          uri: lb://slack-service
+          predicates:
+            - Path=/v1/slacks/**, /v1/slack-templates/**, /springdoc/openapi3-slacks-service.json
       discovery:
         locator:
           enabled: true
@@ -58,6 +63,9 @@ springdoc:
     urls[3]:
       name: Order Service
       url: /springdoc/openapi3-order-service.json
+    urls[4]:
+      name: Slack Service
+      url: /springdoc/openapi3-slack-service.json
 eureka:
   client:
     service-url:

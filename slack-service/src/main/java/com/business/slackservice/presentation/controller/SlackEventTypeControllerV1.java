@@ -6,7 +6,7 @@ import com.business.slackservice.application.dto.response.slackEventType.ResSlac
 import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetDTOV1;
 import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypePostDTOApiV1;
 import com.business.slackservice.application.service.SlackEventTypeServiceApiV1;
-import com.business.slackservice.domain.slack.entity.SlackEventTypeEntity;
+import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;

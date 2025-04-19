@@ -40,7 +40,7 @@ spring:
         - id: slack-service
           uri: lb://slack-service
           predicates:
-            - Path=/v1/slacks/**, /v1/slack-templates/**, /springdoc/openapi3-slacks-service.json
+            - Path=/v1/slacks/**, /v1/slack-templates/**, /v1/slack-event-types/**, /springdoc/openapi3-slacks-service.json
       discovery:
         locator:
           enabled: true

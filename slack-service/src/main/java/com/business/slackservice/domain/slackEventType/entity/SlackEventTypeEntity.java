@@ -1,4 +1,4 @@
-package com.business.slackservice.domain.slack.entity;
+package com.business.slackservice.domain.slackEventType.entity;
 
 import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.Column;

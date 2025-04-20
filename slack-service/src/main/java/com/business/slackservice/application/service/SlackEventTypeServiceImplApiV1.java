@@ -2,12 +2,12 @@ package com.business.slackservice.application.service;
 
 import com.business.slackservice.application.dto.request.slackEventType.ReqSlackEventTypePostDTOApiV1;
 import com.business.slackservice.application.dto.request.slackEventType.ReqSlackEventTypePutDTOApiV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetByIdDTOV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetDTOV1;
+import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetByIdDTOApiV1;
+import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetDTOApiV1;
 import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypePostDTOApiV1;
 import com.business.slackservice.application.exception.SlackExceptionCode;
-import com.business.slackservice.domain.slack.entity.SlackEventTypeEntity;
-import com.business.slackservice.domain.slack.repository.SlackEventTypeRepository;
+import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
+import com.business.slackservice.domain.slackEventType.repository.SlackEventTypeRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
 import java.util.UUID;
@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SlackEventTypeServiceImplApiV1 implements SlackEventTypeServiceApiV1 {
 
     private final SlackEventTypeRepository slackEventTypeRepository;
+    private final SlackEventTypeService slackEventTypeService;
 
     @Transactional
     @Override
@@ -36,32 +37,28 @@ public class SlackEventTypeServiceImplApiV1 implements SlackEventTypeServiceApiV
     }
 
     @Override
-    public ResSlackEventTypeGetByIdDTOV1 getBy(UUID id) {
-        SlackEventTypeEntity slackEventTypeEntity = findById(id);
-        return ResSlackEventTypeGetByIdDTOV1.of(slackEventTypeEntity);
+    public ResSlackEventTypeGetByIdDTOApiV1 getBy(UUID id) {
+        SlackEventTypeEntity slackEventTypeEntity = slackEventTypeService.getBy(id);
+        return ResSlackEventTypeGetByIdDTOApiV1.of(slackEventTypeEntity);
     }
 
     @Override
-    public ResSlackEventTypeGetDTOV1 getBy(Predicate predicate, Pageable pageable) {
+    public ResSlackEventTypeGetDTOApiV1 getBy(Predicate predicate, Pageable pageable) {
         Page<SlackEventTypeEntity> slackEventTypeEntityPage = slackEventTypeRepository.findAll(predicate, pageable);
-        return ResSlackEventTypeGetDTOV1.of(slackEventTypeEntityPage);
+        return ResSlackEventTypeGetDTOApiV1.of(slackEventTypeEntityPage);
     }
 
     @Transactional
     @Override
     public void putBy(UUID id, ReqSlackEventTypePutDTOApiV1 dto) {
-        SlackEventTypeEntity slackEventTypeEntity = findById(id);
+        SlackEventTypeEntity slackEventTypeEntity = slackEventTypeService.getBy(id);
         dto.getSlackEventType().update(slackEventTypeEntity);
     }
 
+    @Transactional
     @Override
     public void deleteBy(UUID id, Long userId) {
-        SlackEventTypeEntity slackEventTypeEntity = findById(id);
+        SlackEventTypeEntity slackEventTypeEntity = slackEventTypeService.getBy(id);
         slackEventTypeEntity.deletedBy(userId);
-    }
-
-    private SlackEventTypeEntity findById(UUID id) {
-        return slackEventTypeRepository.findById(id)
-            .orElseThrow(() -> new CustomException(SlackExceptionCode.SLACK_EVENT_TYPE_NOT_FOUND));
     }
 }

@@ -1,6 +1,6 @@
-package com.business.slackservice.domain.slack.repository;
+package com.business.slackservice.domain.slackEventType.repository;
 
-import com.business.slackservice.domain.slack.entity.SlackEventTypeEntity;
+import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
 import com.querydsl.core.types.Predicate;
 import java.util.Optional;
 import java.util.UUID;

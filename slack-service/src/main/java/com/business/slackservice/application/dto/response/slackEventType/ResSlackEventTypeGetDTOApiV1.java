@@ -1,6 +1,6 @@
 package com.business.slackservice.application.dto.response.slackEventType;
 
-import com.business.slackservice.domain.slack.entity.SlackEventTypeEntity;
+import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Builder;
@@ -9,14 +9,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PagedModel;
 
 @Builder
-public class ResSlackEventTypeGetDTOV1 {
+public class ResSlackEventTypeGetDTOApiV1 {
 
     @JsonProperty
     private SlackEventTypePage slackEventTypePage;
 
-    public static ResSlackEventTypeGetDTOV1 of(
+    public static ResSlackEventTypeGetDTOApiV1 of(
         Page<SlackEventTypeEntity> slackEventTypeEntityPage) {
-        return ResSlackEventTypeGetDTOV1.builder()
+        return ResSlackEventTypeGetDTOApiV1.builder()
             .slackEventTypePage(new SlackEventTypePage(slackEventTypeEntityPage))
             .build();
     }

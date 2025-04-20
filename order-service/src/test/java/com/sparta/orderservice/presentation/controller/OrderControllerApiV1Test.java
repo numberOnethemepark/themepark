@@ -204,7 +204,6 @@ public class OrderControllerApiV1Test {
                 .order(ReqOrderPutDtoApiV1.Order.builder()
                         .slackId("1234")
                         .paymentStatus(PaymentStatus.NOT_PAID)
-                        .paymentId(null)
                         .build())
                 .build();
 

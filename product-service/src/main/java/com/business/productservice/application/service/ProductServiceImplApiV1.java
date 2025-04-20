@@ -42,6 +42,7 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
         return ResProductGetByIdDTOApiV1.of(productEntity);
     }
 
+
     @Override
     public ResProductGetDTOApiV1 getBy(Predicate predicate, Pageable pageable){
 

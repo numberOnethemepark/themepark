@@ -135,7 +135,6 @@ public class OrderControllerApiV1Test {
         ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1 = ReqOrderPutDtoApiV1.builder()
                 .order(ReqOrderPutDtoApiV1.Order.builder()
                         .slackId("1234")
-                        .orderStatus("paid")
                         .build())
                 .build();
 

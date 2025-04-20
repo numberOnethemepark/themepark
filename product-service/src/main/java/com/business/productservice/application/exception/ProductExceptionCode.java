@@ -14,5 +14,4 @@ public enum ProductExceptionCode implements ExceptionCode {
     private final String code;
     private final String message;
     private final HttpStatus status;
-
 }

@@ -1,5 +1,7 @@
 package com.sparta.orderservice.payment.infrastructure.repository;
 
+import com.github.themepark.common.application.exception.CustomException;
+import com.sparta.orderservice.payment.application.exception.PaymentExceptionCode;
 import com.sparta.orderservice.payment.domain.entity.PaymentEntity;
 import com.sparta.orderservice.payment.domain.repository.PaymentRepository;
 import org.springframework.stereotype.Repository;
@@ -21,6 +23,6 @@ public class JpaPaymentRepository implements PaymentRepository {
     }
 
     @Override
-    public PaymentEntity findById(UUID paymentId) { return jpaPaymentRepository.findById(paymentId).orElse(null); }
+    public PaymentEntity findById(UUID paymentId) { return jpaPaymentRepository.findById(paymentId).orElseThrow(() -> new CustomException(PaymentExceptionCode.PAYMENT_EXCEPTION_CODE_NOT_FOUND));}
 
 }

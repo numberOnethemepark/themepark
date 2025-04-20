@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
         name = "tossPaymentsClient",
         url = "https://api.tosspayments.com/v1/payments",
         configuration = TossFeignConfig.class)
-public interface TossPaymentsClient {
+public interface TossPaymentsFeignClientApi {
     @PostMapping("/confirm")
     ResPaymentTossDto confirmPayment(@RequestBody ReqPaymentTossDto request);
 }

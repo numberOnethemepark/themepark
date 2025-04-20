@@ -8,6 +8,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class ReqPaymentTossDto {
 
     private UUID orderId;

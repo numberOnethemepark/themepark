@@ -1,6 +1,8 @@
-package com.sparta.orderservice.payment.infrastructure.feign;
+package com.sparta.orderservice.order.infrastructure.feign;
 
+import com.github.themepark.common.application.dto.ResDTO;
 import com.github.themepark.common.infrastructure.config.FeignConfig;
+import com.sparta.orderservice.order.application.dto.reponse.ResProductGetByIdDTOApiV1;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,11 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.UUID;
 
 @FeignClient(
-        name = "ProductOrderClient",
+        name = "product-service-client",
         url = "http://localhost:8004/v1/products",
         configuration = FeignConfig.class
 )
-public interface ProductPaymentClient {
+public interface ProductFeignClientApiV1 {
     @GetMapping("/{id}/stock")
     void getStockById(@PathVariable UUID id);
 
@@ -22,4 +24,7 @@ public interface ProductPaymentClient {
 
     @PostMapping("/{id}/stocks-restore")
     void postRestoreById(@PathVariable UUID id);
+
+    @GetMapping("{id}")
+    ResDTO<ResProductGetByIdDTOApiV1> getBy(@PathVariable UUID id);
 }

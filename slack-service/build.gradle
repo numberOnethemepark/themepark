@@ -52,6 +52,8 @@ dependencies {
     //querydsl
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
     annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
+    // Slack
+    implementation 'com.slack.api:slack-api-client:1.45.3'
 
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'

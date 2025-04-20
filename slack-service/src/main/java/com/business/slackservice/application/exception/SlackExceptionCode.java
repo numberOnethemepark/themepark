@@ -20,6 +20,7 @@ public enum SlackExceptionCode implements ExceptionCode {
     SLACK_TEMPLATE_NOT_FOUND("S201", "슬랙 양식을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     SLACK_TEMPLATE_DUPLICATED("S202", "이미 존재하는 양식이 있습니다.", HttpStatus.BAD_REQUEST),
 
+    SLACK_NOT_FOUND("S301", "슬랙을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     ;
 
     private final String code;

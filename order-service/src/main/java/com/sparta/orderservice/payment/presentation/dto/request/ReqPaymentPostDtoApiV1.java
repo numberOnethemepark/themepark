@@ -33,5 +33,8 @@ public class ReqPaymentPostDtoApiV1 {
 
         @NotBlank(message = "결제 key 를 입력해주세요.")
         public String paymentKey;
+
+        @NotBlank(message = "상품아이디를 입력해주세요.")
+        public UUID productId;
     }
 }

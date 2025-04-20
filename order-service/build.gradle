@@ -59,13 +59,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-
 	// Lombok
 	implementation 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
 	// Common libraries
-	implementation 'com.github.numberOnethemepark:common:0.0.7'
+	implementation 'com.github.numberOnethemepark:common:0.2.0'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

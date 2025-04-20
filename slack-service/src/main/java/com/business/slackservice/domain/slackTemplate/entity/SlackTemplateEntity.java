@@ -1,5 +1,6 @@
-package com.business.slackservice.domain.slack.entity;
+package com.business.slackservice.domain.slackTemplate.entity;
 
+import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,8 +12,11 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "p_slack_templates")
 @Entity
@@ -29,4 +33,23 @@ public class SlackTemplateEntity {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
+
+    @Builder
+    private SlackTemplateEntity(
+        SlackEventTypeEntity eventType,
+        String content
+    ) {
+        this.eventType = eventType;
+        this.content = content;
+    }
+
+    public static SlackTemplateEntity create(
+        SlackEventTypeEntity eventType,
+        String content
+    ) {
+        return SlackTemplateEntity.builder()
+            .eventType(eventType)
+            .content(content)
+            .build();
+    }
 }

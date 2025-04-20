@@ -1,6 +1,7 @@
 package com.business.slackservice.domain.slack.entity;
 
 import com.business.slackservice.domain.slack.vo.SlackStatus;
+import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

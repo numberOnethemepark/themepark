@@ -1,6 +1,6 @@
 package com.business.slackservice.application.dto.response.slackEventType;
 
-import com.business.slackservice.domain.slack.entity.SlackEventTypeEntity;
+import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 

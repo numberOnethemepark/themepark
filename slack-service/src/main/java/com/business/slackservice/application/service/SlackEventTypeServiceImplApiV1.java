@@ -2,8 +2,8 @@ package com.business.slackservice.application.service;
 
 import com.business.slackservice.application.dto.request.slackEventType.ReqSlackEventTypePostDTOApiV1;
 import com.business.slackservice.application.dto.request.slackEventType.ReqSlackEventTypePutDTOApiV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetByIdDTOV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetDTOV1;
+import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetByIdDTOApiV1;
+import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetDTOApiV1;
 import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypePostDTOApiV1;
 import com.business.slackservice.application.exception.SlackExceptionCode;
 import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
@@ -37,15 +37,15 @@ public class SlackEventTypeServiceImplApiV1 implements SlackEventTypeServiceApiV
     }
 
     @Override
-    public ResSlackEventTypeGetByIdDTOV1 getBy(UUID id) {
+    public ResSlackEventTypeGetByIdDTOApiV1 getBy(UUID id) {
         SlackEventTypeEntity slackEventTypeEntity = slackEventTypeService.getBy(id);
-        return ResSlackEventTypeGetByIdDTOV1.of(slackEventTypeEntity);
+        return ResSlackEventTypeGetByIdDTOApiV1.of(slackEventTypeEntity);
     }
 
     @Override
-    public ResSlackEventTypeGetDTOV1 getBy(Predicate predicate, Pageable pageable) {
+    public ResSlackEventTypeGetDTOApiV1 getBy(Predicate predicate, Pageable pageable) {
         Page<SlackEventTypeEntity> slackEventTypeEntityPage = slackEventTypeRepository.findAll(predicate, pageable);
-        return ResSlackEventTypeGetDTOV1.of(slackEventTypeEntityPage);
+        return ResSlackEventTypeGetDTOApiV1.of(slackEventTypeEntityPage);
     }
 
     @Transactional
@@ -55,6 +55,7 @@ public class SlackEventTypeServiceImplApiV1 implements SlackEventTypeServiceApiV
         dto.getSlackEventType().update(slackEventTypeEntity);
     }
 
+    @Transactional
     @Override
     public void deleteBy(UUID id, Long userId) {
         SlackEventTypeEntity slackEventTypeEntity = slackEventTypeService.getBy(id);

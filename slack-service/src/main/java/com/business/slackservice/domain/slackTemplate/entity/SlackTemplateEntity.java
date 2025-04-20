@@ -1,6 +1,7 @@
 package com.business.slackservice.domain.slackTemplate.entity;
 
 import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
+import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "p_slack_templates")
 @Entity
-public class SlackTemplateEntity {
+public class SlackTemplateEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -28,8 +29,8 @@ public class SlackTemplateEntity {
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "slack_event_type_id")
-    private SlackEventTypeEntity eventType;
+    @JoinColumn(name = "slack_event_type")
+    private SlackEventTypeEntity slackEventTypeEntity;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
@@ -39,7 +40,7 @@ public class SlackTemplateEntity {
         SlackEventTypeEntity eventType,
         String content
     ) {
-        this.eventType = eventType;
+        this.slackEventTypeEntity = eventType;
         this.content = content;
     }
 
@@ -51,5 +52,10 @@ public class SlackTemplateEntity {
             .eventType(eventType)
             .content(content)
             .build();
+    }
+
+    public void update(SlackEventTypeEntity slackEventTypeEntity, String content) {
+        if (slackEventTypeEntity != null) this.slackEventTypeEntity = slackEventTypeEntity;
+        if (content != null) this.content = content;
     }
 }

@@ -25,3 +25,9 @@ eureka:
 
 server:
   port: 8006
+
+slack:
+  bot:
+    token: ${SLACK_TOKEN}
+  admin:
+      id: C08NM9CQ3SA

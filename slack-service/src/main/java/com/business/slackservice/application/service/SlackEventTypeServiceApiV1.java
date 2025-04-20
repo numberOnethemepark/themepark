@@ -2,8 +2,8 @@ package com.business.slackservice.application.service;
 
 import com.business.slackservice.application.dto.request.slackEventType.ReqSlackEventTypePostDTOApiV1;
 import com.business.slackservice.application.dto.request.slackEventType.ReqSlackEventTypePutDTOApiV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetByIdDTOV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetDTOV1;
+import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetByIdDTOApiV1;
+import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetDTOApiV1;
 import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypePostDTOApiV1;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
@@ -14,9 +14,9 @@ public interface SlackEventTypeServiceApiV1 {
 
     ResSlackEventTypePostDTOApiV1 postBy(@Valid ReqSlackEventTypePostDTOApiV1 dto);
 
-    ResSlackEventTypeGetByIdDTOV1 getBy(UUID id);
+    ResSlackEventTypeGetByIdDTOApiV1 getBy(UUID id);
 
-    ResSlackEventTypeGetDTOV1 getBy(Predicate predicate, Pageable pageable);
+    ResSlackEventTypeGetDTOApiV1 getBy(Predicate predicate, Pageable pageable);
 
     void putBy(UUID id, @Valid ReqSlackEventTypePutDTOApiV1 dto);
 

@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
 @Builder
-public class ResSlackEventTypeGetByIdDTOV1 {
+public class ResSlackEventTypeGetByIdDTOApiV1 {
     @JsonProperty
     private SlackEventType slackEventType;
 
-    public static ResSlackEventTypeGetByIdDTOV1 of(SlackEventTypeEntity slackEventTypeEntity) {
-        return ResSlackEventTypeGetByIdDTOV1.builder()
+    public static ResSlackEventTypeGetByIdDTOApiV1 of(SlackEventTypeEntity slackEventTypeEntity) {
+        return ResSlackEventTypeGetByIdDTOApiV1.builder()
             .slackEventType(SlackEventType.from(slackEventTypeEntity))
             .build();
     }

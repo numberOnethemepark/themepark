@@ -2,8 +2,8 @@ package com.business.slackservice.presentation.controller;
 
 import com.business.slackservice.application.dto.request.slackEventType.ReqSlackEventTypePostDTOApiV1;
 import com.business.slackservice.application.dto.request.slackEventType.ReqSlackEventTypePutDTOApiV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetByIdDTOV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetDTOV1;
+import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetByIdDTOApiV1;
+import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetDTOApiV1;
 import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypePostDTOApiV1;
 import com.business.slackservice.application.service.SlackEventTypeServiceApiV1;
 import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
@@ -52,13 +52,13 @@ public class SlackEventTypeControllerV1 {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResDTO<ResSlackEventTypeGetByIdDTOV1>> getBy(
+    public ResponseEntity<ResDTO<ResSlackEventTypeGetByIdDTOApiV1>> getBy(
         @PathVariable UUID id
     ) {
-        ResSlackEventTypeGetByIdDTOV1 response = slackEventTypeServiceApiV1.getBy(id);
+        ResSlackEventTypeGetByIdDTOApiV1 response = slackEventTypeServiceApiV1.getBy(id);
 
         return new ResponseEntity<>(
-            ResDTO.<ResSlackEventTypeGetByIdDTOV1>builder()
+            ResDTO.<ResSlackEventTypeGetByIdDTOApiV1>builder()
                 .code(0)
                 .message("이벤트 타입 조회에 성공했습니다.")
                 .data(response)
@@ -68,14 +68,14 @@ public class SlackEventTypeControllerV1 {
     }
 
     @GetMapping
-    public ResponseEntity<ResDTO<ResSlackEventTypeGetDTOV1>> getBy(
+    public ResponseEntity<ResDTO<ResSlackEventTypeGetDTOApiV1>> getBy(
         @QuerydslPredicate(root = SlackEventTypeEntity.class) Predicate predicate,
         @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable
     ) {
-        ResSlackEventTypeGetDTOV1 response = slackEventTypeServiceApiV1.getBy(predicate, pageable);
+        ResSlackEventTypeGetDTOApiV1 response = slackEventTypeServiceApiV1.getBy(predicate, pageable);
 
         return new ResponseEntity<>(
-            ResDTO.<ResSlackEventTypeGetDTOV1>builder()
+            ResDTO.<ResSlackEventTypeGetDTOApiV1>builder()
                 .code(0)
                 .message("이벤트 타입 목록 조회에 성공했습니다.")
                 .data(response)

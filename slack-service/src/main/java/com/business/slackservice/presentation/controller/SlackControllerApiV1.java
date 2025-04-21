@@ -29,12 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/slacks")
-public class SlackControllerV1 {
+@RequestMapping("/v1")
+public class SlackControllerApiV1 {
 
     private final SlackServiceApiV1 slackServiceApiV1;
 
-    @PostMapping
+    @PostMapping("/internal/slacks")
     public ResponseEntity<ResDTO<ResSlackPostDTOApiV1>> postBy(
         @RequestBody ReqSlackPostDTOApiV1 dto
     ) throws SlackApiException, IOException {
@@ -49,7 +49,7 @@ public class SlackControllerV1 {
         );
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/slacks/{id}")
     public ResponseEntity<ResDTO<ResSlackGetByIdDTOApiV1>> getBy(
         @PathVariable UUID id
     ) {
@@ -64,7 +64,7 @@ public class SlackControllerV1 {
         );
     }
 
-    @GetMapping
+    @GetMapping("/slacks")
     public ResponseEntity<ResDTO<ResSlackGetDTOApiV1>> getBy(
         @QuerydslPredicate(root = SlackEntity.class) Predicate predicate,
         @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable
@@ -80,7 +80,7 @@ public class SlackControllerV1 {
         );
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/slacks/{id}")
     public ResponseEntity<ResDTO<Object>> deleteBy(
         @PathVariable UUID id,
         @RequestHeader("X-User-Id") Long userId

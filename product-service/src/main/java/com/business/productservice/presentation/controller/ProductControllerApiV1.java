@@ -36,7 +36,7 @@ public class ProductControllerApiV1 {
                 ResProductPostDTOApiV1 responseDto = productServiceApiV1.postBy(dto);
                 return new ResponseEntity<>(
                         ResDTO.<ResProductPostDTOApiV1>builder()
-                                .code(0)
+                                .code("0")
                                 .message("상품 등록에 성공했습니다.")
                                 .data(responseDto)
                                 .build(),
@@ -52,7 +52,7 @@ public class ProductControllerApiV1 {
 
                 return new ResponseEntity<>(
                         ResDTO.<ResProductGetByIdDTOApiV1>builder()
-                                .code(0)
+                                .code("0")
                                 .message("상품 조회에 성공했습니다.")
                                 .data(responseDto)
                                 .build(),
@@ -69,7 +69,7 @@ public class ProductControllerApiV1 {
 
                 return new ResponseEntity<>(
                         ResDTO.<ResProductGetDTOApiV1>builder()
-                                .code(0)
+                                .code("0")
                                 .message("상품 조회에 성공했습니다.")
                                 .data(responseDto)
                                 .build(),
@@ -86,7 +86,7 @@ public class ProductControllerApiV1 {
                 ResProductPutDTOApiV1 responseDto = productServiceApiV1.putBy(id, dto);
                 return new ResponseEntity<>(
                         ResDTO.<ResProductPutDTOApiV1>builder()
-                                .code(0)
+                                .code("0")
                                 .message("상품 정보 수정에 성공했습니다.")
                                 .data(responseDto)
                                 .build(),
@@ -102,7 +102,7 @@ public class ProductControllerApiV1 {
                 productServiceApiV1.deleteBy(id);
                 return new ResponseEntity<>(
                         ResDTO.builder()
-                                .code(0)
+                                .code("0")
                                 .message("상품 삭제를 성공했습니다.")
                                 .build(),
                         HttpStatus.OK
@@ -117,7 +117,7 @@ public class ProductControllerApiV1 {
                 productServiceApiV1.postDecreaseById(id);
                 return new ResponseEntity<>(
                         ResDTO.builder()
-                                .code(0)
+                                .code("0")
                                 .message("상품 재고가 차감되었습니다.")
                                 .build(),
                         HttpStatus.OK
@@ -132,7 +132,7 @@ public class ProductControllerApiV1 {
                 productServiceApiV1.postRestoreById(id);
                 return new ResponseEntity<>(
                         ResDTO.builder()
-                                .code(0)
+                                .code("0")
                                 .message("상품 재고가 복구되었습니다.")
                                 .build(),
                         HttpStatus.OK
@@ -147,7 +147,7 @@ public class ProductControllerApiV1 {
                 ResStockGetByIdDTOApiv1 responseDto = productServiceApiV1.getStockById(id);
                 return new ResponseEntity<>(
                         ResDTO.<ResStockGetByIdDTOApiv1>builder()
-                                .code(0)
+                                .code("0")
                                 .message("상품 재고 조회에 성공했습니다.")
                                 .data(responseDto)
                                 .build(),

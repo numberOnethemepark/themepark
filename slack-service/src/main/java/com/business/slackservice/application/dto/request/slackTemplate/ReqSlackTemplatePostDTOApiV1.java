@@ -6,11 +6,13 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 public class ReqSlackTemplatePostDTOApiV1 {
     @Valid
@@ -19,6 +21,7 @@ public class ReqSlackTemplatePostDTOApiV1 {
 
     @NoArgsConstructor
     @AllArgsConstructor
+    @Builder
     @Getter
     public static class SlackTemplate {
         @NotNull(message = "이벤트 타입 ID를 입력해주세요.")

@@ -46,7 +46,7 @@ public class OrderControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.<ResOrderPostDtoApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("주문을 생성하였습니다!")
                         .data(ResOrderPostDtoApiV1.of(orderEntity))
                         .build(),
@@ -63,7 +63,7 @@ public class OrderControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.builder()
-                        .code(0) //Ok 코드
+                        .code("0") //Ok 코드
                         .message("주문을 수정하였습니다!")
                         .build(),
                 HttpStatus.OK
@@ -76,7 +76,7 @@ public class OrderControllerApiV1 {
     ){
         return new ResponseEntity<>(
                 ResDTO.<ResOrderGetDtoApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("주문정보를 조회하였습니다!")
                         .data(ResOrderGetDtoApiV1.of(orderFacade.getOrderBy(id)))
                         .build(),
@@ -94,7 +94,7 @@ public class OrderControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.<ResOrdersGetByIdDtoApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("주문목록을 조회하였습니다!")
                         .data(ResOrdersGetByIdDtoApiV1.of(orderPage))
                         .build(),
@@ -108,7 +108,7 @@ public class OrderControllerApiV1 {
     ){
         return new ResponseEntity<>(
                 ResDTO.builder()
-                        .code(0)
+                        .code("0")
                         .message("주문을 삭제하였습니다!")
                         .build(),
                 HttpStatus.OK

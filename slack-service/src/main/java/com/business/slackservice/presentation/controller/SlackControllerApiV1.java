@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/slacks")
-public class SlackControllerV1 {
+public class SlackControllerApiV1 {
 
     private final SlackServiceApiV1 slackServiceApiV1;
 

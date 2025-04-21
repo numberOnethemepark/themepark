@@ -99,7 +99,7 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
                 .request(exchange.getRequest().mutate()
                     .header("X-User-Id", getUserIdFromToken(jwtToken))
                     .header("X-User-Role", getRoleFromToken(jwtToken))
-                    .header("X-User-SlackId", getSlackIdFromToken(jwtToken))
+                    .header("X-User-Slack-Id", getSlackIdFromToken(jwtToken))
                     .build())
                 .build();
 

@@ -4,11 +4,13 @@ import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEnti
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 public class ReqSlackEventTypePutDTOApiV1 {
     @Valid
@@ -17,6 +19,7 @@ public class ReqSlackEventTypePutDTOApiV1 {
 
     @NoArgsConstructor
     @AllArgsConstructor
+    @Builder
     @Getter
     public static class SlackEventType {
         @NotNull(message = "이벤트 이름을 입력해주세요.")

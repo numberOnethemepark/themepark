@@ -4,7 +4,6 @@ import com.business.slackservice.domain.slack.entity.SlackEntity;
 import com.business.slackservice.domain.slack.vo.SlackStatus;
 import com.business.slackservice.domain.slack.vo.TargetType;
 import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
-import java.util.UUID;
 import lombok.Getter;
 
 @Getter
@@ -13,7 +12,7 @@ public class ReqSlackPostDTOApiV1 {
 
     @Getter
     public static class Slack {
-        private UUID slackEventTypeId;
+        private String slackEventType;
         private String relatedName;
         private SlackTarget target;
 

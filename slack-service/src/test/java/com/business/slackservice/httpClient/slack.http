@@ -82,7 +82,7 @@ Authorization: {{accessToken}}
 
 {
     "slack": {
-        "slackEventTypeId": "701544bb-5ab1-4a45-90b7-d2ca3b72b885",
+        "slackEventType": "ORDER_COMPLETE",
         "relatedName": "8월 한정 20% 할인",
         "target": {
             "slackId": "ADMIN",

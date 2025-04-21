@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
         url = "http://localhost:8006",configuration = FeignConfig.class)
 public interface SlackFeignClientApiV1 {
 
-    @PostMapping("/v1/slacks")
+    @PostMapping("/v1/internal/slacks")
     ResponseEntity<Void> postBy(@RequestBody ReqToSlackPostDTOApiV1 dto);
 }

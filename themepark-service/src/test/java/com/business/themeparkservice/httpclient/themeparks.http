@@ -8,14 +8,14 @@ Content-Type:application/json
   }
 }
 > {%
-    client.global.set("access_token", response.headers.valueOf("ACCESS_TOKEN"))
+    client.global.set("accessToken", response.headers.valueOf("ACCESS_TOKEN"))
 %}
 
 ###
 
 POST http://localhost:8080/v1/themeparks
 Content-Type: application/json
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
 
 {
   "themepark":
@@ -50,7 +50,7 @@ GET http://localhost:8080/v1/themeparks?description=슝슝 놀이기구입니다
 
 PUT http://localhost:8080/v1/themeparks/7949401a-a67e-41cf-a5e3-192ad62d81f8
 Content-Type: application/json
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
 
 {
   "themepark": {
@@ -71,4 +71,4 @@ Authorization: {{access_token}}
 ###
 
 DELETE http://localhost:8080/v1/themeparks/1bce86d2-1afb-4e80-994e-a1fb4d92aaf9
-Authorization: {{access_token}}
+Authorization: {{accessToken}}

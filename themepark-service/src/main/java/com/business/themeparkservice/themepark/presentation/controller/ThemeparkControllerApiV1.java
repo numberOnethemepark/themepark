@@ -36,7 +36,7 @@ public class ThemeparkControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.<ResThemeparkPostDTOApiv1>builder()
-                        .code(0)
+                        .code("0")
                         .message("테마파크 생성을 성공했습니다.")
                         .data(themeparkService.postBy(reqDto))
                         .build(),
@@ -48,7 +48,7 @@ public class ThemeparkControllerApiV1 {
     public ResponseEntity<ResDTO<ResThemeparkGetByIdDTOApiV1>> getBy(@PathVariable UUID id){
         return new ResponseEntity<>(
                 ResDTO.<ResThemeparkGetByIdDTOApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("테마파크 조회에 성공했습니다.")
                         .data(themeparkService.getBy(id))
                         .build(),
@@ -64,7 +64,7 @@ public class ThemeparkControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.<ResThemeparkGetDTOApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("테마파크 검색에 성공했습니다.")
                         .data(themeparkService.getBy(predicate,pageable))
                         .build(),
@@ -81,7 +81,7 @@ public class ThemeparkControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.<ResThemeparkPutDTOApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("테마파크 수정을 성공했습니다.")
                         .data(themeparkService.putBy(id,reqDto))
                         .build(),
@@ -95,7 +95,7 @@ public class ThemeparkControllerApiV1 {
         themeparkService.deleteBy(id,userId);
         return new ResponseEntity<>(
                 ResDTO.builder()
-                        .code(0)
+                        .code("0")
                         .message("테마파크 삭제를 성공했습니다.")
                         .build(),
                 HttpStatus.OK

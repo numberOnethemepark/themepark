@@ -57,7 +57,7 @@ public class SlackControllerApiV1Test {
             )
             .build();
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/v1/slacks")
+                RestDocumentationRequestBuilders.post("/v1/internal/slacks")
                     .content(dtoToJson(req))
                     .contentType(MediaType.APPLICATION_JSON)
             )

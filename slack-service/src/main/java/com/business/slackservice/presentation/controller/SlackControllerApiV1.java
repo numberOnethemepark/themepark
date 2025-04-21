@@ -29,19 +29,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/slacks")
-public class SlackControllerV1 {
+@RequestMapping("/v1")
+public class SlackControllerApiV1 {
 
     private final SlackServiceApiV1 slackServiceApiV1;
 
-    @PostMapping
+    @PostMapping("/internal/slacks")
     public ResponseEntity<ResDTO<ResSlackPostDTOApiV1>> postBy(
         @RequestBody ReqSlackPostDTOApiV1 dto
     ) throws SlackApiException, IOException {
         ResSlackPostDTOApiV1 response = slackServiceApiV1.postBy(dto);
         return new ResponseEntity<>(
             ResDTO.<ResSlackPostDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("슬랙이 전송되었습니다.")
                 .data(response)
                 .build(),
@@ -49,14 +49,14 @@ public class SlackControllerV1 {
         );
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/slacks/{id}")
     public ResponseEntity<ResDTO<ResSlackGetByIdDTOApiV1>> getBy(
         @PathVariable UUID id
     ) {
         ResSlackGetByIdDTOApiV1 response = slackServiceApiV1.getBy(id);
         return new ResponseEntity<>(
             ResDTO.<ResSlackGetByIdDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("슬랙 조회에 성공했습니다.")
                 .data(response)
                 .build(),
@@ -64,7 +64,7 @@ public class SlackControllerV1 {
         );
     }
 
-    @GetMapping
+    @GetMapping("/slacks")
     public ResponseEntity<ResDTO<ResSlackGetDTOApiV1>> getBy(
         @QuerydslPredicate(root = SlackEntity.class) Predicate predicate,
         @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable
@@ -72,7 +72,7 @@ public class SlackControllerV1 {
         ResSlackGetDTOApiV1 response = slackServiceApiV1.getBy(predicate, pageable);
         return new ResponseEntity<>(
             ResDTO.<ResSlackGetDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("슬랙 목록 조회에 성공했습니다.")
                 .data(response)
                 .build(),
@@ -80,7 +80,7 @@ public class SlackControllerV1 {
         );
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/slacks/{id}")
     public ResponseEntity<ResDTO<Object>> deleteBy(
         @PathVariable UUID id,
         @RequestHeader("X-User-Id") Long userId
@@ -88,7 +88,7 @@ public class SlackControllerV1 {
         slackServiceApiV1.deleteBy(id, userId);
         return new ResponseEntity<>(
             ResDTO.builder()
-                .code(0)
+                .code("0")
                 .message("슬랙 삭제에 성공했습니다.")
                 .build(),
             HttpStatus.OK

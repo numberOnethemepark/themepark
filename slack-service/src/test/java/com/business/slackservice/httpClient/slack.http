@@ -76,7 +76,7 @@ Content-Type: application/json
 Authorization: {{accessToken}}
 
 ### 3-1. 슬랙 CREATE + 관리자 채널에 메시지 전송
-POST http://localhost:8080/v1/slacks
+POST http://localhost:8006/v1/internal/slacks
 Content-Type: application/json
 Authorization: {{accessToken}}
 
@@ -92,7 +92,7 @@ Authorization: {{accessToken}}
 }
 
 ### 3-2. 슬랙 CREATE + 사용자 DM 전송
-POST http://localhost:8080/v1/slacks
+POST http://localhost:8006/v1/internal/slacks
 Content-Type: application/json
 Authorization: {{accessToken}}
 

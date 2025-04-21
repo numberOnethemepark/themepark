@@ -43,7 +43,7 @@ public class SlackEventTypeControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.<ResSlackEventTypePostDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("이벤트 타입이 저장되었습니다.")
                 .data(response)
                 .build(),
@@ -59,7 +59,7 @@ public class SlackEventTypeControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.<ResSlackEventTypeGetByIdDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("이벤트 타입 조회에 성공했습니다.")
                 .data(response)
                 .build(),
@@ -76,7 +76,7 @@ public class SlackEventTypeControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.<ResSlackEventTypeGetDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("이벤트 타입 목록 조회에 성공했습니다.")
                 .data(response)
                 .build(),
@@ -93,7 +93,7 @@ public class SlackEventTypeControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.builder()
-                .code(0)
+                .code("0")
                 .message("이벤트 타입 수정에 성공했습니다.")
                 .build(),
             HttpStatus.OK
@@ -109,7 +109,7 @@ public class SlackEventTypeControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.builder()
-                .code(0)
+                .code("0")
                 .message("이벤트 타입 삭제에 성공했습니다.")
                 .build(),
             HttpStatus.OK

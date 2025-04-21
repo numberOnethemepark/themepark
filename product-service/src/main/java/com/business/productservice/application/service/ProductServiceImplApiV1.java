@@ -101,12 +101,12 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
             String productName = stockEntity.getProduct().getName();
 
             ReqToSlackPostDTOApiV1.Slack.SlackTarget target = ReqToSlackPostDTOApiV1.Slack.SlackTarget.builder()
-                    .slackId("C01ABCDEF78") // 슬랙 관리자 채널 ID
-                    .type("ADMIN_CHANNEL")  // 고정
+                    .slackId("C01ABCDEF78")
+                    .type("ADMIN_CHANNEL")
                     .build();
 
             ReqToSlackPostDTOApiV1.Slack slack = ReqToSlackPostDTOApiV1.Slack.builder()
-                    .slackEventTypeId("STOCK_OUT")
+                    .slackEventType("STOCK_OUT")
                     .relatedName(productName)
                     .target(target)
                     .build();
@@ -117,6 +117,7 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
             try {
                 // 슬랙 API 호출 (FeignClient 직접 사용)
                 slackFeignClientApiV1.postBy(request);
+                log.info("슬랙 성공");
             } catch (Exception e) {
                 log.warn("슬랙 전송 실패 - 상품명: {}", productName, e);
             }

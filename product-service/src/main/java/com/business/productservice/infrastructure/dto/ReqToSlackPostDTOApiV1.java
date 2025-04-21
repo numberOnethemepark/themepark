@@ -16,7 +16,7 @@ public class ReqToSlackPostDTOApiV1 {
     @AllArgsConstructor
     @Builder
     public static class Slack {
-        private String slackEventTypeId;
+        private String slackEventType;
         private String relatedName;
         private SlackTarget target;
 

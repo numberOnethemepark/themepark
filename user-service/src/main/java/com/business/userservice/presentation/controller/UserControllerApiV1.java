@@ -44,7 +44,7 @@ public class UserControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.builder()
-                .code(0)
+                .code("0")
                 .message("회원 정보 수정에 성공했습니다.")
                 .build(),
             HttpStatus.OK
@@ -59,7 +59,7 @@ public class UserControllerApiV1 {
         ResUserGetByIdDTOApiV1 data = userService.getBy(id);
         return new ResponseEntity<>(
             ResDTO.<ResUserGetByIdDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("회원 조회에 성공하였습니다.")
                 .data(data)
                 .build(),
@@ -77,7 +77,7 @@ public class UserControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.<ResUserGetDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("회원 리스트 조회에 성공했습니다.")
                 .data(data)
                 .build(),
@@ -95,7 +95,7 @@ public class UserControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.builder()
-                .code(0)
+                .code("0")
                 .message("회원 탈퇴에 성공했습니다.")
                 .build(),
             HttpStatus.OK
@@ -112,7 +112,7 @@ public class UserControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.builder()
-                .code(0)
+                .code("0")
                 .message(message)
                 .build(),
             HttpStatus.OK

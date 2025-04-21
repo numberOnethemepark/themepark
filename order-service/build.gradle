@@ -66,6 +66,10 @@ dependencies {
 	// Common libraries
 	implementation 'com.github.numberOnethemepark:common:0.2.0'
 
+	// H2 for test
+	implementation 'com.h2database:h2'
+
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

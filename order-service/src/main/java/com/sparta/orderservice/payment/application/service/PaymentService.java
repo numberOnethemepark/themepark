@@ -10,8 +10,9 @@ import com.sparta.orderservice.payment.application.usercase.PaymentUseCase;
 import com.sparta.orderservice.payment.domain.entity.PaymentEntity;
 import com.sparta.orderservice.payment.domain.repository.PaymentRepository;
 import com.sparta.orderservice.payment.domain.vo.PaymentStatus;
-import com.sparta.orderservice.payment.infrastructure.feign.ProductPaymentClient;
-import com.sparta.orderservice.payment.infrastructure.feign.TossPaymentsClient;
+import com.sparta.orderservice.payment.infrastructure.feign.ProductFeignClientApiV1;
+import com.sparta.orderservice.payment.infrastructure.feign.TossPaymentsFeignClientApi;
+
 import com.sparta.orderservice.payment.presentation.dto.request.ReqPaymentPostDtoApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,15 +23,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PaymentService implements PaymentUseCase {
 
-    private final TossPaymentsClient tossPaymentsClient;
+    private final TossPaymentsFeignClientApi tossPaymentsFeignClientApi;
     private final PaymentRepository paymentRepository;
     private final OrderFacade orderFacade;
-    private final ProductPaymentClient productPaymentClient;
+    private final ProductFeignClientApiV1 productFeignClientApiV1;
 
     @Override
     public void createPayment(ReqPaymentPostDtoApiV1 reqPaymentPostDtoApiV1){
 
-        ResPaymentTossDto tossRes = tossPaymentsClient.confirmPayment(ReqPaymentTossDto
+        ResPaymentTossDto tossRes = tossPaymentsFeignClientApi.confirmPayment(ReqPaymentTossDto
                 .of(reqPaymentPostDtoApiV1.getPayment().getOrderId()
                         , reqPaymentPostDtoApiV1.getPayment().getAmount()
                         , reqPaymentPostDtoApiV1.getPayment().getPaymentKey()
@@ -39,7 +40,7 @@ public class PaymentService implements PaymentUseCase {
 
         //결제 실패
         if (tossRes.getFailure() != null) {
-            productPaymentClient.postRestoreById(reqPaymentPostDtoApiV1.getPayment().productId);
+            productFeignClientApiV1.postRestoreById(reqPaymentPostDtoApiV1.getPayment().productId);
             throw new CustomException(PaymentExceptionCode.PAYMENT_FAILURE);
         }
 

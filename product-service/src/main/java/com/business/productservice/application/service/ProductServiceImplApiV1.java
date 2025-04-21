@@ -6,12 +6,15 @@ import com.business.productservice.application.dto.response.*;
 import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.domain.product.entity.StockEntity;
+import com.business.productservice.infrastructure.dto.ReqToSlackPostDTOApiV1;
+import com.business.productservice.infrastructure.feign.SlackFeignClientApiV1;
 import com.business.productservice.infrastructure.persistence.product.ProductJpaRepository;
 import com.business.productservice.infrastructure.persistence.product.StockJpaRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,10 +24,12 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class ProductServiceImplApiV1 implements ProductServiceApiV1{
 
     private final ProductJpaRepository productRepository;
     private final StockJpaRepository stockRepository;
+    private final SlackFeignClientApiV1 slackFeignClientApiV1;
 
     @Override
     public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
@@ -91,6 +96,31 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
         }
 
         stockEntity.decrease();
+
+        if(stockEntity.getStock() == 0){
+            String productName = stockEntity.getProduct().getName();
+
+            ReqToSlackPostDTOApiV1.Slack.SlackTarget target = ReqToSlackPostDTOApiV1.Slack.SlackTarget.builder()
+                    .slackId("C01ABCDEF78") // 슬랙 관리자 채널 ID
+                    .type("ADMIN_CHANNEL")  // 고정
+                    .build();
+
+            ReqToSlackPostDTOApiV1.Slack slack = ReqToSlackPostDTOApiV1.Slack.builder()
+                    .slackEventTypeId("STOCK_OUT")
+                    .relatedName(productName)
+                    .target(target)
+                    .build();
+
+            ReqToSlackPostDTOApiV1 request = ReqToSlackPostDTOApiV1.builder()
+                    .slack(slack)
+                    .build();
+            try {
+                // 슬랙 API 호출 (FeignClient 직접 사용)
+                slackFeignClientApiV1.postBy(request);
+            } catch (Exception e) {
+                log.warn("슬랙 전송 실패 - 상품명: {}", productName, e);
+            }
+        }
     }
 
     @Override

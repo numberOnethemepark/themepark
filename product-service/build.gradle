@@ -62,7 +62,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     //common
-    implementation 'com.github.numberOnethemepark:common:0.1.0'
+    implementation 'com.github.numberOnethemepark:common:0.2.1'
 
     //querydsl
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"

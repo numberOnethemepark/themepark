@@ -44,7 +44,7 @@ public class SlackTemplateControllerApiV1 {
         ResSlackTemplatePostDTOApiV1 response = slackTemplateServiceApiV1.postBy(dto);
         return new ResponseEntity<>(
             ResDTO.<ResSlackTemplatePostDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("슬랙 양식이 저장되었습니다.")
                 .data(response)
                 .build(),
@@ -59,7 +59,7 @@ public class SlackTemplateControllerApiV1 {
         ResSlackTemplateGetByIdDTOApiV1 response = slackTemplateServiceApiV1.getBy(id);
         return new ResponseEntity<>(
             ResDTO.<ResSlackTemplateGetByIdDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("슬랙 양식 조회에 성공했습니다.")
                 .data(response)
                 .build(),
@@ -75,7 +75,7 @@ public class SlackTemplateControllerApiV1 {
         ResSlackTemplateGetDTOApiV1 response = slackTemplateServiceImplApiV1.getBy(predicate, pageable);
         return new ResponseEntity<>(
             ResDTO.<ResSlackTemplateGetDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("슬랙 양식 목록 조회에 성공했습니다.")
                 .data(response)
                 .build(),
@@ -91,7 +91,7 @@ public class SlackTemplateControllerApiV1 {
         slackTemplateServiceApiV1.putBy(id, dto);
         return new ResponseEntity<>(
             ResDTO.builder()
-                .code(0)
+                .code("0")
                 .message("슬랙 양식 수정에 성공했습니다.")
                 .build(),
             HttpStatus.OK
@@ -106,7 +106,7 @@ public class SlackTemplateControllerApiV1 {
         slackTemplateServiceApiV1.deleteBy(id, userId);
         return new ResponseEntity<>(
             ResDTO.builder()
-                .code(0)
+                .code("0")
                 .message("슬랙 양식 삭제에 성공했습니다.")
                 .build(),
             HttpStatus.OK

@@ -64,7 +64,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
 	// Common libraries
-	implementation 'com.github.numberOnethemepark:common:0.2.0'
+	implementation 'com.github.numberOnethemepark:common:0.2.1'
 
 	// H2 for test
 	implementation 'com.h2database:h2'

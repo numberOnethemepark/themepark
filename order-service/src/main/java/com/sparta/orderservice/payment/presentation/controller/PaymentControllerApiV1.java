@@ -29,7 +29,7 @@ public class PaymentControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.<ResPaymentPostDtoApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("결제를 완료하였습니다.")
                         .data(ResPaymentPostDtoApiV1.of())
                         .build(),
@@ -44,7 +44,7 @@ public class PaymentControllerApiV1 {
     ){
         return new ResponseEntity<>(
                 ResDTO.builder()
-                        .code(0)
+                        .code("0")
                         .message("결제가 수정되었습니다.")
                         .build(),
                 HttpStatus.OK
@@ -58,7 +58,7 @@ public class PaymentControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.<ResPaymentGetDtoApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("결제정보를 조회하였습니다.")
                         .data(ResPaymentGetDtoApiV1.of(paymentService.getBy(id)))
                         .build(),

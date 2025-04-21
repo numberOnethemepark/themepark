@@ -49,21 +49,6 @@ public class SlackControllerV1 {
         );
     }
 
-    @PostMapping("/internal/waiting/call")
-    public ResponseEntity<ResDTO<ResSlackPostDTOApiV1>> internalPostBy(
-            @RequestBody ReqSlackPostDTOApiV1 dto
-    ) throws SlackApiException, IOException {
-        ResSlackPostDTOApiV1 response = slackServiceApiV1.postBy(dto);
-        return new ResponseEntity<>(
-                ResDTO.<ResSlackPostDTOApiV1>builder()
-                        .code(0)
-                        .message("슬랙이 전송되었습니다.")
-                        .data(response)
-                        .build(),
-                HttpStatus.OK
-        );
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ResDTO<ResSlackGetByIdDTOApiV1>> getBy(
         @PathVariable UUID id

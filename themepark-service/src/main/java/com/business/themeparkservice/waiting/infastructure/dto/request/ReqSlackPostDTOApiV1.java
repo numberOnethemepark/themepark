@@ -12,7 +12,7 @@ public class ReqSlackPostDTOApiV1 {
 
     public void createslack(String message) {
         this.slack = Slack.builder()
-                .slackEventTypeId(UUID.fromString("5edff6f0-b211-4fb4-b106-641a8fcfe8d1"))
+                .slackEventType("WAITING_CALL")
                 .relatedName(message)
                 .target(Slack.SlackTarget.builder()
                         .slackId("U08L3T2DTCP")
@@ -25,7 +25,7 @@ public class ReqSlackPostDTOApiV1 {
     @Getter
     @Builder
     public static class Slack {
-        private UUID slackEventTypeId;
+        private String slackEventType;
         private String relatedName;
         private SlackTarget target;
 
@@ -36,15 +36,5 @@ public class ReqSlackPostDTOApiV1 {
             private TargetType type;
         }
 
-//        public SlackEntity toEntityBy(SlackEventTypeEntity slackEventTypeEntity, String content, SlackStatus status) {
-//            return SlackEntity.create(
-//                slackEventTypeEntity,
-//                relatedName,
-//                status,
-//                content,
-//                target.getSlackId(),
-//                target.getType()
-//            );
-//        }
     }
 }

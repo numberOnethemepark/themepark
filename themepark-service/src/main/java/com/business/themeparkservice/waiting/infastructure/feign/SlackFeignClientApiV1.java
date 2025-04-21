@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "slack-service",
-        url = "http://localhost:8006/v1/slacks",configuration = FeignConfig.class)
+        url = "http://localhost:8006/v1/internal/slacks",configuration = FeignConfig.class)
 public interface SlackFeignClientApiV1 {
 
-    @PostMapping("/internal/waiting/call")
+    @PostMapping
     void postBy(@RequestBody ReqSlackPostDTOApiV1 reqDto);
 }

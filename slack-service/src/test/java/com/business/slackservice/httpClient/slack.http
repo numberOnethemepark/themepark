@@ -1,0 +1,123 @@
+### 1-1. 슬랙 이벤트 타입 CREATE
+POST http://localhost:8080/v1/slack-event-types
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+    "slackEventType": {
+        "name": "ORDER_COMPLETE1"
+    }
+}
+
+### 1-2. 슬랙 이벤트 타입 단일 READ
+GET http://localhost:8080/v1/slack-event-types/701544bb-5ab1-4a45-90b7-d2ca3b72b885
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+### 1-3. 슬랙 이벤트 타입 목록 READ
+GET http://localhost:8080/v1/slack-event-types
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+### 1-4. 슬랙 이벤트 타입 UPDATE
+PUT http://localhost:8080/v1/slack-event-types/701544bb-5ab1-4a45-90b7-d2ca3b72b885
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+  "slackEventType": {
+    "name": "ORDER_COMPLETE_UPDATE"
+  }
+}
+
+### 1-5. 슬랙 이벤트 타입 DELETE
+DELETE http://localhost:8080/v1/slack-event-types/701544bb-5ab1-4a45-90b7-d2ca3b72b885
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+### 2-1. 슬랙 템플릿 CREATE
+POST http://localhost:8080/v1/slack-templates
+Content-Type: application/json
+Authorization: {{accessToken}}
+// relatedName은 {{relatedName}}으로 전달해야 합니다.
+
+{
+    "slackTemplate": {
+        "slackEventTypeId": "701544bb-5ab1-4a45-90b7-d2ca3b72b885",
+        "content": "relatedName 주문이 정상적으로 접수되었습니다."
+    }
+}
+
+### 2-2. 슬랙 템플릿 단일 READ
+GET http://localhost:8080/v1/slack-templates/8c102e7d-6084-4c53-8568-4653e655374c
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+### 2-3. 슬랙 템플릿 목록 READ
+GET http://localhost:8080/v1/slack-templates
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+### 2-4. 슬랙 템플릿 UPDATE
+PUT http://localhost:8080/v1/slack-templates/8c102e7d-6084-4c53-8568-4653e655374c
+Content-Type: application/json
+Authorization: {{accessToken}}
+// relatedName은 {{relatedName}}으로 전달해야 합니다.
+
+{
+  "slackTemplate": {
+    "content": "relatedName 주문이 정상적으로 접수되었습니다!!!!!"
+  }
+}
+
+### 2-5. 슬랙 템플릿 DELETE
+DELETE http://localhost:8080/v1/slack-templates/8c102e7d-6084-4c53-8568-4653e655374c
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+### 3-1. 슬랙 CREATE + 관리자 채널에 메시지 전송
+POST http://localhost:8080/v1/slacks
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+    "slack": {
+        "slackEventTypeId": "701544bb-5ab1-4a45-90b7-d2ca3b72b885",
+        "relatedName": "8월 한정 20% 할인",
+        "target": {
+            "slackId": "ADMIN",
+            "type": "ADMIN_CHANNEL"
+        }
+    }
+}
+
+### 3-2. 슬랙 CREATE + 사용자 DM 전송
+POST http://localhost:8080/v1/slacks
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+  "slack": {
+    "slackEventTypeId": "701544bb-5ab1-4a45-90b7-d2ca3b72b885",
+    "relatedName": "8월 한정 20% 할인",
+    "target": {
+      "slackId": "U08LM39A951",
+      "type": "USER_DM"
+    }
+  }
+}
+
+### 3-3. 슬랙 단일 READ
+GET http://localhost:8080/v1/slacks/084de24b-d437-4198-bd74-c9f11b702e0c
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+### 3-4. 슬랙 목록 READ
+GET http://localhost:8080/v1/slacks
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+### 3-5. 슬랙 DELETE
+DELETE http://localhost:8080/v1/slacks/084de24b-d437-4198-bd74-c9f11b702e0c
+Content-Type: application/json
+Authorization: {{accessToken}}

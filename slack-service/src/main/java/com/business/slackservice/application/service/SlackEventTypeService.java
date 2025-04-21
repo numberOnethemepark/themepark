@@ -18,4 +18,9 @@ public class SlackEventTypeService {
         return slackEventTypeRepository.findById(id)
             .orElseThrow(() -> new CustomException(SlackExceptionCode.SLACK_EVENT_TYPE_NOT_FOUND));
     }
+
+    public SlackEventTypeEntity getByName(String slackEventTypeName) {
+        return slackEventTypeRepository.findByName(slackEventTypeName)
+            .orElseThrow(() -> new CustomException(SlackExceptionCode.SLACK_EVENT_TYPE_NOT_FOUND));
+    }
 }

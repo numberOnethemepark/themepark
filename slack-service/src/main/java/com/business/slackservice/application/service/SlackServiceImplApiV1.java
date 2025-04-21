@@ -47,7 +47,7 @@ public class SlackServiceImplApiV1 implements SlackServiceApiV1 {
     @Override
     public ResSlackPostDTOApiV1 postBy(ReqSlackPostDTOApiV1 dto)
         throws SlackApiException, IOException {
-        SlackEventTypeEntity eventType = getEventTypeById(dto.getSlack().getSlackEventTypeId());
+        SlackEventTypeEntity eventType = getEventTypeByName(dto.getSlack().getSlackEventType());
         SlackTemplateEntity template = getTemplateBySlackEventType(eventType);
 
         String content = generateContent(template, dto.getSlack().getRelatedName());
@@ -83,8 +83,8 @@ public class SlackServiceImplApiV1 implements SlackServiceApiV1 {
             .orElseThrow(() -> new CustomException(SlackExceptionCode.SLACK_NOT_FOUND));
     }
 
-    private SlackEventTypeEntity getEventTypeById(UUID slackEventTypeId) {
-        return slackEventTypeService.getBy(slackEventTypeId);
+    private SlackEventTypeEntity getEventTypeByName(String slackEventTypeName) {
+        return slackEventTypeService.getByName(slackEventTypeName);
     }
 
     private SlackTemplateEntity getTemplateBySlackEventType(

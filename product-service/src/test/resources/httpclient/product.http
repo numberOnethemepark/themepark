@@ -84,8 +84,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiY2F0ZWdvcnkiOiJBQ0NFU
 Content-Type: application/json
 
 ### 8. 상품 재고 차감 (내부 호출용) - 선착순 1인 1예매
-POST http://localhost:8080/v1/products/internal/330592a8-f6ab-465c-833e-c108e4b56e10/stocks-decrease
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiY2F0ZWdvcnkiOiJBQ0NFU1MiLCJ1c2VySWQiOiIyIiwicm9sZSI6Ik1BU1RFUiIsImV4cCI6MTc0NTA0MTYyNCwiaWF0IjoxNzQ0OTU1MjI0fQ.Uc1ZY-IcbV6N5UIDr0g9jpNkKaf90Cs1odHWjowTG4M
+POST http://localhost:8080/v1/products/internal/476c2d9e-cb99-49a3-9fb8-721096683d04/stocks-decrease
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiY2F0ZWdvcnkiOiJBQ0NFU1MiLCJ1c2VySWQiOiIyIiwicm9sZSI6Ik1BU1RFUiIsImV4cCI6MTc0NTMwNjk2OSwiaWF0IjoxNzQ1MjIwNTY5fQ.GFIAcDI42IjjdtGTBLzHpJajDdJUHfQSL38tF7eM93Q
 Content-Type: application/json
 
 ### 9. 상품 재고 복구 (내부 호출용) - 주문, 결제 실패 시 호출

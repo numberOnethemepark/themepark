@@ -90,7 +90,7 @@ public class OrderControllerApiV1Test {
                 .build();
 
         response = ResDTO.<ResProductGetByIdDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("확인되었습니다.")
                 .data(resProductGetByIdDTOApiV1)
                 .build();

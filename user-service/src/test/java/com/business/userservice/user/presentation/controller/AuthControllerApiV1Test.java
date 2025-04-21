@@ -119,7 +119,7 @@ public class AuthControllerApiV1Test {
 
     @Test
     public void testAuthGetRefreshSuccess() throws Exception {
-        String accessJwt = jwtUtil.createToken("ACCESS", 1L, RoleType.USER, 0L);
+        String accessJwt = jwtUtil.createToken("ACCESS", 1L, RoleType.USER, "slackId", 0L);
         String refreshJwt = jwtUtil.createRefreshToken(accessJwt);
 
         mockMvc.perform(

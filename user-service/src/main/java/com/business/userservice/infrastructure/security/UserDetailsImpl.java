@@ -11,11 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 public class UserDetailsImpl implements UserDetails {
+
     private final Long id;
     private final String username;
     private final RoleType role;
     private final Boolean isBlacklisted;
     private final String password;
+    private final String slackId;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(UserEntity user) {
@@ -24,6 +26,7 @@ public class UserDetailsImpl implements UserDetails {
         this.role = user.getRole();
         this.isBlacklisted = user.getIsBlacklisted();
         this.password = user.getPassword();
+        this.slackId = user.getSlackId();
         this.authorities = generateAuthorities(role);
     }
 

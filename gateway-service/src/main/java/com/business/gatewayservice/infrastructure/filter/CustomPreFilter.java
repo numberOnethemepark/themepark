@@ -57,7 +57,7 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
             "/v1/themeparks/*",
             "/v1/hashtags/*",
             "/v1/auth/refresh",
-            "/springdoc/openapi3-user-service.json"
+            "/springdoc/*"
         ),
         HttpMethod.POST, List.of(
             "/v1/auth/join",

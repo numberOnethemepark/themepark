@@ -20,14 +20,14 @@ Content-Type:application/json
   }
 }
 > {%
-    client.global.set("access_token", response.headers.valueOf("ACCESS_TOKEN"))
+    client.global.set("accessToken", response.headers.valueOf("ACCESS_TOKEN"))
 %}
 
 ###
 
 POST http://localhost:8080/v1/hashtags
 Content-Type: application/json
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
 
 {
   "hashtag": {
@@ -47,7 +47,7 @@ GET http://localhost:8080/v1/hashtags?name=짜릿한&name=신나는
 
 PUT http://localhost:8080/v1/hashtags/f20d7a0c-0872-4b95-9440-dc2bd1c49cc1
 Content-Type: application/json
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
 
 {
   "hashtag": {
@@ -58,5 +58,5 @@ Authorization: {{access_token}}
 ###
 
 DELETE http://localhost:8080/v1/hashtags/1d57d230-3fe2-4b9b-ae80-d69f73a117b2
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
 

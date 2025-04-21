@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/slack-event-types")
-public class SlackEventTypeControllerV1 {
+public class SlackEventTypeControllerApiV1 {
 
     private final SlackEventTypeServiceApiV1 slackEventTypeServiceApiV1;
 

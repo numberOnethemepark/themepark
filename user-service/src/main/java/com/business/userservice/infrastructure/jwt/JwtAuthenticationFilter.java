@@ -81,8 +81,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         Long userId = userDetails.getId();
         RoleType role = userDetails.getRole();
+        String slackId = userDetails.getSlackId();
 
-        String accessToken = jwtUtil.createAccessToken(userId, role);
+        String accessToken = jwtUtil.createAccessToken(userId, role, slackId);
         String refreshToken = jwtUtil.createRefreshToken(accessToken);
 
         ResAuthPostLoginDTOApiV1 dto = ResAuthPostLoginDTOApiV1.of(accessToken, refreshToken);

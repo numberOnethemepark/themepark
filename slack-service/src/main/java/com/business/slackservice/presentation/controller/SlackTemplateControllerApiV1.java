@@ -1,12 +1,13 @@
 package com.business.slackservice.presentation.controller;
 
-import com.business.slackservice.application.dto.request.slackEventType.ReqSlackEventTypePostDTOApiV1;
-import com.business.slackservice.application.dto.request.slackEventType.ReqSlackEventTypePutDTOApiV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetByIdDTOApiV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypeGetDTOApiV1;
-import com.business.slackservice.application.dto.response.slackEventType.ResSlackEventTypePostDTOApiV1;
-import com.business.slackservice.application.service.SlackEventTypeServiceApiV1;
-import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
+import com.business.slackservice.application.dto.request.slackTemplate.ReqSlackTemplatePostDTOApiV1;
+import com.business.slackservice.application.dto.request.slackTemplate.ReqSlackTemplatePutDTOApiV1;
+import com.business.slackservice.application.dto.response.slackTemplate.ResSlackTemplateGetByIdDTOApiV1;
+import com.business.slackservice.application.dto.response.slackTemplate.ResSlackTemplateGetDTOApiV1;
+import com.business.slackservice.application.dto.response.slackTemplate.ResSlackTemplatePostDTOApiV1;
+import com.business.slackservice.application.service.SlackTemplateServiceApiV1;
+import com.business.slackservice.application.service.SlackTemplateServiceImplApiV1;
+import com.business.slackservice.domain.slackTemplate.entity.SlackTemplateEntity;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
@@ -30,21 +31,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/slack-event-types")
-public class SlackEventTypeControllerV1 {
+@RequestMapping("/v1/slack-templates")
+public class SlackTemplateControllerApiV1 {
 
-    private final SlackEventTypeServiceApiV1 slackEventTypeServiceApiV1;
+    private final SlackTemplateServiceApiV1 slackTemplateServiceApiV1;
+    private final SlackTemplateServiceImplApiV1 slackTemplateServiceImplApiV1;
 
     @PostMapping
-    public ResponseEntity<ResDTO<ResSlackEventTypePostDTOApiV1>> postBy(
-        @Valid @RequestBody ReqSlackEventTypePostDTOApiV1 dto
+    public ResponseEntity<ResDTO<ResSlackTemplatePostDTOApiV1>> postBy(
+        @Valid @RequestBody ReqSlackTemplatePostDTOApiV1 dto
     ) {
-        ResSlackEventTypePostDTOApiV1 response = slackEventTypeServiceApiV1.postBy(dto);
-
+        ResSlackTemplatePostDTOApiV1 response = slackTemplateServiceApiV1.postBy(dto);
         return new ResponseEntity<>(
-            ResDTO.<ResSlackEventTypePostDTOApiV1>builder()
+            ResDTO.<ResSlackTemplatePostDTOApiV1>builder()
                 .code(0)
-                .message("이벤트 타입이 저장되었습니다.")
+                .message("슬랙 양식이 저장되었습니다.")
                 .data(response)
                 .build(),
             HttpStatus.CREATED
@@ -52,15 +53,14 @@ public class SlackEventTypeControllerV1 {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResDTO<ResSlackEventTypeGetByIdDTOApiV1>> getBy(
+    public ResponseEntity<ResDTO<ResSlackTemplateGetByIdDTOApiV1>> getBy(
         @PathVariable UUID id
     ) {
-        ResSlackEventTypeGetByIdDTOApiV1 response = slackEventTypeServiceApiV1.getBy(id);
-
+        ResSlackTemplateGetByIdDTOApiV1 response = slackTemplateServiceApiV1.getBy(id);
         return new ResponseEntity<>(
-            ResDTO.<ResSlackEventTypeGetByIdDTOApiV1>builder()
+            ResDTO.<ResSlackTemplateGetByIdDTOApiV1>builder()
                 .code(0)
-                .message("이벤트 타입 조회에 성공했습니다.")
+                .message("슬랙 양식 조회에 성공했습니다.")
                 .data(response)
                 .build(),
             HttpStatus.OK
@@ -68,16 +68,15 @@ public class SlackEventTypeControllerV1 {
     }
 
     @GetMapping
-    public ResponseEntity<ResDTO<ResSlackEventTypeGetDTOApiV1>> getBy(
-        @QuerydslPredicate(root = SlackEventTypeEntity.class) Predicate predicate,
+    public ResponseEntity<ResDTO<ResSlackTemplateGetDTOApiV1>> getBY(
+        @QuerydslPredicate(root = SlackTemplateEntity.class) Predicate predicate,
         @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable
     ) {
-        ResSlackEventTypeGetDTOApiV1 response = slackEventTypeServiceApiV1.getBy(predicate, pageable);
-
+        ResSlackTemplateGetDTOApiV1 response = slackTemplateServiceImplApiV1.getBy(predicate, pageable);
         return new ResponseEntity<>(
-            ResDTO.<ResSlackEventTypeGetDTOApiV1>builder()
+            ResDTO.<ResSlackTemplateGetDTOApiV1>builder()
                 .code(0)
-                .message("이벤트 타입 목록 조회에 성공했습니다.")
+                .message("슬랙 양식 목록 조회에 성공했습니다.")
                 .data(response)
                 .build(),
             HttpStatus.OK
@@ -87,14 +86,13 @@ public class SlackEventTypeControllerV1 {
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> putBy(
         @PathVariable UUID id,
-        @Valid @RequestBody ReqSlackEventTypePutDTOApiV1 dto
+        @Valid @RequestBody ReqSlackTemplatePutDTOApiV1 dto
     ) {
-        slackEventTypeServiceApiV1.putBy(id, dto);
-
+        slackTemplateServiceApiV1.putBy(id, dto);
         return new ResponseEntity<>(
             ResDTO.builder()
                 .code(0)
-                .message("이벤트 타입 수정에 성공했습니다.")
+                .message("슬랙 양식 수정에 성공했습니다.")
                 .build(),
             HttpStatus.OK
         );
@@ -105,12 +103,11 @@ public class SlackEventTypeControllerV1 {
         @PathVariable UUID id,
         @RequestHeader("X-User-Id") Long userId
     ) {
-        slackEventTypeServiceApiV1.deleteBy(id, userId);
-
+        slackTemplateServiceApiV1.deleteBy(id, userId);
         return new ResponseEntity<>(
             ResDTO.builder()
                 .code(0)
-                .message("이벤트 타입 삭제에 성공했습니다.")
+                .message("슬랙 양식 삭제에 성공했습니다.")
                 .build(),
             HttpStatus.OK
         );

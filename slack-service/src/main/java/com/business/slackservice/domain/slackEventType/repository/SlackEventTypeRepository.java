@@ -16,4 +16,6 @@ public interface SlackEventTypeRepository {
     Page<SlackEventTypeEntity> findAll(Predicate predicate, Pageable pageable);
 
     boolean existsByName(String name);
+
+    Optional<SlackEventTypeEntity> findByName(String slackEventTypeName);
 }

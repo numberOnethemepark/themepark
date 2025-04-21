@@ -36,7 +36,7 @@ public class AuthControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.<ResAuthPostJoinDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("회원가입에 성공하였습니다.")
                 .data(data)
                 .build(),
@@ -54,7 +54,7 @@ public class AuthControllerApiV1 {
         if (newAccessToken.equals(HttpStatus.UNAUTHORIZED.toString())) {
             return new ResponseEntity<>(
                 ResDTO.<ResAuthGetRefreshDTOApiV1>builder()
-                    .code(0)
+                    .code("0")
                     .message("만료된 Refresh Token 입니다. 재로그인을 요청해주세요.")
                     .data(null)
                     .build(),
@@ -63,7 +63,7 @@ public class AuthControllerApiV1 {
         } else {
             return new ResponseEntity<>(
                 ResDTO.<ResAuthGetRefreshDTOApiV1>builder()
-                    .code(0)
+                    .code("0")
                     .message("Access Token 재발급 성공했습니다.")
                     .data(ResAuthGetRefreshDTOApiV1.of(newAccessToken))
                     .build(),
@@ -82,7 +82,7 @@ public class AuthControllerApiV1 {
 
         return new ResponseEntity<>(
             ResDTO.<ResAuthPostManagerJoinDTOApiV1>builder()
-                .code(0)
+                .code("0")
                 .message("매니저 회원가입에 성공하였습니다.")
                 .data(data)
                 .build(),

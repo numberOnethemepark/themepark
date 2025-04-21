@@ -57,7 +57,7 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
             "/v1/themeparks/*",
             "/v1/hashtags/*",
             "/v1/auth/refresh",
-            "/springdoc/openapi3-user-service.json"
+            "/springdoc/*"
         ),
         HttpMethod.POST, List.of(
             "/v1/auth/join",
@@ -99,6 +99,7 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
                 .request(exchange.getRequest().mutate()
                     .header("X-User-Id", getUserIdFromToken(jwtToken))
                     .header("X-User-Role", getRoleFromToken(jwtToken))
+                    .header("X-User-Slack-Id", getSlackIdFromToken(jwtToken))
                     .build())
                 .build();
 
@@ -181,6 +182,15 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
             .parseClaimsJws(jwtToken)
             .getBody()
             .get("role", String.class);
+    }
+
+    private String getSlackIdFromToken(String jwtToken) {
+        return Jwts.parserBuilder()
+            .setSigningKey(getSecretKey())
+            .build()
+            .parseClaimsJws(jwtToken)
+            .getBody()
+            .get("slackId", String.class);
     }
 
     private Mono<Void> sendErrorResponse(ServerWebExchange exchange, int errorCode, Exception e) {

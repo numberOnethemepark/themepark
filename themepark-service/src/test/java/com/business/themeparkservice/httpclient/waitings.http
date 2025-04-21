@@ -8,14 +8,14 @@ Content-Type:application/json
   }
 }
 > {%
-    client.global.set("access_token", response.headers.valueOf("ACCESS_TOKEN"))
+    client.global.set("accessToken", response.headers.valueOf("ACCESS_TOKEN"))
 %}
 
 ###
 
 POST http://localhost:8080/v1/waitings
 Content-Type: application/json
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
 
 {
   "waiting": {
@@ -26,24 +26,30 @@ Authorization: {{access_token}}
 ###
 
 GET http://localhost:8080/v1/waitings/8599d801-8e69-4204-872d-ebe13916e0c7
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
 
 ###
 
 GET http://localhost:8080/v1/waitings?themeparkId=f5220852-59fe-4894-8fc4-200bd1419872
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
 
 ###
 
 POST http://localhost:8080/v1/waitings/83fd502d-1ff3-47bd-8915-4ca4bd9433d1/done
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
 
 ###
 
 POST http://localhost:8080/v1/waitings/8599d801-8e69-4204-872d-ebe13916e0c7/cancel
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
 
 ###
 
 DELETE http://localhost:8080/v1/waitings/8599d801-8e69-4204-872d-ebe13916e0c7
-Authorization: {{access_token}}
+Authorization: {{accessToken}}
+
+###
+
+POST http://localhost:8080/v1/waitings/internal/e5fe4018-5707-4b26-abd4-c5cfaf95fa4b/call
+Authorization: {{accessToken}}
+

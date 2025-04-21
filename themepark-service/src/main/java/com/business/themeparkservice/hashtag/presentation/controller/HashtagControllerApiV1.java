@@ -34,7 +34,7 @@ public class HashtagControllerApiV1 {
     public ResponseEntity<ResDTO<ResHashtagPostDTOApiV1>> postBy(@Valid @RequestBody ReqHashtagPostDTOApiV1 reqDto){
         return new ResponseEntity<>(
                 ResDTO.<ResHashtagPostDTOApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("해시태그 생성을 성공했습니다.")
                         .data(hashtagService.postBy(reqDto))
                         .build(),
@@ -46,7 +46,7 @@ public class HashtagControllerApiV1 {
     public ResponseEntity<ResDTO<ResHashtagGetByIdDTOApiV1>> getBy(@PathVariable UUID id){
         return new ResponseEntity<>(
                 ResDTO.<ResHashtagGetByIdDTOApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("해시태그 조회에 성공했습니다.")
                         .data(hashtagService.getBy(id))
                         .build(),
@@ -62,7 +62,7 @@ public class HashtagControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.<ResHashtagGetDTOApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("해시태그 검색에 성공했습니다.")
                         .data(hashtagService.getBy(predicate,pageable))
                         .build(),
@@ -78,7 +78,7 @@ public class HashtagControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.<ResHashtagPutDTOApiV1>builder()
-                        .code(0)
+                        .code("0")
                         .message("해시태그 수정을 성공했습니다.")
                         .data(hashtagService.putBy(id,reqDto))
                         .build(),
@@ -92,7 +92,7 @@ public class HashtagControllerApiV1 {
         hashtagService.deleteBy(id,userId);
         return new ResponseEntity<>(
                 ResDTO.builder()
-                        .code(0)
+                        .code("0")
                         .message("해시태그 삭제를 성공했습니다.")
                         .build(),
                 HttpStatus.OK

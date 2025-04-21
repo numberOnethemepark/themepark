@@ -42,8 +42,8 @@ public class JwtUtil {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    public String createAccessToken(Long userId, RoleType role) {
-        String token = createToken("ACCESS", userId, role,
+    public String createAccessToken(Long userId, RoleType role, String slackId) {
+        String token = createToken("ACCESS", userId, role, slackId,
             jwtProperties.getAccessTokenExpiration());
         return addBearerPrefix(token);
     }
@@ -66,7 +66,7 @@ public class JwtUtil {
         }
 
         // refresh token이 존재하지 않을 경우 refresh token 생성
-        String refreshToken = createToken("REFRESH", userId, user.getRole(),
+        String refreshToken = createToken("REFRESH", userId, user.getRole(), user.getSlackId(),
             jwtProperties.getRefreshTokenExpiration());
         RefreshTokenEntity refreshTokenEntity = RefreshTokenEntity.of(
             userId,
@@ -111,7 +111,7 @@ public class JwtUtil {
             // refresh token이 유효한 경우 => access token 발급
             UserDetailsImpl user = (UserDetailsImpl) userDetailsServiceImpl.loadUserById(
                 Long.parseLong(subject));
-            return createAccessToken(user.getId(), user.getRole());
+            return createAccessToken(user.getId(), user.getRole(), user.getSlackId());
         }
     }
 
@@ -121,12 +121,14 @@ public class JwtUtil {
     }
 
     //accessToken 생성
-    public String createToken(String category, Long userId, RoleType role, Long expiresIn) {
+    public String createToken(String category, Long userId, RoleType role, String slackId,
+        Long expiresIn) {
         return Jwts.builder()
             .setSubject(userId.toString())
             .claim("category", category)
             .claim("userId", userId.toString())
             .claim("role", role)
+            .claim("slackId", slackId)
             .setExpiration(getExpiryDateFromNow(expiresIn))
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .signWith(getSecretKey(), signatureAlgorithm)

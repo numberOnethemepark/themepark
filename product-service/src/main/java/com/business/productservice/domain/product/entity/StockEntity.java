@@ -1,5 +1,6 @@
 package com.business.productservice.domain.product.entity;
 
+import com.business.productservice.domain.product.vo.ProductType;
 import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,10 +44,16 @@ public class StockEntity extends BaseEntity {
     }
 
     public void decrease() {
+        if(!product.getProductType().equals(ProductType.EVENT)){
+            return;
+        }
         this.stock--;
     }
 
     public void restore(){
+        if(!product.getProductType().equals(ProductType.EVENT)){
+            return;
+        }
         this.stock++;
     }
 

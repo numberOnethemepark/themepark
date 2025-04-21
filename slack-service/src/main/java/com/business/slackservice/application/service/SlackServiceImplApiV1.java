@@ -13,10 +13,7 @@ import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEnti
 import com.business.slackservice.domain.slackTemplate.entity.SlackTemplateEntity;
 import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
-import com.slack.api.Slack;
 import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.chat.ChatPostMessageRequest;
-import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -33,15 +30,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class SlackServiceImplApiV1 implements SlackServiceApiV1 {
 
-    @Value("${slack.bot.token}")
-    private String slackToken;
-
     @Value("${slack.admin.id}")
     private String slackAdminId;
 
     private final SlackEventTypeService slackEventTypeService;
     private final SlackTemplateService slackTemplateService;
     private final SlackRepository slackRepository;
+    private final SlackMessageSender slackMessageSender;
 
     @Transactional
     @Override
@@ -53,7 +48,7 @@ public class SlackServiceImplApiV1 implements SlackServiceApiV1 {
         String content = generateContent(template, dto.getSlack().getRelatedName());
         String slackId = resolveSlackId(dto);
 
-        SlackStatus status = sendSlackMessage(slackId, content);
+        SlackStatus status = slackMessageSender.send(slackId, content);
 
         SlackEntity slackEntity = dto.getSlack().toEntityBy(eventType, content, status);
 
@@ -99,20 +94,5 @@ public class SlackServiceImplApiV1 implements SlackServiceApiV1 {
     private String resolveSlackId(ReqSlackPostDTOApiV1 dto) {
         TargetType targetType = dto.getSlack().getTarget().getType();
         return targetType.equals(TargetType.USER_DM) ? dto.getSlack().getTarget().getSlackId() : slackAdminId;
-    }
-
-    private SlackStatus sendSlackMessage(String slackId, String content)
-        throws SlackApiException, IOException {
-        Slack slack = Slack.getInstance();
-
-        ChatPostMessageRequest request = ChatPostMessageRequest.builder()
-            .channel(slackId)
-            .text(content)
-            .build();
-
-        ChatPostMessageResponse response = slack.methods(slackToken)
-            .chatPostMessage(request);
-
-        return response.isOk() ? SlackStatus.SENT : SlackStatus.FAILED;
     }
 }

@@ -18,7 +18,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.applyPermitDefaultValues();
-                    config.addAllowedOrigin("http://localhost:8002"); // 허용할 출처를 명시
+                    config.addAllowedOrigin("http://localhost:8080"); // 허용할 출처를 명시
                     config.addAllowedMethod(HttpMethod.GET); // GET 요청 허용
                     config.addAllowedMethod(HttpMethod.POST); // POST 요청 허용
                     config.addAllowedMethod(HttpMethod.PUT); // PUT 요청 허용

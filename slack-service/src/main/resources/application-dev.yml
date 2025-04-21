@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: slack-service
+  datasource:
+    url: jdbc:postgresql://localhost:5430/themeparkdb
+    username: admin
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: slack_service
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+server:
+  port: 8006
+
+slack:
+  bot:
+    token: ${SLACK_TOKEN}
+  admin:
+      id: C08NM9CQ3SA

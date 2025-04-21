@@ -1,7 +1,9 @@
 package com.sparta.orderservice.order.presentation.controller;
 
+import com.sparta.orderservice.order.application.dto.reponse.ResProductGetByIdDTOApiV1;
 import com.sparta.orderservice.order.application.facade.OrderFacade;
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
+import com.sparta.orderservice.order.infrastructure.feign.ProductOrderClient;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrderPostDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrdersGetByIdDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
@@ -13,9 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +25,7 @@ import java.util.UUID;
 public class OrderControllerApiV1 {
 
     private final OrderFacade orderFacade;
+    private final ProductOrderClient productOrderClient;
 
     @PostMapping
     public ResponseEntity<ResDTO<ResOrderPostDtoApiV1>> postBy(
@@ -31,6 +33,15 @@ public class OrderControllerApiV1 {
            @RequestHeader("X-User-Id") Long userId
            )  {
 
+        // 상품의 타입확인
+        ResDTO<ResProductGetByIdDTOApiV1> resProductGetByIdDTOApiV1ResDTO = productOrderClient.getBy(reqOrdersPostDtoApiV1.getOrder().getProductId());
+        if (Objects.equals(resProductGetByIdDTOApiV1ResDTO.getData().getProduct().getProductType(), "EVENT")) {
+            // 재고조회 -> product service 에서 재고가 없을시 error -> 재고차감
+            productOrderClient.getStockById(reqOrdersPostDtoApiV1.getOrder().getProductId());
+            productOrderClient.postDecreaseById(reqOrdersPostDtoApiV1.getOrder().getProductId());
+        }
+
+        // 주문시작
         OrderEntity orderEntity = orderFacade.postBy(reqOrdersPostDtoApiV1, userId);
 
         return new ResponseEntity<>(

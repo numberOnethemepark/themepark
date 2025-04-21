@@ -1,0 +1,25 @@
+package com.business.slackservice.application.dto.request.slackTemplate;
+
+import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
+import com.business.slackservice.domain.slackTemplate.entity.SlackTemplateEntity;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import java.util.UUID;
+import lombok.Getter;
+
+@Getter
+public class ReqSlackTemplatePutDTOApiV1 {
+    @Valid
+    @NotNull(message = "슬랙 양식을 입력해주세요.")
+    private SlackTemplate slackTemplate;
+
+    @Getter
+    public static class SlackTemplate {
+        private UUID SlackEventTypeId;
+        private String content;
+
+        public void update(SlackTemplateEntity slackTemplateEntity, SlackEventTypeEntity slackEventTypeEntity) {
+            slackTemplateEntity.update(slackEventTypeEntity, content);
+        }
+    }
+}

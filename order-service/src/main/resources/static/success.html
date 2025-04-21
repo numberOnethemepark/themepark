@@ -16,6 +16,7 @@
     const paymentKey = urlParams.get("paymentKey");
     const orderId = urlParams.get("orderId");
     const amount = urlParams.get("amount");
+    const productId = urlParams.get("productId")
 
     async function confirm() {
         const requestData = {
@@ -23,6 +24,7 @@
                 paymentKey: paymentKey,
                 orderId: orderId,
                 amount: amount,
+                productId: productId,
             }
         };
 

@@ -24,6 +24,7 @@
         const queryParams = new URLSearchParams(window.location.search);
         const orderId = queryParams.get("orderId");
         const amount = parseInt(queryParams.get("amount"));
+        const productId = queryParams.get("productId");
 
 
         const button = document.getElementById("paymentEntity-button");
@@ -77,7 +78,7 @@
             await widgets.requestPayment({
                 orderId: orderId,
                 orderName: "토스 티셔츠 외 2건",
-                successUrl: window.location.origin + "/success.html",
+                successUrl: `${window.location.origin}/success.html?orderId=${orderId}&amount=${amount}&productId=${productId}`,
                 failUrl: window.location.origin + "/fail.html",
                 customerEmail: "customer123@gmail.com",
                 customerName: "김토스",

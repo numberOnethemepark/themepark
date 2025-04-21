@@ -7,11 +7,9 @@ import com.business.slackservice.application.dto.response.slackTemplate.ResSlack
 import com.business.slackservice.application.dto.response.slackTemplate.ResSlackTemplatePostDTOApiV1;
 import com.business.slackservice.application.service.SlackTemplateServiceApiV1;
 import com.business.slackservice.application.service.SlackTemplateServiceImplApiV1;
-import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
 import com.business.slackservice.domain.slackTemplate.entity.SlackTemplateEntity;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
-import feign.Response;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/slack-templates")
-public class SlackTemplateControllerV1 {
+public class SlackTemplateControllerApiV1 {
 
     private final SlackTemplateServiceApiV1 slackTemplateServiceApiV1;
     private final SlackTemplateServiceImplApiV1 slackTemplateServiceImplApiV1;

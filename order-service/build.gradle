@@ -69,6 +69,14 @@ dependencies {
 	// H2 for test
 	implementation 'com.h2database:h2'
 
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	// 선택: 레디스 커넥터 Lettuce (기본값) 또는 Jedis
+	implementation 'io.lettuce:lettuce-core' // 비동기 지원
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

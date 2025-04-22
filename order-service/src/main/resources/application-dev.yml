@@ -12,6 +12,13 @@ spring:
       ddl-auto: create
     show-sql: true
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: default
+      password: systempass
+
 server:
   port: 8002
 

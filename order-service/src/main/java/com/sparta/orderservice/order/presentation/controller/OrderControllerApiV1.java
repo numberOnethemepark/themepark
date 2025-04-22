@@ -1,5 +1,6 @@
 package com.sparta.orderservice.order.presentation.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.orderservice.order.application.dto.reponse.ResProductGetByIdDTOApiV1;
 import com.sparta.orderservice.order.application.facade.OrderFacade;
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
@@ -12,12 +13,14 @@ import com.github.themepark.common.application.dto.ResDTO;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrderGetDtoApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/v1/orders")
@@ -26,6 +29,8 @@ public class OrderControllerApiV1 {
 
     private final OrderFacade orderFacade;
     private final ProductFeignClientApiV1 productFeignClientApiV1;
+    private final RedisTemplate<String, ResProductGetByIdDTOApiV1> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @PostMapping
     public ResponseEntity<ResDTO<ResOrderPostDtoApiV1>> postBy(
@@ -33,12 +38,28 @@ public class OrderControllerApiV1 {
            @RequestHeader("X-User-Id") Long userId
            )  {
 
-        // 상품의 타입확인
-        ResDTO<ResProductGetByIdDTOApiV1> resProductGetByIdDTOApiV1ResDTO = productFeignClientApiV1.getBy(reqOrdersPostDtoApiV1.getOrder().getProductId());
-        if (Objects.equals(resProductGetByIdDTOApiV1ResDTO.getData().getProduct().getProductType(), "EVENT")) {
-            // 재고조회 -> product service 에서 재고가 없을시 error -> 재고차감
-            productFeignClientApiV1.getStockById(reqOrdersPostDtoApiV1.getOrder().getProductId());
-            productFeignClientApiV1.postDecreaseById(reqOrdersPostDtoApiV1.getOrder().getProductId());
+        // Redis 에서 상품 정보 조회
+        String productId = reqOrdersPostDtoApiV1.getOrder().getProductId().toString();
+        Object raw = redisTemplate.opsForValue().get(productId);
+        ResProductGetByIdDTOApiV1 product = objectMapper.convertValue(raw, ResProductGetByIdDTOApiV1.class);
+
+        // redis 에 해당 productId를 갖고있는 데이터가 존재하지 않는다면 redis 에 저장
+        if(product == null){
+            ResDTO<ResProductGetByIdDTOApiV1> resProductGetByIdDTOApiV1ResDTO = productFeignClientApiV1.getBy(reqOrdersPostDtoApiV1.getOrder().getProductId());
+            product = resProductGetByIdDTOApiV1ResDTO.getData();
+            redisTemplate.opsForValue().set(productId, product, 10, TimeUnit.MINUTES);
+
+            if (Objects.equals(resProductGetByIdDTOApiV1ResDTO.getData().getProduct().getProductType(), "EVENT")) {
+                // 재고조회 -> product service 에서 재고가 없을시 error -> 재고차감
+                productFeignClientApiV1.getStockById(reqOrdersPostDtoApiV1.getOrder().getProductId());
+                productFeignClientApiV1.postDecreaseById(reqOrdersPostDtoApiV1.getOrder().getProductId());
+            }
+        }
+        else{
+            if(Objects.equals(product.getProduct().getProductType(), "EVENT")){
+                productFeignClientApiV1.getStockById(reqOrdersPostDtoApiV1.getOrder().getProductId());
+                productFeignClientApiV1.postDecreaseById(reqOrdersPostDtoApiV1.getOrder().getProductId());
+            }
         }
 
         // 주문시작

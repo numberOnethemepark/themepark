@@ -58,13 +58,20 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
         UserEntity userEntity = findById(id);
         validatePassword(dto.getUser().getPassword(), userEntity);
         userEntity.deletedBy(id);
+        blacklistRepository.save(String.valueOf(userEntity.getId()));
     }
 
     @Transactional
     @Override
     public boolean blacklistById(Long id) {
         UserEntity userEntity = findById(id);
-        return userEntity.blacklist();
+        boolean isBlacklisted = userEntity.blacklist();
+        if (isBlacklisted) {
+            blacklistRepository.save(String.valueOf(id));
+        } else {
+            blacklistRepository.delete(String.valueOf(id));
+        }
+        return isBlacklisted;
     }
 
     private UserEntity findById(Long id) {

@@ -7,9 +7,13 @@ import com.business.userservice.application.dto.response.ResAuthPostJoinDTOApiV1
 import com.business.userservice.application.dto.response.ResAuthPostManagerJoinDTOApiV1;
 import com.business.userservice.application.exception.AuthExceptionCode;
 import com.business.userservice.domain.user.entity.UserEntity;
+import com.business.userservice.domain.user.repository.BlacklistRepository;
 import com.business.userservice.domain.user.repository.UserRepository;
 import com.business.userservice.infrastructure.jwt.JwtUtil;
 import com.github.themepark.common.application.exception.CustomException;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final BlacklistRepository blacklistRepository;
 
     @Transactional
     @Override
@@ -31,9 +36,20 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
         return ResAuthPostJoinDTOApiV1.of(savedUser);
     }
 
-    @Transactional
     @Override
     public String refreshToken(String accessToken, String refreshToken) {
+        String userId = jwtUtil.getUserIdFromToken(accessToken);
+        Date iat = jwtUtil.getIatFromToken(accessToken);
+        Optional<String> blacklistDate = blacklistRepository.findByUserId(userId);
+
+        if (blacklistDate.isPresent()) {
+            Timestamp blacklistTimestamp = Timestamp.valueOf(blacklistDate.get());
+            Timestamp iatTimestamp = new Timestamp(iat.getTime());
+            if (iatTimestamp.before(blacklistTimestamp)) {
+                throw new CustomException(AuthExceptionCode.BLOCKED_USER);
+            }
+        }
+
         return jwtUtil.validateRefreshToken(accessToken, refreshToken);
     }
 

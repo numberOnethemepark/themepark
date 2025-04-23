@@ -1,25 +1,16 @@
 package com.business.gatewayservice.infrastructure.filter;
 
 import com.business.gatewayservice.application.exception.GatewayExceptionCode;
+import com.business.gatewayservice.infrastructure.jwt.JwtTokenProvider;
 import com.business.gatewayservice.infrastructure.persistence.redis.BlacklistRepository;
 import com.github.themepark.common.application.exception.CustomException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -41,17 +32,11 @@ import reactor.core.publisher.Mono;
 @Slf4j(topic = "JWT 인가 필터")
 public class CustomPreFilter implements GlobalFilter, Ordered {
 
-    @Value("${spring.jwt.secret}")
-    private String secretKey;
     private static final String BEARER_PREFIX = "Bearer ";
 
-    private final AntPathMatcher matcher = new AntPathMatcher();
+    private final JwtTokenProvider jwtTokenProvider;
     private final BlacklistRepository blacklistRepository;
-
-    private SecretKey getSecretKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
+    private final AntPathMatcher matcher = new AntPathMatcher();
 
     // JWT 인증을 적용하지 않을 경로 목록
     private static final Map<HttpMethod, List<String>> EXCLUDED_PATHS_BY_METHOD = Map.of(
@@ -71,7 +56,6 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-
         String path = exchange.getRequest().getURI().getPath();
         HttpMethod method = exchange.getRequest().getMethod();
 
@@ -83,34 +67,26 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
 
         try {
             // 토큰가져오기
-            String authorization = getJwtFromHeader(exchange);
-            String jwtToken = parseAuthorizationToken(authorization);
+            String jwtToken = parseAuthorizationToken(getJwtFromHeader(exchange));
             // 검증
-            validateToken(jwtToken);
+            jwtTokenProvider.validateToken(jwtToken);
             if (!StringUtils.hasText(jwtToken)) {
-                throw new Exception("토큰 비어있음");
-            }
-            // 유효기간확인
-            if (isValidateExpire(jwtToken)) {
-                throw new Exception("만료된 토큰");
+                throw new CustomException(GatewayExceptionCode.EMPTY_JWT_TOKEN);
             }
             // 차단 확인
-            if (isValidateBlacklist(jwtToken)) {
+            if (isBlacklisted(jwtToken)) {
                 throw new CustomException(GatewayExceptionCode.BLOCKED_USER);
             }
             //  JWT 검증 성공 후 요청 헤더에 사용자 정보 추가
             ServerWebExchange modifiedExchange = exchange.mutate()
                 .request(exchange.getRequest().mutate()
-                    .header("X-User-Id", getUserIdFromToken(jwtToken))
-                    .header("X-User-Role", getRoleFromToken(jwtToken))
-                    .header("X-User-Slack-Id", getSlackIdFromToken(jwtToken))
+                    .header("X-User-Id", jwtTokenProvider.getUserIdFromToken(jwtToken))
+                    .header("X-User-Role", jwtTokenProvider.getRoleFromToken(jwtToken))
+                    .header("X-User-Slack-Id", jwtTokenProvider.getSlackIdFromToken(jwtToken))
                     .build())
                 .build();
 
-            log.info("********** info " + modifiedExchange);
-
             return chain.filter(modifiedExchange);
-
         } catch (Exception e) {
             log.error("JWT 필터 처리 중 예외 발생: {}", e.getMessage(), e);
             return sendErrorResponse(exchange, 999, e);
@@ -122,79 +98,18 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
         return -1;
     }
 
-    private void validateToken(String token) {
-        try {
-            parseClaims(token);
-        } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token, 만료된 JWT token 입니다.");
-            throw new CustomException(GatewayExceptionCode.EXPIRED_JWT);
-        } catch (SecurityException | MalformedJwtException e) {
-            log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
-            throw new CustomException(GatewayExceptionCode.INVALID_SIGNATURE);
-        } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
-            throw new CustomException(GatewayExceptionCode.UNSUPPORTED_JWT);
-        } catch (IllegalArgumentException e) {
-            log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-            throw new CustomException(GatewayExceptionCode.EMPTY_CLAIMS);
-        }
-    }
-
-    private Claims parseClaims(String token) {
-        return Jwts.parserBuilder()
-            .setSigningKey(getSecretKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
-    }
-
     private String getJwtFromHeader(ServerWebExchange exchange) throws Exception {
-        List<String> authorizations = exchange.getRequest().getHeaders()
-            .get(HttpHeaders.AUTHORIZATION);
-        if (authorizations == null || authorizations.isEmpty()) {
-            throw new CustomException(GatewayExceptionCode.AUTH_HEADER_MISSING);
-        }
-        return authorizations.stream()
-            .filter(this::isBearerType)
-            .findFirst()
+        return Optional.ofNullable(exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION))
+            .filter(this::isBearerToken)
+            .map(token -> token.replace(BEARER_PREFIX, "").trim())
             .orElseThrow(() -> new CustomException(GatewayExceptionCode.BEARER_TOKEN_NOT_FOUND));
     }
 
     private boolean isExcludedPath(String path, HttpMethod method) {
-        List<String> excludedPaths = EXCLUDED_PATHS_BY_METHOD.get(method);
-        if (excludedPaths == null || excludedPaths.isEmpty()) {
-            log.info("excludedPaths NULL");
-            return false;
-        }
-        log.info("excludedPaths.stream().anyMatch(pattern -> matcher.match(pattern, path)): {}", excludedPaths.stream().anyMatch(pattern -> matcher.match(pattern, path)));
-        return excludedPaths.stream().anyMatch(pattern -> matcher.match(pattern, path));
-    }
-
-    private String getUserIdFromToken(String jwtToken) {
-        return Jwts.parserBuilder()
-            .setSigningKey(getSecretKey())
-            .build()
-            .parseClaimsJws(jwtToken)
-            .getBody()
-            .get("userId", String.class);
-    }
-
-    private String getRoleFromToken(String jwtToken) {
-        return Jwts.parserBuilder()
-            .setSigningKey(getSecretKey())
-            .build()
-            .parseClaimsJws(jwtToken)
-            .getBody()
-            .get("role", String.class);
-    }
-
-    private String getSlackIdFromToken(String jwtToken) {
-        return Jwts.parserBuilder()
-            .setSigningKey(getSecretKey())
-            .build()
-            .parseClaimsJws(jwtToken)
-            .getBody()
-            .get("slackId", String.class);
+        return Optional.ofNullable(EXCLUDED_PATHS_BY_METHOD.get(method))
+            .orElse(List.of())
+            .stream()
+            .anyMatch(pattern -> matcher.match(pattern, path));
     }
 
     private Mono<Void> sendErrorResponse(ServerWebExchange exchange, int errorCode, Exception e) {
@@ -212,33 +127,16 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
         return authorization.replace(BEARER_PREFIX, "").trim();
     }
 
-    private boolean isBearerType(String authorization) {
-        return authorization.startsWith(BEARER_PREFIX);
+    private boolean isBearerToken(String token) {
+        return token.startsWith(BEARER_PREFIX);
     }
 
-    private boolean isValidateExpire(String jwtToken) {
-        Date expiration = Jwts.parserBuilder().setSigningKey(getSecretKey())
-            .build()
-            .parseClaimsJws(jwtToken)
-            .getBody()
-            .getExpiration();
-        return expiration.before(new Date());
-    }
+    private boolean isBlacklisted(String token) {
+        String userId = jwtTokenProvider.getUserIdFromToken(token);
+        Date issuedAt = jwtTokenProvider.getIssuedAtFromToken(token);
 
-    private boolean isValidateBlacklist(String token) {
-        Claims claims = Jwts.parserBuilder().setSigningKey(getSecretKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
-        String userId = (String) claims.get("userId");
-        Date iat = claims.getIssuedAt();
-        Optional<Timestamp> blacklistDate = blacklistRepository.findByUserId(userId);
-
-        if (blacklistDate.isPresent()) {
-            Timestamp blacklistTimestamp = blacklistDate.get();
-            Timestamp iatTimestamp = new Timestamp(iat.getTime());
-            return iatTimestamp.before(blacklistTimestamp);
-        }
-        return false;
+        return blacklistRepository.findByUserId(userId)
+            .map(issuedAt::before)
+            .orElse(false);
     }
 }

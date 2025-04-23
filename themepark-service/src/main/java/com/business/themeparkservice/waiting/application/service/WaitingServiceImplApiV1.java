@@ -10,13 +10,18 @@ import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,16 +33,25 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     private final ThemeparkJpaRepository themeparkRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public ResWaitingPostDTOApiV1 postBy(ReqWaitingPostDTOApiV1 reqDto,Long userId) {
-        ThemeparkChecking(reqDto.getWaiting().getThemeparkId());
-        WaitingChecking(reqDto,userId);
+        UUID themeparkId = reqDto.getWaiting().getThemeparkId();
+        ThemeparkChecking(themeparkId);
+//        WaitingChecking(reqDto,userId);
 
-        int waitingLeft = waitingRepository.countByThemeparkIdAndWaitingStatus(reqDto.getWaiting().getThemeparkId(),WaitingStatus.WAITING);
 
-        int waitingNumber=waitingRepository.findLastWaitingNumber(reqDto.getWaiting().getThemeparkId())+1;
+        WaitingEntity waitingInfo
+                = waitingRepository.findLastWaitingNumber(themeparkId, WaitingStatus.WAITING).orElse(null);
+
+        int waitingLeft = (waitingInfo != null) ? waitingInfo.getWaitingLeft()+1 : 0;
+        int waitingNumber = (waitingInfo != null) ? waitingInfo.getWaitingNumber()+1 : 1;
 
         WaitingEntity waitingEntity = reqDto.createWaiting(waitingNumber,waitingLeft,userId);
+
         waitingRepository.save(waitingEntity);
 
         return ResWaitingPostDTOApiV1.of(waitingEntity);

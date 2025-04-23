@@ -23,11 +23,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
-    private final JwtProperties jwtProperties;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, JwtProperties jwtProperties) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        this.jwtProperties = jwtProperties;
         setFilterProcessesUrl("/v1/auth/login");
     }
 

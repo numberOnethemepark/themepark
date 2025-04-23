@@ -1,7 +1,6 @@
 package com.business.userservice.infrastructure.config;
 
 import com.business.userservice.infrastructure.jwt.JwtAuthenticationFilter;
-import com.business.userservice.infrastructure.jwt.JwtProperties;
 import com.business.userservice.infrastructure.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +23,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AuthSecurityConfig {
 
     private final JwtUtil jwtUtil;
-    private final JwtProperties jwtProperties;
     private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
@@ -40,7 +38,7 @@ public class AuthSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, jwtProperties);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }

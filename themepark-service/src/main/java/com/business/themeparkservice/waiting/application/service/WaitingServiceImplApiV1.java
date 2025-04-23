@@ -33,16 +33,12 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     private final ThemeparkJpaRepository themeparkRepository;
 
-    @Autowired
-    private EntityManager entityManager;
-
     @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public ResWaitingPostDTOApiV1 postBy(ReqWaitingPostDTOApiV1 reqDto,Long userId) {
         UUID themeparkId = reqDto.getWaiting().getThemeparkId();
         ThemeparkChecking(themeparkId);
 //        WaitingChecking(reqDto,userId);
-
 
         WaitingEntity waitingInfo
                 = waitingRepository.findLastWaitingNumber(themeparkId, WaitingStatus.WAITING).orElse(null);

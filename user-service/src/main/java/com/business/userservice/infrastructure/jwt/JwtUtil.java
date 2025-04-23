@@ -44,12 +44,7 @@ public class JwtUtil {
     }
 
     public String createRefreshToken(String accessToken) {
-        Claims claims = Jwts.parserBuilder()
-            .setSigningKey(getSecretKey())
-            .build()
-            .parseClaimsJws(removeBearerPrefix(accessToken))
-            .getBody();
-
+        Claims claims = getClaimsFromToken(removeBearerPrefix(accessToken));
         Long userId = Long.parseLong(claims.getSubject());
         UserDetailsImpl user = (UserDetailsImpl) userDetailsServiceImpl.loadUserById(userId);
 
@@ -58,71 +53,28 @@ public class JwtUtil {
     }
 
     public String validateRefreshToken(String accessToken, String refreshToken) {
-        String atSubject;
-        String rtSubject;
-        Date rtExp;
+        String accessTokenSubject = extractSubject(accessToken);
+        Claims refreshTokenClaims = getClaimsFromToken(refreshToken);
 
-        // 만료된 access token 에서 subject 추출을 위한 클레임 파싱
-        try {
-            Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSecretKey())
-                .build()
-                .parseClaimsJws(accessToken)
-                .getBody();
-            atSubject = claims.getSubject();
-        } catch (ExpiredJwtException e) {
-            atSubject = e.getClaims().getSubject();
-        }
-
-        // Refresh Token 확인
-        try {
-            Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSecretKey())
-                .build()
-                .parseClaimsJws(refreshToken)
-                .getBody();
-            rtSubject = claims.getSubject();
-            rtExp = claims.getExpiration();
-        } catch (ExpiredJwtException e) {
-            rtSubject = e.getClaims().getSubject();
-            rtExp = e.getClaims().getExpiration();
-        }
-
-        if (!atSubject.equals(rtSubject)) {
+        if (!accessTokenSubject.equals(refreshTokenClaims.getSubject())) {
             return HttpStatus.UNAUTHORIZED.toString();
         }
 
-        Date now = new Date();
-        if (!now.before(rtExp)) {
+        if (isTokenExpired(refreshTokenClaims.getExpiration())) {
             throw new CustomException(AuthExceptionCode.REFRESH_TOKEN_EXPIRED);
         }
 
         UserDetailsImpl user = (UserDetailsImpl) userDetailsServiceImpl.loadUserById(
-            Long.parseLong(atSubject));
+            Long.parseLong(accessTokenSubject));
         return createAccessToken(user.getId(), user.getRole(), user.getSlackId());
     }
 
     public String getUserIdFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-            .setSigningKey(getSecretKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
-        return claims.getSubject();
+        return getClaimsFromToken(token).getSubject();
     }
 
     public Date getIatFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-            .setSigningKey(getSecretKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
-        return claims.getIssuedAt();
-    }
-
-    private SecretKey getSecretKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return getClaimsFromToken(token).getIssuedAt();
     }
 
     //accessToken 생성
@@ -140,6 +92,11 @@ public class JwtUtil {
             .compact();
     }
 
+    private SecretKey getSecretKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
     private String addBearerPrefix(String token) {
         return BEARER_PREFIX + token;
     }
@@ -153,5 +110,25 @@ public class JwtUtil {
             return token.substring(BEARER_PREFIX.length());
         }
         return token;
+    }
+
+    private Claims getClaimsFromToken(String token) {
+        return Jwts.parserBuilder()
+            .setSigningKey(getSecretKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+    }
+
+    private String extractSubject(String token) {
+        try {
+            return getClaimsFromToken(token).getSubject();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims().getSubject();
+        }
+    }
+
+    private boolean isTokenExpired(Date expiration) {
+        return expiration.before(new Date());
     }
 }

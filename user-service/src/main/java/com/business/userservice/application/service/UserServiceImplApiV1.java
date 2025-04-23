@@ -2,11 +2,14 @@ package com.business.userservice.application.service;
 
 import com.business.userservice.application.dto.request.ReqUserPostDeleteDTOApiV1;
 import com.business.userservice.application.dto.request.ReqUserPutDTOApiV1;
+import com.business.userservice.application.dto.response.ResAuthPutDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetDTOApiV1;
 import com.business.userservice.application.exception.UserExceptionCode;
 import com.business.userservice.domain.user.entity.UserEntity;
+import com.business.userservice.domain.user.repository.BlacklistRepository;
 import com.business.userservice.domain.user.repository.UserRepository;
+import com.business.userservice.infrastructure.jwt.JwtUtil;
 import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,8 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final BlacklistRepository blacklistRepository;
+    private final JwtUtil jwtUtil;
 
     @Override
     public ResUserGetByIdDTOApiV1 getBy(Long id) {
@@ -38,9 +43,13 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
 
     @Transactional
     @Override
-    public void putBy(Long id, ReqUserPutDTOApiV1 dto) {
+    public ResAuthPutDTOApiV1 putBy(Long id, ReqUserPutDTOApiV1 dto) {
         UserEntity userEntity = findById(id);
-        dto.getUser().update(userEntity);
+        UserEntity updateUser = dto.getUser().update(userEntity);
+        blacklistRepository.save(String.valueOf(userEntity.getId()));
+        String accessToken = jwtUtil.createAccessToken(id, updateUser.getRole(), updateUser.getSlackId());
+        String refreshToken = jwtUtil.createRefreshToken(accessToken);
+        return ResAuthPutDTOApiV1.of(accessToken, refreshToken);
     }
 
     @Transactional

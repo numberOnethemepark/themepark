@@ -69,10 +69,11 @@ public class UserEntity extends BaseEntity {
             .build();
     }
 
-    public void update(String username, String password, String slackId) {
+    public UserEntity update(String username, String password, String slackId) {
         if (username != null) this.username = username;
         if (password != null) this.password = password;
         if (slackId != null) this.slackId = slackId;
+        return this;
     }
 
     public boolean isPasswordMatch(String rawPassword, PasswordEncoder encoder) {

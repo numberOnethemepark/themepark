@@ -14,7 +14,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -28,16 +31,26 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     private final ThemeparkJpaRepository themeparkRepository;
 
+    @Retryable(
+            value = { org.springframework.dao.CannotAcquireLockException.class, org.postgresql.util.PSQLException.class },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 400, multiplier = 2)
+    )
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public ResWaitingPostDTOApiV1 postBy(ReqWaitingPostDTOApiV1 reqDto,Long userId) {
-        ThemeparkChecking(reqDto.getWaiting().getThemeparkId());
-        WaitingChecking(reqDto,userId);
+        UUID themeparkId = reqDto.getWaiting().getThemeparkId();
+        ThemeparkChecking(themeparkId);
+//        WaitingChecking(reqDto,userId);
 
-        int waitingLeft = waitingRepository.countByThemeparkIdAndWaitingStatus(reqDto.getWaiting().getThemeparkId(),WaitingStatus.WAITING);
+        WaitingEntity waitingInfo
+                = waitingRepository.findLastWaitingNumber(themeparkId, WaitingStatus.WAITING).orElse(null);
 
-        int waitingNumber=waitingRepository.findLastWaitingNumber(reqDto.getWaiting().getThemeparkId())+1;
+        int waitingLeft = (waitingInfo != null) ? waitingInfo.getWaitingLeft()+1 : 0;
+        int waitingNumber = (waitingInfo != null) ? waitingInfo.getWaitingNumber()+1 : 1;
 
         WaitingEntity waitingEntity = reqDto.createWaiting(waitingNumber,waitingLeft,userId);
+
         waitingRepository.save(waitingEntity);
 
         return ResWaitingPostDTOApiV1.of(waitingEntity);

@@ -1,6 +1,7 @@
 package com.business.gatewayservice.infrastructure.filter;
 
 import com.business.gatewayservice.application.exception.GatewayExceptionCode;
+import com.business.gatewayservice.infrastructure.persistence.redis.BlacklistRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -10,9 +11,11 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +46,7 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final AntPathMatcher matcher = new AntPathMatcher();
+    private final BlacklistRepository blacklistRepository;
 
     private SecretKey getSecretKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -78,22 +82,22 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
         }
 
         try {
-            //토큰가져오기
+            // 토큰가져오기
             String authorization = getJwtFromHeader(exchange);
             String jwtToken = parseAuthorizationToken(authorization);
-            //검증
+            // 검증
             validateToken(jwtToken);
-
-
             if (!StringUtils.hasText(jwtToken)) {
                 throw new Exception("토큰 비어있음");
             }
-
-            //유효기간확인
+            // 유효기간확인
             if (isValidateExpire(jwtToken)) {
                 throw new Exception("만료된 토큰");
             }
-
+            // 차단 확인
+            if (isValidateBlacklist(jwtToken)) {
+                throw new CustomException(GatewayExceptionCode.BLOCKED_USER);
+            }
             //  JWT 검증 성공 후 요청 헤더에 사용자 정보 추가
             ServerWebExchange modifiedExchange = exchange.mutate()
                 .request(exchange.getRequest().mutate()
@@ -219,5 +223,22 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
             .getBody()
             .getExpiration();
         return expiration.before(new Date());
+    }
+
+    private boolean isValidateBlacklist(String token) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(getSecretKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+        String userId = (String) claims.get("userId");
+        Date iat = claims.getIssuedAt();
+        Optional<Timestamp> blacklistDate = blacklistRepository.findByUserId(userId);
+
+        if (blacklistDate.isPresent()) {
+            Timestamp blacklistTimestamp = blacklistDate.get();
+            Timestamp iatTimestamp = new Timestamp(iat.getTime());
+            return iatTimestamp.before(blacklistTimestamp);
+        }
+        return false;
     }
 }

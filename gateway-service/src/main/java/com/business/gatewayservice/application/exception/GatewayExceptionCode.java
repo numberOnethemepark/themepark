@@ -15,6 +15,8 @@ public enum GatewayExceptionCode implements ExceptionCode {
 
     AUTH_HEADER_MISSING("G201", "Authorization 헤더가 존재하지 않습니다.", HttpStatus.UNAUTHORIZED),
     BEARER_TOKEN_NOT_FOUND("G202", "Bearer 타입의 토큰이 존재하지 않습니다.", HttpStatus.UNAUTHORIZED),
+
+    BLOCKED_USER("G301", "차단된 사용자입니다.", HttpStatus.UNAUTHORIZED),
     ;
 
     private final String code;

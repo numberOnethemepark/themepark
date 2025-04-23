@@ -2,6 +2,7 @@ package com.business.userservice.infrastructure.jwt;
 
 
 import com.business.userservice.application.exception.AuthExceptionCode;
+import com.business.userservice.domain.user.vo.JwtClaim;
 import com.business.userservice.domain.user.vo.RoleType;
 import com.business.userservice.domain.user.vo.TokenExpiration;
 import com.business.userservice.infrastructure.security.UserDetailsImpl;
@@ -24,32 +25,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
-    @Value("${spring.jwt.secret}")
-    private String secretKey;
     public static final String BEARER_PREFIX = "Bearer ";
-
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final SecretKey secretKey;
 
     public JwtUtil(
-        UserDetailsServiceImpl userDetailsServiceImpl
+        UserDetailsServiceImpl userDetailsServiceImpl,
+        @Value("${spring.jwt.secret}") String secret
     ) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
+        this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
     public String createAccessToken(Long userId, RoleType role, String slackId) {
-        String token = createToken("ACCESS", userId, role, slackId,
-            TokenExpiration.ACCESS_TOKEN.getSeconds());
+        String token = createToken(
+            "ACCESS",
+            userId,
+            role,
+            slackId,
+            TokenExpiration.ACCESS_TOKEN.getSeconds()
+        );
         return addBearerPrefix(token);
     }
 
     public String createRefreshToken(String accessToken) {
-        Claims claims = getClaimsFromToken(removeBearerPrefix(accessToken));
-        Long userId = Long.parseLong(claims.getSubject());
+        Long userId = Long.parseLong(extractSubject(removeBearerPrefix(accessToken)));
         UserDetailsImpl user = (UserDetailsImpl) userDetailsServiceImpl.loadUserById(userId);
 
-        return createToken("REFRESH", userId, user.getRole(), user.getSlackId(),
-            TokenExpiration.REFRESH_TOKEN.getSeconds());
+        return createToken(
+            "REFRESH",
+            userId,
+            user.getRole(),
+            user.getSlackId(),
+            TokenExpiration.REFRESH_TOKEN.getSeconds()
+        );
     }
 
     public String validateRefreshToken(String accessToken, String refreshToken) {
@@ -64,8 +74,7 @@ public class JwtUtil {
             throw new CustomException(AuthExceptionCode.REFRESH_TOKEN_EXPIRED);
         }
 
-        UserDetailsImpl user = (UserDetailsImpl) userDetailsServiceImpl.loadUserById(
-            Long.parseLong(accessTokenSubject));
+        UserDetailsImpl user = (UserDetailsImpl) userDetailsServiceImpl.loadUserById(Long.parseLong(accessTokenSubject));
         return createAccessToken(user.getId(), user.getRole(), user.getSlackId());
     }
 
@@ -77,24 +86,23 @@ public class JwtUtil {
         return getClaimsFromToken(token).getIssuedAt();
     }
 
-    //accessToken 생성
-    public String createToken(String category, Long userId, RoleType role, String slackId,
-        Long expiresIn) {
+    public String createToken(
+        String category,
+        Long userId,
+        RoleType role,
+        String slackId,
+        Long expiresIn
+    ) {
         return Jwts.builder()
             .setSubject(userId.toString())
-            .claim("category", category)
-            .claim("userId", userId.toString())
-            .claim("role", role)
-            .claim("slackId", slackId)
+            .claim(JwtClaim.CATEGORY.getName(), category)
+            .claim(JwtClaim.USER_ID.getName(), userId.toString())
+            .claim(JwtClaim.ROLE.getName(), role)
+            .claim(JwtClaim.SLACK_ID.getName(), slackId)
             .setExpiration(getExpiryDateFromNow(expiresIn))
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .signWith(getSecretKey(), signatureAlgorithm)
+            .signWith(secretKey, signatureAlgorithm)
             .compact();
-    }
-
-    private SecretKey getSecretKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     private String addBearerPrefix(String token) {
@@ -106,15 +114,12 @@ public class JwtUtil {
     }
 
     private String removeBearerPrefix(String token) {
-        if (token != null && token.startsWith(BEARER_PREFIX)) {
-            return token.substring(BEARER_PREFIX.length());
-        }
-        return token;
+        return (token != null && token.startsWith(BEARER_PREFIX)) ? token.substring(BEARER_PREFIX.length()) : token;
     }
 
     private Claims getClaimsFromToken(String token) {
         return Jwts.parserBuilder()
-            .setSigningKey(getSecretKey())
+            .setSigningKey(secretKey)
             .build()
             .parseClaimsJws(token)
             .getBody();

@@ -13,7 +13,6 @@ import com.business.userservice.infrastructure.jwt.JwtUtil;
 import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,14 +30,12 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
 
     @Override
     public ResUserGetByIdDTOApiV1 getBy(Long id) {
-        UserEntity userEntity = findById(id);
-        return ResUserGetByIdDTOApiV1.of(userEntity);
+        return ResUserGetByIdDTOApiV1.of(findById(id));
     }
 
     @Override
     public ResUserGetDTOApiV1 getBy(Predicate predicate, Pageable pageable) {
-        Page<UserEntity> userEntityPage = userRepository.findAll(predicate, pageable);
-        return ResUserGetDTOApiV1.of(userEntityPage);
+        return ResUserGetDTOApiV1.of(userRepository.findAll(predicate, pageable));
     }
 
     @Transactional
@@ -46,7 +43,9 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
     public ResAuthPutDTOApiV1 putBy(Long id, ReqUserPutDTOApiV1 dto) {
         UserEntity userEntity = findById(id);
         UserEntity updateUser = dto.getUser().update(userEntity);
-        blacklistRepository.save(String.valueOf(userEntity.getId()));
+
+        addToBlacklist(userEntity.getId());
+
         String accessToken = jwtUtil.createAccessToken(id, updateUser.getRole(), updateUser.getSlackId());
         String refreshToken = jwtUtil.createRefreshToken(accessToken);
         return ResAuthPutDTOApiV1.of(accessToken, refreshToken);
@@ -57,8 +56,9 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
     public void deleteById(Long id, ReqUserPostDeleteDTOApiV1 dto) {
         UserEntity userEntity = findById(id);
         validatePassword(dto.getUser().getPassword(), userEntity);
+
         userEntity.deletedBy(id);
-        blacklistRepository.save(String.valueOf(userEntity.getId()));
+        addToBlacklist(userEntity.getId());
     }
 
     @Transactional
@@ -66,11 +66,13 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
     public boolean blacklistById(Long id) {
         UserEntity userEntity = findById(id);
         boolean isBlacklisted = userEntity.blacklist();
+
         if (isBlacklisted) {
             blacklistRepository.save(String.valueOf(id));
         } else {
             blacklistRepository.delete(String.valueOf(id));
         }
+
         return isBlacklisted;
     }
 
@@ -83,5 +85,9 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
         if (!userEntity.isPasswordMatch(password, passwordEncoder)) {
             throw new CustomException(UserExceptionCode.PASSWORD_NOT_MATCH);
         }
+    }
+
+    private void addToBlacklist(Long userId) {
+        blacklistRepository.save(String.valueOf(userId));
     }
 }

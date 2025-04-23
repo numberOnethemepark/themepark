@@ -13,7 +13,6 @@ import com.business.userservice.infrastructure.jwt.JwtUtil;
 import com.github.themepark.common.application.exception.CustomException;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,16 +38,9 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
     @Override
     public String refreshToken(String accessToken, String refreshToken) {
         String userId = jwtUtil.getUserIdFromToken(accessToken);
-        Date iat = jwtUtil.getIatFromToken(accessToken);
-        Optional<String> blacklistDate = blacklistRepository.findByUserId(userId);
+        Date issuedAt = jwtUtil.getIatFromToken(accessToken);
 
-        if (blacklistDate.isPresent()) {
-            Timestamp blacklistTimestamp = Timestamp.valueOf(blacklistDate.get());
-            Timestamp iatTimestamp = new Timestamp(iat.getTime());
-            if (iatTimestamp.before(blacklistTimestamp)) {
-                throw new CustomException(AuthExceptionCode.BLOCKED_USER);
-            }
-        }
+        checkTokenBlacklisted(userId, issuedAt);
 
         return jwtUtil.validateRefreshToken(accessToken, refreshToken);
     }
@@ -82,5 +74,16 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
             .ifPresent(userEntity -> {
                 throw new CustomException(AuthExceptionCode.DUPLICATE_SLACK_ID);
             });
+    }
+
+    private void checkTokenBlacklisted(String userId, Date issuedAt) {
+        blacklistRepository.findByUserId(userId).ifPresent(blacklistedAtStr -> {
+            Timestamp blacklistedAt = Timestamp.valueOf(blacklistedAtStr);
+            Timestamp tokenIssuedAt = new Timestamp(issuedAt.getTime());
+
+            if (tokenIssuedAt.before(blacklistedAt)) {
+                throw new CustomException(AuthExceptionCode.BLOCKED_USER);
+            }
+        });
     }
 }

@@ -3,7 +3,6 @@ package com.business.userservice.infrastructure.jwt;
 import com.business.userservice.application.dto.request.ReqAuthPostLoginDTOApiV1;
 import com.business.userservice.application.dto.response.ResAuthPostLoginDTOApiV1;
 import com.business.userservice.application.exception.AuthExceptionCode;
-import com.business.userservice.domain.user.vo.RoleType;
 import com.business.userservice.infrastructure.security.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.themepark.common.application.exception.CustomException;
@@ -23,28 +22,28 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
         setFilterProcessesUrl("/v1/auth/login");
     }
 
-
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
-        HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+        throws AuthenticationException {
 
         String username;
         String password;
 
-        if (request.getContentType() != null && request.getContentType().contains("application/json")) {
+        if (isJsonRequest(request)) {
             // JSON 요청 처리
             try {
                 ReqAuthPostLoginDTOApiV1 reqDto = new ObjectMapper().readValue(request.getInputStream(), ReqAuthPostLoginDTOApiV1.class);
                 username = reqDto.getUser().getUsername();
                 password = reqDto.getUser().getPassword();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("요청 바디 파싱 실패: {}", e.getMessage());
                 throw new CustomException(AuthExceptionCode.INVALID_REQUEST_BODY);
             }
         } else {
@@ -53,13 +52,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             password = request.getParameter("password");
         }
 
-        if (username == null || password == null) {
-            throw new CustomException(AuthExceptionCode.MISSING_USERNAME_OR_PASSWORD);
-        }
+        validateUsernameAndPassword(username, password);
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-
-        return getAuthenticationManager().authenticate(authToken);
+        return getAuthenticationManager().authenticate(
+            new UsernamePasswordAuthenticationToken(username, password)
+        );
     }
 
     @Override
@@ -77,30 +74,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     ) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
 
-        Long userId = userDetails.getId();
-        RoleType role = userDetails.getRole();
-        String slackId = userDetails.getSlackId();
-
-        String accessToken = jwtUtil.createAccessToken(userId, role, slackId);
+        String accessToken = jwtUtil.createAccessToken(userDetails.getId(), userDetails.getRole(), userDetails.getSlackId());
         String refreshToken = jwtUtil.createRefreshToken(accessToken);
 
-        ResAuthPostLoginDTOApiV1 dto = ResAuthPostLoginDTOApiV1.of(accessToken, refreshToken);
-
-        response.setHeader("ACCESS_TOKEN", accessToken);
-
-        Cookie refreshCookie = createCookie("refresh", refreshToken);
-        response.addCookie(refreshCookie);
-
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            response.getWriter().write(mapper.writeValueAsString(dto));
-        } catch (IOException e) {
-            throw new CustomException(AuthExceptionCode.RESPONSE_WRITE_FAIL);
-        }
+        sendSuccessResponse(response, accessToken, refreshToken);
     }
 
     @Override
@@ -118,5 +95,33 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         cookie.setPath("/");
         cookie.setMaxAge(60 * 60 * 24 * 14);    // 2주
         return cookie;
+    }
+
+    private boolean isJsonRequest(HttpServletRequest request) {
+        return request.getContentType() != null && request.getContentType().contains("application/json");
+    }
+
+    private void validateUsernameAndPassword(String username, String password) {
+        if (username == null || password == null) {
+            throw new CustomException(AuthExceptionCode.MISSING_USERNAME_OR_PASSWORD);
+        }
+    }
+
+    private void sendSuccessResponse(HttpServletResponse response, String accessToken, String refreshToken) {
+        response.setHeader("ACCESS_TOKEN", accessToken);
+        response.addCookie(createCookie("refresh", refreshToken));
+
+        ResAuthPostLoginDTOApiV1 dto = ResAuthPostLoginDTOApiV1.of(accessToken, refreshToken);
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        try {
+            response.getWriter().write(objectMapper.writeValueAsString(dto));
+        } catch (IOException e) {
+            log.error("응답 쓰기 실패: {}", e.getMessage());
+            throw new CustomException(AuthExceptionCode.RESPONSE_WRITE_FAIL);
+        }
     }
 }

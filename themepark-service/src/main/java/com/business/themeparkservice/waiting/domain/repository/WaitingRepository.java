@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public interface WaitingRepository {
 
-    @Query(value = "select * from themepark_service.p_waitings w where w.themepark_id = :themeparkId and w.waiting_status = 'WAITING' order by w.waiting_number desc limit 1 for update ",nativeQuery = true)
+    @Query(value = "select * from themepark_service.p_waitings w where w.themepark_id = :themeparkId and w.waiting_status = 'WAITING' order by w.waiting_number desc limit 1 for share",nativeQuery = true)
     Optional<WaitingEntity> findLastWaitingNumber(UUID themeparkId,WaitingStatus waitingStatus);
 
     int countByThemeparkIdAndWaitingStatus(@NotNull(message = "테마파크번호를 입력해주세요") UUID themeparkId,WaitingStatus waitingStatus);

@@ -10,18 +10,16 @@ import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -33,6 +31,11 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     private final ThemeparkJpaRepository themeparkRepository;
 
+    @Retryable(
+            value = { org.springframework.dao.CannotAcquireLockException.class, org.postgresql.util.PSQLException.class },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 400, multiplier = 2)
+    )
     @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public ResWaitingPostDTOApiV1 postBy(ReqWaitingPostDTOApiV1 reqDto,Long userId) {

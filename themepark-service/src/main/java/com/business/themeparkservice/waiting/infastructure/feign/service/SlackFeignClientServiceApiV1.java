@@ -1,4 +1,4 @@
-package com.business.themeparkservice.waiting.infastructure.service;
+package com.business.themeparkservice.waiting.infastructure.feign.service;
 
 import com.business.themeparkservice.themepark.application.exception.ThemeparkExceptionCode;
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
@@ -6,7 +6,7 @@ import com.business.themeparkservice.themepark.infastructure.persistence.themepa
 import com.business.themeparkservice.waiting.application.exception.WaitingExceptionCode;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
-import com.business.themeparkservice.waiting.infastructure.dto.request.ReqSlackPostDTOApiV1;
+import com.business.themeparkservice.waiting.infastructure.feign.dto.request.ReqSlackPostDTOApiV1;
 import com.business.themeparkservice.waiting.infastructure.feign.SlackFeignClientApiV1;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
 import com.github.themepark.common.application.exception.CustomException;

@@ -1,10 +1,8 @@
-package com.business.themeparkservice.waiting.infastructure.dto.request;
+package com.business.themeparkservice.waiting.infastructure.feign.dto.request;
 
-import com.business.themeparkservice.waiting.infastructure.vo.TargetType;
+import com.business.themeparkservice.waiting.infastructure.feign.vo.TargetType;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.UUID;
 
 @Getter
 public class ReqSlackPostDTOApiV1 {

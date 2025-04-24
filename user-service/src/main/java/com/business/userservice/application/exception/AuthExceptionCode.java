@@ -16,7 +16,10 @@ public enum AuthExceptionCode implements ExceptionCode {
     DUPLICATE_SLACK_ID("J106", "이미 존재하는 Slack ID입니다.", HttpStatus.CONFLICT),
 
     REFRESH_TOKEN_NOT_FOUND("J201", "존재하지 않는 refresh token 입니다.", HttpStatus.NOT_FOUND),
-    REFRESH_TOKEN_USER_MISMATCH("J202", "만료된 access token의 user와 요청한 refresh token의 user가 동일하지 않습니다.", HttpStatus.UNAUTHORIZED)
+    REFRESH_TOKEN_USER_MISMATCH("J202", "만료된 access token의 user와 요청한 refresh token의 user가 동일하지 않습니다.", HttpStatus.UNAUTHORIZED),
+    REFRESH_TOKEN_EXPIRED("J203", "만료된 refresh token 입니다.", HttpStatus.UNAUTHORIZED),
+
+    BLOCKED_USER("J301", "차단된 사용자입니다.", HttpStatus.UNAUTHORIZED),
     ;
 
 

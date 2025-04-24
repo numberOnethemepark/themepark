@@ -18,6 +18,9 @@ tasks.named('test') {
 }
 
 dependencies {
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     implementation 'com.github.numberOnethemepark:common:0.0.8'
 
     implementation 'org.springframework.boot:spring-boot-starter'

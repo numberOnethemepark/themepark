@@ -40,12 +40,7 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     private final RedissonClient redissonClient;
 
-    @Retryable(
-            value = { org.springframework.dao.CannotAcquireLockException.class, org.postgresql.util.PSQLException.class },
-            maxAttempts = 5,
-            backoff = @Backoff(delay = 400, multiplier = 2)
-    )
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     @Override
     public ResWaitingPostDTOApiV1 postBy(ReqWaitingPostDTOApiV1 reqDto,Long userId) {
         UUID themeparkId = reqDto.getWaiting().getThemeparkId();

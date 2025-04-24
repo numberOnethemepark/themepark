@@ -11,6 +11,14 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-
+  redis-stack:
+    image: redis/redis-stack
+    container_name: redis-stack
+    restart: always
+    environment:
+      REDIS_ARGS: "--requirepass systempass"
+    ports:
+      - 6379:6379
+      - 8009:8009
 volumes:
   pgdata:

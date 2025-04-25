@@ -11,6 +11,7 @@ import com.business.slackservice.domain.slack.vo.SlackStatus;
 import com.business.slackservice.domain.slack.vo.TargetType;
 import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
 import com.business.slackservice.domain.slackTemplate.entity.SlackTemplateEntity;
+import com.business.slackservice.infrastructure.persistence.SlackRedisRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
 import com.slack.api.methods.SlackApiException;
@@ -37,22 +38,22 @@ public class SlackServiceImplApiV1 implements SlackServiceApiV1 {
     private final SlackTemplateService slackTemplateService;
     private final SlackRepository slackRepository;
     private final SlackMessageSender slackMessageSender;
+    private final SlackRedisRepository slackRedisRepository;
 
     @Transactional
     @Override
-    public ResSlackPostDTOApiV1 postBy(ReqSlackPostDTOApiV1 dto)
-        throws SlackApiException, IOException {
-        SlackEventTypeEntity eventType = getEventTypeByName(dto.getSlack().getSlackEventType());
-        SlackTemplateEntity template = getTemplateBySlackEventType(eventType);
+    public ResSlackPostDTOApiV1 postBy(ReqSlackPostDTOApiV1 dto) throws SlackApiException, IOException {
+        String eventTypeName = dto.getSlack().getSlackEventType();
 
-        String content = generateContent(template, dto.getSlack().getRelatedName());
+        SlackEventTypeEntity eventType = getOrLoadEventType(eventTypeName);
+        String templateContent = getOrLoadTemplateContent(eventTypeName, eventType);
+
+        String content = generateContent(templateContent, dto.getSlack().getRelatedName());
         String slackId = resolveSlackId(dto);
-
         SlackStatus status = slackMessageSender.send(slackId, content);
 
-        SlackEntity slackEntity = dto.getSlack().toEntityBy(eventType, content, status);
-
-        return ResSlackPostDTOApiV1.of(slackRepository.save(slackEntity));
+        SlackEntity savedEntity = slackRepository.save(dto.getSlack().toEntityBy(eventType, content, status));
+        return ResSlackPostDTOApiV1.of(savedEntity);
     }
 
     @Override
@@ -87,12 +88,31 @@ public class SlackServiceImplApiV1 implements SlackServiceApiV1 {
         return slackTemplateService.findBySlackEventType(slackEventTypeEntity);
     }
 
-    private String generateContent(SlackTemplateEntity template, String relatedName) {
-        return template.getContent().replace("{{relatedName}}", relatedName);
+    private String generateContent(String slackTemplateContent, String relatedName) {
+        return slackTemplateContent.replace("{{relatedName}}", relatedName);
     }
 
     private String resolveSlackId(ReqSlackPostDTOApiV1 dto) {
         TargetType targetType = dto.getSlack().getTarget().getType();
         return targetType.equals(TargetType.USER_DM) ? dto.getSlack().getTarget().getSlackId() : slackAdminId;
+    }
+
+    private SlackEventTypeEntity getOrLoadEventType(String eventTypeName) {
+        return slackRedisRepository.findSlackEventTypeByName(eventTypeName)
+            .map(cached -> getEventTypeByName(eventTypeName))
+            .orElseGet(() -> {
+                SlackEventTypeEntity loaded = getEventTypeByName(eventTypeName);
+                slackRedisRepository.saveSlackEventType(loaded);
+                return loaded;
+            });
+    }
+
+    private String getOrLoadTemplateContent(String eventTypeName, SlackEventTypeEntity eventType) {
+        return slackRedisRepository.findSlackTemplateByEventType(eventTypeName)
+            .orElseGet(() -> {
+                SlackTemplateEntity loaded = getTemplateBySlackEventType(eventType);
+                slackRedisRepository.saveSlackTemplate(loaded);
+                return loaded.getContent();
+            });
     }
 }

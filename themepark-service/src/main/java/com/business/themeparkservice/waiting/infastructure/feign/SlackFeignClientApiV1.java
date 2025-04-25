@@ -1,6 +1,6 @@
 package com.business.themeparkservice.waiting.infastructure.feign;
 
-import com.business.themeparkservice.waiting.infastructure.dto.request.ReqSlackPostDTOApiV1;
+import com.business.themeparkservice.waiting.infastructure.feign.dto.request.ReqSlackPostDTOApiV1;
 import com.github.themepark.common.infrastructure.config.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -20,8 +20,8 @@ public class ReqUserPutDTOApiV1 {
         @JsonProperty
         private String slackId;
 
-        public void update(UserEntity userEntity) {
-            userEntity.update(username, password, slackId);
+        public UserEntity update(UserEntity userEntity) {
+            return userEntity.update(username, password, slackId);
         }
     }
 }

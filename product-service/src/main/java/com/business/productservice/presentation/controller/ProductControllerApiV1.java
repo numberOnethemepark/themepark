@@ -109,8 +109,7 @@ public class ProductControllerApiV1 {
                 );
         }
 
-        @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
-        @PostMapping("internal/{id}/stocks-decrease")
+        @PostMapping("/internal/{id}/stocks-decrease")
         public ResponseEntity<ResDTO<Object>> postDecreaseById(
                 @PathVariable("id") UUID id
         ){
@@ -124,8 +123,7 @@ public class ProductControllerApiV1 {
                 );
         }
 
-        @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
-        @PostMapping("internal/{id}/stocks-restore")
+        @PostMapping("/internal/{id}/stocks-restore")
         public ResponseEntity<ResDTO<Object>> postRestoreById(
                 @PathVariable("id") UUID id
         ){

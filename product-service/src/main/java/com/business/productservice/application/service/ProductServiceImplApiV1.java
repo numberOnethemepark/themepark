@@ -15,11 +15,16 @@ import com.querydsl.core.types.Predicate;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +35,7 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
     private final ProductJpaRepository productRepository;
     private final StockJpaRepository stockRepository;
     private final SlackFeignClientApiV1 slackFeignClientApiV1;
+    private final RedissonClient redissonClient;
 
     @Override
     public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
@@ -87,41 +93,73 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
     }
 
     @Override
+    @Transactional
     public void postDecreaseById(UUID id) {
-        StockEntity stockEntity = stockRepository.findByIdWithPessimisticLock(id)
-                .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
+        String lockKey = "lock:stock:"+id;
+        RLock lock = redissonClient.getLock(lockKey);
 
-        if (stockEntity.getStock() <= 0) {
-            throw new CustomException(ProductExceptionCode.PRODUCT_STOCK_SOLDOUT);
-        }
+        boolean isLocked = false;
+        try{
+            log.info("락 시도");
+            isLocked = lock.tryLock(5, 30, TimeUnit.SECONDS); // waitTime: 5초, leaseTime: 3초
 
-        stockEntity.decrease();
+            System.out.println("🔒 현재 락 키 존재 여부: " + redissonClient.getKeys().getKeysStream()
+                    .filter(key -> key.startsWith("lock:"))
+                    .toList());
 
-        if(stockEntity.getStock() == 0){
-            String productName = stockEntity.getProduct().getName();
+            if (!isLocked) {
+                log.warn("락 획득 실패");
+                throw new CustomException(ProductExceptionCode.LOCK_FAILED);
+            }
+            log.info("락 획득 성공");
 
-            ReqToSlackPostDTOApiV1.Slack.SlackTarget target = ReqToSlackPostDTOApiV1.Slack.SlackTarget.builder()
-                    .slackId("C01ABCDEF78")
-                    .type("ADMIN_CHANNEL")
-                    .build();
+            StockEntity stockEntity = stockRepository.findById(id)
+                    .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
 
-            ReqToSlackPostDTOApiV1.Slack slack = ReqToSlackPostDTOApiV1.Slack.builder()
-                    .slackEventType("STOCK_OUT")
-                    .relatedName(productName)
-                    .target(target)
-                    .build();
+            if (stockEntity.getStock() <= 0) {
+                throw new CustomException(ProductExceptionCode.PRODUCT_STOCK_SOLDOUT);
+            }
 
-            ReqToSlackPostDTOApiV1 request = ReqToSlackPostDTOApiV1.builder()
-                    .slack(slack)
-                    .build();
-            try {
-                // 슬랙 API 호출 (FeignClient 직접 사용)
-                slackFeignClientApiV1.postBy(request);
-                log.info("슬랙 성공");
-            } catch (Exception e) {
-                log.warn("슬랙 전송 실패 - 상품명: {}", productName, e);
+            stockEntity.decrease();
+
+            if(stockEntity.getStock() == 0){
+                String productName = stockEntity.getProduct().getName();
+
+                ReqToSlackPostDTOApiV1.Slack.SlackTarget target = ReqToSlackPostDTOApiV1.Slack.SlackTarget.builder()
+                        .slackId("C01ABCDEF78")
+                        .type("ADMIN_CHANNEL")
+                        .build();
+
+                ReqToSlackPostDTOApiV1.Slack slack = ReqToSlackPostDTOApiV1.Slack.builder()
+                        .slackEventType("STOCK_OUT")
+                        .relatedName(productName)
+                        .target(target)
+                        .build();
+
+                ReqToSlackPostDTOApiV1 request = ReqToSlackPostDTOApiV1.builder()
+                        .slack(slack)
+                        .build();
+                try {
+                    // 슬랙 API 호출 (FeignClient 직접 사용)
+                    slackFeignClientApiV1.postBy(request);
+                    log.info("슬랙 성공");
+                } catch (Exception e) {
+                    log.warn("슬랙 전송 실패 - 상품명: {}", productName, e);
+                }
+            }
+        } catch(InterruptedException e){
+            throw new CustomException(ProductExceptionCode.LOCK_INTERRUPTED);
+        } finally{
+            if (isLocked) {
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+                    @Override
+                    public void afterCommit() {
+                        lock.unlock();
+                    }
+                });
             }
         }
+
     }
 
     @Override

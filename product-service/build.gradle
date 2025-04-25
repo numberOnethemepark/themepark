@@ -74,6 +74,11 @@ dependencies {
 
     //feignClient
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    //Redisson
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.23.4'
+
 }
 
 // 컴파일 시 빌드 폴더를 지웁니다.

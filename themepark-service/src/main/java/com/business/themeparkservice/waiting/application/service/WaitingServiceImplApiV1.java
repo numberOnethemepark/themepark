@@ -6,18 +6,26 @@ import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingP
 import com.business.themeparkservice.waiting.application.dto.response.*;
 import com.business.themeparkservice.waiting.application.exception.WaitingExceptionCode;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
+import com.business.themeparkservice.waiting.domain.entity.WaitingRedisEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
+import com.business.themeparkservice.waiting.infastructure.redis.WaitingCrudRedisRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -26,21 +34,65 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     private final WaitingJpaRepository waitingRepository;
 
+    private final WaitingCrudRedisRepository waitingRedisRepository;
+
     private final ThemeparkJpaRepository themeparkRepository;
 
+    private final RedissonClient redissonClient;
+
+    @Transactional
     @Override
     public ResWaitingPostDTOApiV1 postBy(ReqWaitingPostDTOApiV1 reqDto,Long userId) {
-        ThemeparkChecking(reqDto.getWaiting().getThemeparkId());
-        WaitingChecking(reqDto,userId);
+        UUID themeparkId = reqDto.getWaiting().getThemeparkId();
+        ThemeparkChecking(themeparkId);
+//        WaitingChecking(reqDto,userId);
 
-        int waitingLeft = waitingRepository.countByThemeparkIdAndWaitingStatus(reqDto.getWaiting().getThemeparkId(),WaitingStatus.WAITING);
+        RLock lock = redissonClient.getLock("lock:waiting:themeparkId:" + themeparkId);
+        int waitingNumber = 1;
+        int waitingLeft = 0;
 
-        int waitingNumber=waitingRepository.findLastWaitingNumber(reqDto.getWaiting().getThemeparkId())+1;
+        try{
+            boolean lockChecking = lock.tryLock(5, TimeUnit.SECONDS);
 
-        WaitingEntity waitingEntity = reqDto.createWaiting(waitingNumber,waitingLeft,userId);
-        waitingRepository.save(waitingEntity);
+            if(!lockChecking){
+                throw new CustomException(WaitingExceptionCode.WAITING_LOCK_FAILED);
+            }
 
-        return ResWaitingPostDTOApiV1.of(waitingEntity);
+            WaitingRedisEntity waitingRedisEntity =
+                    waitingRedisRepository.findById(String.valueOf(themeparkId))
+                            .orElse(null);
+
+            if (waitingRedisEntity != null) {
+                waitingLeft = waitingRedisEntity.getWaitingLeft()+1;
+                waitingNumber = waitingRedisEntity.getWaitingNumber()+1;
+            }else {
+                WaitingEntity waitingInfo = waitingRepository.findLastWaitingNumber(themeparkId, WaitingStatus.WAITING)
+                        .orElse(null);
+
+                if (waitingInfo != null) {
+                    waitingLeft = waitingInfo.getWaitingLeft()+1;
+                    waitingNumber = waitingInfo.getWaitingNumber()+1;
+                }
+            }
+
+            waitingRedisRepository.save(WaitingRedisEntity.builder()
+                    .id(String.valueOf(themeparkId))
+                    .waitingNumber(waitingNumber)
+                    .waitingLeft(waitingLeft)
+                    .build());
+
+            WaitingEntity waitingEntity = reqDto.createWaiting(waitingNumber,waitingLeft,userId);
+
+            waitingRepository.save(waitingEntity);
+
+            return ResWaitingPostDTOApiV1.of(waitingEntity);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
+        }
+        return null;
     }
 
     @Override
@@ -89,7 +141,7 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
     private void WaitingChecking(ReqWaitingPostDTOApiV1 reqDto, Long userId) {
         if(waitingRepository.countByThemeparkIdAndUserIdAndWaitingStatus(
                 reqDto.getWaiting().getThemeparkId(),userId,WaitingStatus.WAITING)!= 0){
-            throw new CustomException(WaitingExceptionCode.WAITING_STILL_HERE);
+            throw new CustomException(WaitingExceptionCode.WAITING_DUPLICATE);
         }
     }
 

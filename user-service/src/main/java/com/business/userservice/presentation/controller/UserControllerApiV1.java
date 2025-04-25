@@ -2,6 +2,7 @@ package com.business.userservice.presentation.controller;
 
 import com.business.userservice.application.dto.request.ReqUserPostDeleteDTOApiV1;
 import com.business.userservice.application.dto.request.ReqUserPutDTOApiV1;
+import com.business.userservice.application.dto.response.ResAuthPutDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetDTOApiV1;
 import com.business.userservice.application.service.UserServiceApiV1;
@@ -36,16 +37,17 @@ public class UserControllerApiV1 {
 
     @ApiPermission(roles = {Role.USER})
     @PutMapping("/{id}")
-    public ResponseEntity<ResDTO<Object>> putBy(
+    public ResponseEntity<ResDTO<ResAuthPutDTOApiV1>> putBy(
         @PathVariable Long id,
         @Valid @RequestBody ReqUserPutDTOApiV1 dto
     ) {
-        userService.putBy(id, dto);
+        ResAuthPutDTOApiV1 data = userService.putBy(id, dto);
 
         return new ResponseEntity<>(
-            ResDTO.builder()
+            ResDTO.<ResAuthPutDTOApiV1>builder()
                 .code("0")
                 .message("회원 정보 수정에 성공했습니다.")
+                .data(data)
                 .build(),
             HttpStatus.OK
         );

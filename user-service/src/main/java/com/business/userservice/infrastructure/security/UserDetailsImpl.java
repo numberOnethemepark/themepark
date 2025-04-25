@@ -18,6 +18,7 @@ public class UserDetailsImpl implements UserDetails {
     private final Boolean isBlacklisted;
     private final String password;
     private final String slackId;
+    private final boolean isDeleted;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(UserEntity user) {
@@ -27,6 +28,7 @@ public class UserDetailsImpl implements UserDetails {
         this.isBlacklisted = user.getIsBlacklisted();
         this.password = user.getPassword();
         this.slackId = user.getSlackId();
+        this.isDeleted = user.getDeletedAt() != null;
         this.authorities = generateAuthorities(role);
     }
 
@@ -62,7 +64,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !isBlacklisted;
+        return !isBlacklisted && !isDeleted;
     }
 
     private Collection<GrantedAuthority> generateAuthorities(RoleType role) {

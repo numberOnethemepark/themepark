@@ -12,9 +12,12 @@ public enum GatewayExceptionCode implements ExceptionCode {
     INVALID_SIGNATURE("G102", "유효하지 않은 JWT 서명 입니다.", HttpStatus.UNAUTHORIZED),
     UNSUPPORTED_JWT("G103", "지원되지 않는 JWT Token 입니다.", HttpStatus.BAD_REQUEST),
     EMPTY_CLAIMS("G104", "잘못된 JWT Token 입니다.", HttpStatus.BAD_REQUEST),
+    EMPTY_JWT_TOKEN("G105", "JWT Token이 비어있습니다.", HttpStatus.BAD_REQUEST),
 
     AUTH_HEADER_MISSING("G201", "Authorization 헤더가 존재하지 않습니다.", HttpStatus.UNAUTHORIZED),
     BEARER_TOKEN_NOT_FOUND("G202", "Bearer 타입의 토큰이 존재하지 않습니다.", HttpStatus.UNAUTHORIZED),
+
+    BLOCKED_USER("G301", "차단된 사용자입니다.", HttpStatus.UNAUTHORIZED),
     ;
 
     private final String code;

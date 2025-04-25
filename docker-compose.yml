@@ -11,7 +11,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-
+      
   redis-stack:
     image: redis/redis-stack
     container_name: redis-stack-compose

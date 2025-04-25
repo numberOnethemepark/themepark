@@ -2,6 +2,7 @@ package com.business.userservice.application.service;
 
 import com.business.userservice.application.dto.request.ReqUserPostDeleteDTOApiV1;
 import com.business.userservice.application.dto.request.ReqUserPutDTOApiV1;
+import com.business.userservice.application.dto.response.ResAuthPutDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
 import com.business.userservice.application.dto.response.ResUserGetDTOApiV1;
 import com.querydsl.core.types.Predicate;
@@ -13,7 +14,7 @@ public interface UserServiceApiV1 {
 
     ResUserGetDTOApiV1 getBy(Predicate predicate, Pageable pageable);
 
-    void putBy(Long id, @Valid ReqUserPutDTOApiV1 dto);
+    ResAuthPutDTOApiV1 putBy(Long id, @Valid ReqUserPutDTOApiV1 dto);
 
     void deleteById(Long id, ReqUserPostDeleteDTOApiV1 dto);
 

@@ -4,7 +4,7 @@ import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
 import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.application.dto.response.*;
 import com.business.themeparkservice.waiting.application.service.WaitingServiceApiV1;
-import com.business.themeparkservice.waiting.infastructure.service.SlackFeignClientServiceApiV1;
+import com.business.themeparkservice.waiting.infastructure.feign.service.SlackFeignClientServiceApiV1;
 import com.github.themepark.common.application.aop.annotation.ApiPermission;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;

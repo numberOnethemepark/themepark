@@ -6,9 +6,7 @@ spring:
     username: admin
     password: 12345
     driver-class-name: org.postgresql.Driver
-
   jpa:
-
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -17,6 +15,12 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
         default_schema: themepark_service
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: default
+      password: systempass
 
 eureka:
   client:

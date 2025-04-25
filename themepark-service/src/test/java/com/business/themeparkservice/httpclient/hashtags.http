@@ -31,7 +31,7 @@ Authorization: {{accessToken}}
 
 {
   "hashtag": {
-    "name": "야호"
+    "name": "즐거운"
   }
 }
 

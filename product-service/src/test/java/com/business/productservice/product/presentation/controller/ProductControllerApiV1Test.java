@@ -1,11 +1,11 @@
 package com.business.productservice.product.presentation.controller;
 
-import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
-import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1;
-import com.business.productservice.application.dto.request.ReqStockDecreasePostDTOApiV1;
-import com.business.productservice.application.dto.request.ReqStockRestorePostDTOApiV1;
-import com.business.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
-import com.business.productservice.application.service.ProductServiceApiV1;
+import com.business.productservice.application.dto.v1.request.ReqProductPostDTOApiV1;
+import com.business.productservice.application.dto.v1.request.ReqProductPutDTOApiV1;
+import com.business.productservice.application.dto.v1.request.ReqStockDecreasePostDTOApiV1;
+import com.business.productservice.application.dto.v1.request.ReqStockRestorePostDTOApiV1;
+import com.business.productservice.application.dto.v1.response.ResProductGetByIdDTOApiV1;
+import com.business.productservice.application.service.v1.ProductServiceApiV1;
 import com.business.productservice.domain.product.vo.ProductStatus;
 import com.business.productservice.domain.product.vo.ProductType;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;

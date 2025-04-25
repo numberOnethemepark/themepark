@@ -1,4 +1,4 @@
-package com.business.productservice.application.dto.response;
+package com.business.productservice.application.dto.v1.response;
 
 import com.business.productservice.domain.product.entity.StockEntity;
 import lombok.AllArgsConstructor;
@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResStockGetByIdDTOApiv1 {
+public class ResStockGetByIdDTOApiV1 {
 
     private Stock stock;
 
-    public static ResStockGetByIdDTOApiv1 of(StockEntity stockEntity) {
-        return ResStockGetByIdDTOApiv1.builder()
+    public static ResStockGetByIdDTOApiV1 of(StockEntity stockEntity) {
+        return ResStockGetByIdDTOApiV1.builder()
                 .stock(Stock.from(stockEntity))
                 .build();
     }

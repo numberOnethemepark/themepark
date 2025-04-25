@@ -1,6 +1,7 @@
-package com.business.productservice.application.dto.response;
+package com.business.productservice.application.dto.v1.response;
 
 import com.business.productservice.domain.product.entity.ProductEntity;
+import com.business.productservice.domain.product.vo.ProductStatus;
 import com.business.productservice.domain.product.vo.ProductType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,19 +9,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResProductPostDTOApiV1 {
+public class ResProductPutDTOApiV1 {
 
     private Product product;
 
-    public static ResProductPostDTOApiV1 of(ProductEntity productEntity){
-        return ResProductPostDTOApiV1.builder()
-                .product(ResProductPostDTOApiV1.Product.from(productEntity))
+    public static ResProductPutDTOApiV1 of(ProductEntity productEntity){
+        return ResProductPutDTOApiV1.builder()
+                .product(Product.from(productEntity))
                 .build();
     }
 
@@ -29,7 +29,6 @@ public class ResProductPostDTOApiV1 {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Product{
-        private UUID id;
         private String name;
         private String description;
         private ProductType productType;
@@ -37,10 +36,10 @@ public class ResProductPostDTOApiV1 {
         private Integer limitQuantity;
         private LocalDateTime eventStartAt;
         private LocalDateTime eventEndAt;
+        private ProductStatus productStatus;
 
         public static Product from(ProductEntity productEntity){
             return Product.builder()
-                    .id(productEntity.getId())
                     .name(productEntity.getName())
                     .description(productEntity.getDescription())
                     .productType(productEntity.getProductType())
@@ -48,7 +47,9 @@ public class ResProductPostDTOApiV1 {
                     .limitQuantity(productEntity.getLimitQuantity())
                     .eventStartAt(productEntity.getEventStartAt())
                     .eventEndAt(productEntity.getEventEndAt())
+                    .productStatus(productEntity.getProductStatus())
                     .build();
         }
+
     }
 }

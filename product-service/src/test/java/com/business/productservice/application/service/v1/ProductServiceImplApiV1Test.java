@@ -1,10 +1,7 @@
-package com.business.productservice.application.service;
+package com.business.productservice.application.service.v1;
 
-import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.entity.StockEntity;
 import com.business.productservice.infrastructure.persistence.product.StockJpaRepository;
-import com.github.themepark.common.application.exception.CustomException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @SpringBootTest
 public class ProductServiceImplApiV1Test {

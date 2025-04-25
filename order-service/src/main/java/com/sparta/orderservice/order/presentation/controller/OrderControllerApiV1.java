@@ -1,9 +1,12 @@
 package com.sparta.orderservice.order.presentation.controller;
 
+import com.github.themepark.common.application.exception.CustomException;
 import com.sparta.orderservice.order.application.dto.reponse.ResProductGetByIdDTOApiV1;
+import com.sparta.orderservice.order.application.exception.OrderExceptionCode;
 import com.sparta.orderservice.order.application.facade.OrderFacade;
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.order.infrastructure.feign.ProductFeignClientApiV1;
+import com.sparta.orderservice.order.infrastructure.kafka.service.KafkaService;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrderPostDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrdersGetByIdDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
@@ -11,13 +14,17 @@ import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoAp
 import com.github.themepark.common.application.dto.ResDTO;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrderGetDtoApiV1;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/v1/orders")
@@ -25,7 +32,6 @@ import java.util.UUID;
 public class OrderControllerApiV1 {
 
     private final OrderFacade orderFacade;
-    private final ProductFeignClientApiV1 productFeignClientApiV1;
 
     @PostMapping
     public ResponseEntity<ResDTO<ResOrderPostDtoApiV1>> postBy(
@@ -33,22 +39,13 @@ public class OrderControllerApiV1 {
            @RequestHeader("X-User-Id") Long userId
            )  {
 
-        // 상품의 타입확인
-        ResDTO<ResProductGetByIdDTOApiV1> resProductGetByIdDTOApiV1ResDTO = productFeignClientApiV1.getBy(reqOrdersPostDtoApiV1.getOrder().getProductId());
-        if (Objects.equals(resProductGetByIdDTOApiV1ResDTO.getData().getProduct().getProductType(), "EVENT")) {
-            // 재고조회 -> product service 에서 재고가 없을시 error -> 재고차감
-            productFeignClientApiV1.getStockById(reqOrdersPostDtoApiV1.getOrder().getProductId());
-            productFeignClientApiV1.postDecreaseById(reqOrdersPostDtoApiV1.getOrder().getProductId());
-        }
-
-        // 주문시작
-        OrderEntity orderEntity = orderFacade.postBy(reqOrdersPostDtoApiV1, userId);
+        ResOrderPostDtoApiV1 resOrderPostDtoApiV1 = orderFacade.processOrder(userId, reqOrdersPostDtoApiV1);
 
         return new ResponseEntity<>(
                 ResDTO.<ResOrderPostDtoApiV1>builder()
                         .code("0")
                         .message("주문을 생성하였습니다!")
-                        .data(ResOrderPostDtoApiV1.of(orderEntity))
+                        .data(resOrderPostDtoApiV1)
                         .build(),
                 HttpStatus.CREATED
         );

@@ -11,13 +11,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
 
-    @Bean
-    public RedisTemplate<String, ResProductGetByIdDTOApiV1> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    @Bean("ProductRedisTemplate")
+    public RedisTemplate<String, ResProductGetByIdDTOApiV1> ProductredisTemplate(RedisConnectionFactory redisConnectionFactory) {
         // Redis 와 통신을 위한 template 설정과정 Key = String, Value = ResProductGetByIdDTOApiV1 객체를 사용
         RedisTemplate<String, ResProductGetByIdDTOApiV1> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
@@ -39,6 +40,22 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(serializer);
 
         // 만든도구 초기화 후 반환
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+    }
+
+    @Bean("stockRedisTemplate")
+    public RedisTemplate<String, String> stockRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        // Redis 와 통신을 위한 template 설정과정 Key = String, Value = String 객체를 사용
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+
+        // Key 는 문자열 기대로 사용, Value 는 Integer 으로 변환해서 저장
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }

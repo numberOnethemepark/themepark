@@ -1,4 +1,4 @@
-package com.sparta.orderservice.order.infrastructure.kafka;
+package com.sparta.orderservice.order.infrastructure.kafka.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

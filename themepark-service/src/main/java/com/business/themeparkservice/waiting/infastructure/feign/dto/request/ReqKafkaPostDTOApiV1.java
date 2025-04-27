@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ReqSlackPostDTOApiV1 {
+public class ReqKafkaPostDTOApiV1 {
     private Slack slack;
 
     public void createslack(String message) {

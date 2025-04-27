@@ -57,6 +57,10 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
     // Slack
     implementation 'com.slack.api:slack-api-client:1.45.3'
+    // actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'

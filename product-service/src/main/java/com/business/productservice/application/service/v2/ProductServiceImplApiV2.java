@@ -1,8 +1,8 @@
-package com.business.productservice.application.service;
+package com.business.productservice.application.service.v2;
 
-import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
-import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1;
-import com.business.productservice.application.dto.response.*;
+import com.business.productservice.application.dto.v2.request.ReqProductPostDTOApiV2;
+import com.business.productservice.application.dto.v2.request.ReqProductPutDTOApiV2;
+import com.business.productservice.application.dto.v2.response.*;
 import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.domain.product.entity.StockEntity;
@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class ProductServiceImplApiV1 implements ProductServiceApiV1{
+public class ProductServiceImplApiV2 implements ProductServiceApiV2 {
 
     private final ProductJpaRepository productRepository;
     private final StockJpaRepository stockRepository;
@@ -38,31 +38,31 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
     private final RedissonClient redissonClient;
 
     @Override
-    public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
+    public ResProductPostDTOApiV2 postBy(ReqProductPostDTOApiV2 reqDto) {
         ProductEntity product = reqDto.toEntityWithStock();
 
         ProductEntity savedProduct = productRepository.save(product);
 
-        return ResProductPostDTOApiV1.of(savedProduct);
+        return ResProductPostDTOApiV2.of(savedProduct);
     }
 
     @Override
-    public ResProductGetByIdDTOApiV1 getBy(UUID id){
+    public ResProductGetByIdDTOApiV2 getBy(UUID id){
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
-        return ResProductGetByIdDTOApiV1.of(productEntity);
+        return ResProductGetByIdDTOApiV2.of(productEntity);
     }
 
 
     @Override
-    public ResProductGetDTOApiV1 getBy(Predicate predicate, Pageable pageable){
+    public ResProductGetDTOApiV2 getBy(Predicate predicate, Pageable pageable){
 
         Page<ProductEntity> productEntityPage = productRepository.findAll(predicate, pageable);
-        return ResProductGetDTOApiV1.of(productEntityPage);
+        return ResProductGetDTOApiV2.of(productEntityPage);
     }
 
     @Override
-    public ResProductPutDTOApiV1 putBy(UUID id, ReqProductPutDTOApiV1 dto) {
+    public ResProductPutDTOApiV2 putBy(UUID id, ReqProductPutDTOApiV2 dto) {
 
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
@@ -77,7 +77,7 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
                 dto.getProduct().getLimitQuantity(),
                 dto.getProduct().getProductStatus()
         );
-        return ResProductPutDTOApiV1.of(productEntity);
+        return ResProductPutDTOApiV2.of(productEntity);
     }
 
     @Override
@@ -171,10 +171,10 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
     }
 
     @Override
-    public ResStockGetByIdDTOApiv1 getStockById(UUID id){
+    public ResStockGetByIdDTOApiV2 getStockById(UUID id){
         StockEntity stockEntity = stockRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
-        return ResStockGetByIdDTOApiv1.of(stockEntity);
+        return ResStockGetByIdDTOApiV2.of(stockEntity);
     }
 
 }

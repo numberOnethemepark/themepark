@@ -29,3 +29,9 @@ server:
 slack:
   admin:
     id: C08NM9CQ3SA
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'prometheus'

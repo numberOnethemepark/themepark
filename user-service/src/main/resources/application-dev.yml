@@ -32,3 +32,9 @@ eureka:
 
 server:
   port: 8001
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'prometheus'

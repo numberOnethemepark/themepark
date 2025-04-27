@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ReqKafkaPostDTOApiV1 {
-    private Kafka kafka;
+public class ReqSlackPostDTOApiV1 {
+    private Slack slack;
 
     public void createslack(String message) {
-        this.kafka = Kafka.builder()
+        this.slack = Slack.builder()
                 .slackEventType("WAITING_CALL")
                 .relatedName(message)
-                .target(Kafka.SlackTarget.builder()
+                .target(Slack.SlackTarget.builder()
                         .slackId("U08L3T2DTCP")
                         .type(TargetType.USER_DM)
                         .build()
@@ -22,7 +22,7 @@ public class ReqKafkaPostDTOApiV1 {
 
     @Getter
     @Builder
-    public static class Kafka {
+    public static class Slack {
         private String slackEventType;
         private String relatedName;
         private SlackTarget target;

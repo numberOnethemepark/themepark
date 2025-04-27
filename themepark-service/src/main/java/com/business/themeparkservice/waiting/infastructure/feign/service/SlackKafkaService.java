@@ -6,7 +6,7 @@ import com.business.themeparkservice.themepark.infastructure.persistence.themepa
 import com.business.themeparkservice.waiting.application.exception.WaitingExceptionCode;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
-import com.business.themeparkservice.waiting.infastructure.feign.dto.request.ReqKafkaPostDTOApiV1;
+import com.business.themeparkservice.waiting.infastructure.feign.dto.request.ReqSlackPostDTOApiV1;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class SlackKafkaService {
                 waitingRepository.findByIdAndWaitingStatus(id, WaitingStatus.WAITING)
                         .orElseThrow(() -> new CustomException(WaitingExceptionCode.WAITING_NOT_FOUND));
 
-        ReqKafkaPostDTOApiV1 request =  new ReqKafkaPostDTOApiV1();
+        ReqSlackPostDTOApiV1 request =  new ReqSlackPostDTOApiV1();
 
         String message = createCallMessage(waitingEntity);
         request.createslack(message);

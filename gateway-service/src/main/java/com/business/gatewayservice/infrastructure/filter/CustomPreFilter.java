@@ -41,18 +41,16 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
     // JWT 인증을 적용하지 않을 경로 목록
     private static final Map<HttpMethod, List<String>> EXCLUDED_PATHS_BY_METHOD = Map.of(
         HttpMethod.GET, List.of(
-            "/v1/products",
-            "/v1/products/*",
-            "/v2/products",
-            "/v2/products/*",
-            "/v1/themeparks/*",
-            "/v1/hashtags/*",
-            "/v1/auth/refresh",
+            "/v?/products",
+            "/v?/products/*",
+            "/v?/themeparks/*",
+            "/v?/hashtags/*",
+            "/v?/auth/refresh",
             "/springdoc/*"
         ),
         HttpMethod.POST, List.of(
-            "/v1/auth/join",
-            "/v1/auth/login"
+            "/v?/auth/join",
+            "/v?/auth/login"
         )
     );
 

@@ -6,8 +6,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
-import com.business.slackservice.application.dto.request.slackTemplate.ReqSlackTemplatePostDTOApiV1;
-import com.business.slackservice.application.dto.request.slackTemplate.ReqSlackTemplatePutDTOApiV1;
+import com.business.slackservice.application.dto.v1.request.slackTemplate.ReqSlackTemplatePostDTOApiV1;
+import com.business.slackservice.application.dto.v1.request.slackTemplate.ReqSlackTemplatePutDTOApiV1;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;

@@ -14,7 +14,8 @@ import com.sparta.orderservice.order.infrastructure.kafka.service.KafkaService;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrderPostDtoApiV1;
-import lombok.RequiredArgsConstructor;
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.Tracer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +38,7 @@ public class OrderService implements OrderUseCase {
     private final RedisTemplate<String, String> stockRedisTemplate;
     private final KafkaService kafkaService;
     private final ObjectMapper objectMapper;
+    private final Tracer tracer;
 
     public OrderService(
             OrderRepository orderRepository,
@@ -44,7 +46,8 @@ public class OrderService implements OrderUseCase {
             @Qualifier("ProductRedisTemplate") RedisTemplate<String, ResProductGetByIdDTOApiV1> productRedisTemplate,
             @Qualifier("stockRedisTemplate") RedisTemplate<String, String> stockRedisTemplate,
             KafkaService kafkaService,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            Tracer tracer
     ) {
         this.orderRepository = orderRepository;
         this.productFeignClientApiV1 = productFeignClientApiV1;
@@ -52,61 +55,59 @@ public class OrderService implements OrderUseCase {
         this.stockRedisTemplate = stockRedisTemplate;
         this.kafkaService = kafkaService;
         this.objectMapper = objectMapper;
+        this.tracer = tracer;
     }
 
     @Override
     public ResOrderPostDtoApiV1 processOrder(Long userId, ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1){
-        long start = System.currentTimeMillis();
+        // 🔥 Redis 조회 + 재고관리 Span 시작
+        Span redisSpan = tracer.nextSpan().name("Redis 처리").start();
+        try (Tracer.SpanInScope ws = tracer.withSpan(redisSpan)) {
+            String productId = reqOrdersPostDtoApiV1.getOrder().getProductId().toString();
+            String redisProductKey = "stock : " + productId;
+            String redisStockKey = "key : " + productId;
 
-        //Redis 에서 상품 정보 조회
-        String productId = reqOrdersPostDtoApiV1.getOrder().getProductId().toString();
-        String redisProductKey = "stock : " + productId;
-        String redisStockKey = "key : " + productId;
+            Object raw = productRedisTemplate.opsForValue().get(redisProductKey);
+            ResProductGetByIdDTOApiV1 product = objectMapper.convertValue(raw, ResProductGetByIdDTOApiV1.class);
 
-        Object raw = productRedisTemplate.opsForValue().get(redisProductKey);
-        ResProductGetByIdDTOApiV1 product = objectMapper.convertValue(raw, ResProductGetByIdDTOApiV1.class);
+            if (product == null) {
+                ResDTO<ResProductGetByIdDTOApiV1> resProductGetByIdDTOApiV1ResDTO = productFeignClientApiV1.getBy(reqOrdersPostDtoApiV1.getOrder().getProductId());
+                productRedisTemplate.opsForValue().set(redisProductKey, resProductGetByIdDTOApiV1ResDTO.getData());
 
-        // 해당 productId 정보가 존재하지 않는다면
-        if(product == null){
-            ResDTO<ResProductGetByIdDTOApiV1> resProductGetByIdDTOApiV1ResDTO = productFeignClientApiV1.getBy(reqOrdersPostDtoApiV1.getOrder().getProductId());
-            productRedisTemplate.opsForValue().set(redisProductKey, resProductGetByIdDTOApiV1ResDTO.getData());
+                if (Objects.equals(resProductGetByIdDTOApiV1ResDTO.getData().getProduct().getProductType(), "EVENT")) {
+                    Integer quantity = resProductGetByIdDTOApiV1ResDTO.getData().getProduct().getLimitQuantity();
+                    stockRedisTemplate.opsForValue().set(redisStockKey, String.valueOf(quantity), 10, TimeUnit.MINUTES);
 
-            if (Objects.equals(resProductGetByIdDTOApiV1ResDTO.getData().getProduct().getProductType(), "EVENT")) {
-                Integer quantity = resProductGetByIdDTOApiV1ResDTO.getData().getProduct().getLimitQuantity();
-                stockRedisTemplate.opsForValue().set(redisStockKey, String.valueOf(quantity), 10, TimeUnit.MINUTES);
-                // Redis 로 재고관리
-                Long remain = stockRedisTemplate.opsForValue().decrement(redisStockKey);
-                if(remain == null || remain < 0){
-                    stockRedisTemplate.opsForValue().increment(redisStockKey);
-                    throw new CustomException(OrderExceptionCode.ORDER_OUT_OF_STOCK);
+                    Long remain = stockRedisTemplate.opsForValue().decrement(redisStockKey);
+                    if (remain == null || remain < 0) {
+                        stockRedisTemplate.opsForValue().increment(redisStockKey);
+                        throw new CustomException(OrderExceptionCode.ORDER_OUT_OF_STOCK);
+                    }
+                    kafkaService.sendOrderAsync("stock-decrease-topic", productId);
                 }
-                // kafka 메세지
-                kafkaService.sendOrderAsync("stock-decrease-topic", productId);
-            }
-        }
-        else{
-            if(Objects.equals(product.getProduct().getProductType(), "EVENT")){
-                // Redis 로 재고관리
-                Long remain = stockRedisTemplate.opsForValue().decrement(redisStockKey);
-                if(remain == null || remain < 0){
-                    stockRedisTemplate.opsForValue().increment(redisStockKey);
-                    throw new CustomException(OrderExceptionCode.ORDER_OUT_OF_STOCK);
+            } else {
+                if (Objects.equals(product.getProduct().getProductType(), "EVENT")) {
+                    Long remain = stockRedisTemplate.opsForValue().decrement(redisStockKey);
+                    if (remain == null || remain < 0) {
+                        stockRedisTemplate.opsForValue().increment(redisStockKey);
+                        throw new CustomException(OrderExceptionCode.ORDER_OUT_OF_STOCK);
+                    }
+                    kafkaService.sendOrderAsync("stock-decrease-topic", productId);
                 }
-                // kafka 메세지
-                kafkaService.sendOrderAsync("stock-decrease-topic", productId);
             }
+        } finally {
+            redisSpan.end(); // Redis Span 종료
         }
 
-        long redisTime = System.currentTimeMillis();
-
-        // 주문시작
-        OrderEntity orderEntity = OrderEntity.createOrder(reqOrdersPostDtoApiV1, userId);
-        orderRepository.save(orderEntity);
-
-        long dbTime = System.currentTimeMillis();
-
-        System.out.println("Redis 소요: " + (redisTime - start) + "ms");
-        System.out.println("DB 소요: " + (dbTime - redisTime) + "ms");
+        // 🔥 DB 저장 Span 시작
+        Span dbSpan = tracer.nextSpan().name("DB 저장").start();
+        OrderEntity orderEntity;
+        try (Tracer.SpanInScope ws = tracer.withSpan(dbSpan)) {
+            orderEntity = OrderEntity.createOrder(reqOrdersPostDtoApiV1, userId);
+            orderRepository.save(orderEntity);
+        } finally {
+            dbSpan.end(); // DB Span 종료
+        }
 
         return ResOrderPostDtoApiV1.of(orderEntity);
     }

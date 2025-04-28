@@ -110,7 +110,7 @@ public class JwtUtil {
     }
 
     private Date getExpiryDateFromNow(Long expiresIn) {
-        return new Date(System.currentTimeMillis() + expiresIn);
+        return new Date(System.currentTimeMillis() + expiresIn * 1000);
     }
 
     private String removeBearerPrefix(String token) {

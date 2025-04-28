@@ -5,12 +5,12 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.themepark.common.application.dto.ResDTO;
-import com.sparta.orderservice.order.application.dto.reponse.ResProductGetByIdDTOApiV1;
+import com.sparta.orderservice.order.application.dto.v1.reponse.ResProductGetByIdDTOApiV1;
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.order.domain.repository.OrderRepository;
-import com.sparta.orderservice.order.infrastructure.feign.ProductFeignClientApiV1;
-import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoApiV1;
+import com.sparta.orderservice.order.infrastructure.feign.ProductFeignClientApi;
+import com.sparta.orderservice.order.presentation.dto.v1.request.ReqOrderPutDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.v1.request.ReqOrdersPostDtoApiV1;
 import com.sparta.orderservice.payment.domain.vo.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,7 +60,7 @@ public class OrderControllerApiV1Test {
 
 
     @MockitoBean
-    private ProductFeignClientApiV1 productFeignClientApiV1;
+    private ProductFeignClientApi productFeignClientApi;
 
     @BeforeEach
     void setUp(){
@@ -74,7 +74,7 @@ public class OrderControllerApiV1Test {
                 )
                 .build();
 
-        orderEntity = OrderEntity.createOrder(reqOrdersPostDtoApiV1, 1L);
+        orderEntity = OrderEntity.createOrder(reqOrdersPostDtoApiV1.getOrder().getProductId(),reqOrdersPostDtoApiV1.getOrder().getAmount(), reqOrdersPostDtoApiV1.getOrder().getSlackId(),1L);
         orderRepository.save(orderEntity);
 
         ResProductGetByIdDTOApiV1 resProductGetByIdDTOApiV1 = ResProductGetByIdDTOApiV1.builder()
@@ -169,7 +169,7 @@ public class OrderControllerApiV1Test {
 
         String reqDtoJson = objectMapper.writeValueAsString(reqOrdersPostDtoApiV1);
 
-        when(productFeignClientApiV1.getBy(any())).thenReturn(response);
+        when(productFeignClientApi.getBy(any())).thenReturn(response);
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/orders")

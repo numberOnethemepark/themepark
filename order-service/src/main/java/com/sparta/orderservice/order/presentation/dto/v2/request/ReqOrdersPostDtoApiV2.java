@@ -1,15 +1,16 @@
-package com.sparta.orderservice.order.presentation.dto.request;
+package com.sparta.orderservice.order.presentation.dto.v2.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.UUID;
 
 @Getter
 @Builder
-public class ReqOrdersPostDtoApiV1 {
+public class ReqOrdersPostDtoApiV2 {
 
     @Valid
     @NotNull(message = "주문 정보를 입력해주세요.")

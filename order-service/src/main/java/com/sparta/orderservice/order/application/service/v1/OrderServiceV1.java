@@ -1,19 +1,18 @@
-package com.sparta.orderservice.order.application.service;
+package com.sparta.orderservice.order.application.service.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.github.themepark.common.application.exception.CustomException;
-import com.sparta.orderservice.order.application.dto.reponse.ResProductGetByIdDTOApiV1;
+import com.sparta.orderservice.order.application.dto.v1.reponse.ResProductGetByIdDTOApiV1;
 import com.sparta.orderservice.order.application.exception.OrderExceptionCode;
-import com.sparta.orderservice.order.application.facade.OrderFacade;
-import com.sparta.orderservice.order.application.usecase.OrderUseCase;
+import com.sparta.orderservice.order.application.usecase.v1.OrderUseCaseV1;
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.order.domain.repository.OrderRepository;
-import com.sparta.orderservice.order.infrastructure.feign.ProductFeignClientApiV1;
+import com.sparta.orderservice.order.infrastructure.feign.ProductFeignClientApi;
 import com.sparta.orderservice.order.infrastructure.kafka.service.KafkaService;
-import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.response.ResOrderPostDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.v1.request.ReqOrderPutDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.v1.request.ReqOrdersPostDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.v1.response.ResOrderPostDtoApiV1;
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,19 +29,19 @@ import java.util.concurrent.TimeUnit;
 
 
 @Service
-public class OrderService implements OrderUseCase {
+public class OrderServiceV1 implements OrderUseCaseV1 {
 
     private final OrderRepository orderRepository;
-    private final ProductFeignClientApiV1 productFeignClientApiV1;
+    private final ProductFeignClientApi productFeignClientApi;
     private final RedisTemplate<String, ResProductGetByIdDTOApiV1> productRedisTemplate;
     private final RedisTemplate<String, String> stockRedisTemplate;
     private final KafkaService kafkaService;
     private final ObjectMapper objectMapper;
     private final Tracer tracer;
 
-    public OrderService(
+    public OrderServiceV1(
             OrderRepository orderRepository,
-            ProductFeignClientApiV1 productFeignClientApiV1,
+            ProductFeignClientApi productFeignClientApi,
             @Qualifier("ProductRedisTemplate") RedisTemplate<String, ResProductGetByIdDTOApiV1> productRedisTemplate,
             @Qualifier("stockRedisTemplate") RedisTemplate<String, String> stockRedisTemplate,
             KafkaService kafkaService,
@@ -50,7 +49,7 @@ public class OrderService implements OrderUseCase {
             Tracer tracer
     ) {
         this.orderRepository = orderRepository;
-        this.productFeignClientApiV1 = productFeignClientApiV1;
+        this.productFeignClientApi = productFeignClientApi;
         this.productRedisTemplate = productRedisTemplate;
         this.stockRedisTemplate = stockRedisTemplate;
         this.kafkaService = kafkaService;
@@ -71,7 +70,7 @@ public class OrderService implements OrderUseCase {
             ResProductGetByIdDTOApiV1 product = objectMapper.convertValue(raw, ResProductGetByIdDTOApiV1.class);
 
             if (product == null) {
-                ResDTO<ResProductGetByIdDTOApiV1> resProductGetByIdDTOApiV1ResDTO = productFeignClientApiV1.getBy(reqOrdersPostDtoApiV1.getOrder().getProductId());
+                ResDTO<ResProductGetByIdDTOApiV1> resProductGetByIdDTOApiV1ResDTO = productFeignClientApi.getBy(reqOrdersPostDtoApiV1.getOrder().getProductId());
                 productRedisTemplate.opsForValue().set(redisProductKey, resProductGetByIdDTOApiV1ResDTO.getData());
 
                 if (Objects.equals(resProductGetByIdDTOApiV1ResDTO.getData().getProduct().getProductType(), "EVENT")) {
@@ -103,7 +102,10 @@ public class OrderService implements OrderUseCase {
         Span dbSpan = tracer.nextSpan().name("DB 저장").start();
         OrderEntity orderEntity;
         try (Tracer.SpanInScope ws = tracer.withSpan(dbSpan)) {
-            orderEntity = OrderEntity.createOrder(reqOrdersPostDtoApiV1, userId);
+            orderEntity = OrderEntity.createOrder(reqOrdersPostDtoApiV1.getOrder().getProductId(),
+                    reqOrdersPostDtoApiV1.getOrder().getAmount(),
+                    reqOrdersPostDtoApiV1.getOrder().getSlackId(),
+                    userId);
             orderRepository.save(orderEntity);
         } finally {
             dbSpan.end(); // DB Span 종료
@@ -116,7 +118,7 @@ public class OrderService implements OrderUseCase {
     @Override
     public void updateBy(ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1, UUID orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId);
-        OrderEntity.updateOrder(orderEntity, reqOrderPutDtoApiV1);
+        OrderEntity.updateOrder(orderEntity, reqOrderPutDtoApiV1.getOrder().getPaymentId(), reqOrderPutDtoApiV1.getOrder().getPaymentStatus());
     }
 
     @Override

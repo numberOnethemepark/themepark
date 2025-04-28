@@ -1,8 +1,8 @@
 package com.sparta.orderservice.payment.application.service;
 
 import com.github.themepark.common.application.exception.CustomException;
-import com.sparta.orderservice.order.application.facade.OrderFacade;
-import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
+import com.sparta.orderservice.order.application.facade.v1.OrderFacadeV1;
+import com.sparta.orderservice.order.presentation.dto.v1.request.ReqOrderPutDtoApiV1;
 import com.sparta.orderservice.payment.application.dto.request.ReqPaymentTossDto;
 import com.sparta.orderservice.payment.application.dto.response.ResPaymentTossDto;
 import com.sparta.orderservice.payment.application.exception.PaymentExceptionCode;
@@ -25,7 +25,7 @@ public class PaymentService implements PaymentUseCase {
 
     private final TossPaymentsFeignClientApi tossPaymentsFeignClientApi;
     private final PaymentRepository paymentRepository;
-    private final OrderFacade orderFacade;
+    private final OrderFacadeV1 orderFacadeV1;
     private final ProductFeignClientApiV1 productFeignClientApiV1;
 
     @Override
@@ -58,7 +58,7 @@ public class PaymentService implements PaymentUseCase {
 
 
         // 주문 객체 수정 -> 결제상태 / 결제 ID
-        orderFacade.updateBy(reqOrderPutDtoApiV1, reqPaymentPostDtoApiV1.getPayment().getOrderId());
+        orderFacadeV1.updateBy(reqOrderPutDtoApiV1, reqPaymentPostDtoApiV1.getPayment().getOrderId());
     }
 
     public PaymentEntity getBy(UUID paymentId) {

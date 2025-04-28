@@ -1,4 +1,4 @@
-package com.sparta.orderservice.order.presentation.dto.response;
+package com.sparta.orderservice.order.presentation.dto.v2.response;
 
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.payment.domain.vo.PaymentStatus;
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 
 @Getter
 @Builder
-public class ResOrdersGetByIdDtoApiV1 {
+public class ResOrdersGetByIdDtoApiV2 {
 
     @Valid
     @NotNull(message = "주문 리스트는 비어 있을 수 없습니다.")
     private List<Order.OrderItem> orders;
 
-    public static ResOrdersGetByIdDtoApiV1 of(Page<OrderEntity> orderPage) {
-        return ResOrdersGetByIdDtoApiV1.builder()
+    public static ResOrdersGetByIdDtoApiV2 of(Page<OrderEntity> orderPage) {
+        return ResOrdersGetByIdDtoApiV2.builder()
                 .orders(Order.from(orderPage))
                 .build();
     }

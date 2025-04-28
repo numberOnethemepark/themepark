@@ -1,4 +1,4 @@
-package com.sparta.orderservice.order.presentation.dto.response;
+package com.sparta.orderservice.order.presentation.dto.v1.response;
 
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.payment.domain.vo.PaymentStatus;
@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Getter
 @Builder

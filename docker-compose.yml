@@ -58,5 +58,14 @@ services:
       KAFKA_CLUSTERS_0_READONLY: "false"
       SERVER_PORT: 8089
 
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem  # 메모리 저장 (간단 테스트용)
+    restart: always
+
 volumes:
   pgdata:

@@ -6,8 +6,6 @@ spring:
     username: admin
     password: 12345
     driver-class-name: org.postgresql.Driver
-
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,12 +15,21 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
         default_schema: product_service
-
   data:
     redis:
       host: localhost
       port: 6379
       password: systempass
+  kafka:
+    producer:
+      bootstrap-servers: localhost:8088
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      bootstrap-servers: localhost:8088
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
 
 eureka:
   client:

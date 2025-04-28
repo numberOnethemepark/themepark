@@ -1,6 +1,6 @@
 package com.business.themeparkservice.waiting.presentation.controller;
 
-import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
+import com.business.themeparkservice.waiting.application.dto.request.v2.ReqWaitingPostDTOApiV2;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
@@ -38,14 +38,14 @@ public class WaitingControllerApiV1Test {
 
     @Test
     public void testWaitingPostSuccess() throws Exception{
-        ReqWaitingPostDTOApiV1 reqWaitingPostDTOApiV1 =
-                ReqWaitingPostDTOApiV1.builder().waiting(
-                        ReqWaitingPostDTOApiV1.Waiting.builder()
+        ReqWaitingPostDTOApiV2 reqWaitingPostDTOApiV2 =
+                ReqWaitingPostDTOApiV2.builder().waiting(
+                        ReqWaitingPostDTOApiV2.Waiting.builder()
                                 .themeparkId(UUID.fromString("0ad6129e-540c-45da-b389-34d69114cd95"))
                                 .build()
                 ).build();
 
-        String reqJsonDto = objectMapper.writeValueAsString(reqWaitingPostDTOApiV1);
+        String reqJsonDto = objectMapper.writeValueAsString(reqWaitingPostDTOApiV2);
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/waitings")

@@ -1,7 +1,6 @@
 package com.business.slackservice.infrastructure.config;
 
-import com.business.slackservice.application.dto.request.slack.ReqSlackPostDTOApiV1;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.business.slackservice.application.dto.v1.request.slack.ReqSlackPostDTOApiV1;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -32,8 +31,8 @@ public class ConsumerApplicationKafkaConfig {
         configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
 
         // JSON 역직렬화 설정
-        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "com.business.slackservice.application.dto.request.slack");
-        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.business.slackservice.application.dto.request.slack.ReqSlackPostDTOApiV1");
+        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "com.business.slackservice.application.dto.v3.request.slack");
+        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.business.slackservice.application.dto.v3.request.slack.ReqSlackPostDTOApiV3");
         configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
 
         return new DefaultKafkaConsumerFactory<>(

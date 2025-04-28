@@ -1,12 +1,7 @@
 package com.sparta.orderservice.order.presentation.controller;
 
-import com.github.themepark.common.application.exception.CustomException;
-import com.sparta.orderservice.order.application.dto.reponse.ResProductGetByIdDTOApiV1;
-import com.sparta.orderservice.order.application.exception.OrderExceptionCode;
 import com.sparta.orderservice.order.application.facade.OrderFacade;
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
-import com.sparta.orderservice.order.infrastructure.feign.ProductFeignClientApiV1;
-import com.sparta.orderservice.order.infrastructure.kafka.service.KafkaService;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrderPostDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrdersGetByIdDtoApiV1;
 import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
@@ -14,17 +9,12 @@ import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoAp
 import com.github.themepark.common.application.dto.ResDTO;
 import com.sparta.orderservice.order.presentation.dto.response.ResOrderGetDtoApiV1;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+
 
 @RestController
 @RequestMapping("/v1/orders")

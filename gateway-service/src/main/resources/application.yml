@@ -6,8 +6,8 @@ spring:
     redis:
       host: localhost
       port: 6379
-      username: default
       password: systempass
+
   application:
     name: gateway-service
   jwt:
@@ -75,6 +75,7 @@ springdoc:
     urls[4]:
       name: Slack Service
       url: /springdoc/openapi3-slack-service.json
+
 eureka:
   client:
     service-url:

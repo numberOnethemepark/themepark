@@ -26,6 +26,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
+
 server:
   port: 8002
 
@@ -33,6 +34,14 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    enabled: true
+    zipkin:
+      endpoint: http://localhost:9411/api/v2/spans
 
 toss:
   secretKey: test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6

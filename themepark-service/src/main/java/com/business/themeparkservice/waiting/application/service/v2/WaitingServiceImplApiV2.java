@@ -1,9 +1,9 @@
-package com.business.themeparkservice.waiting.application.service;
+package com.business.themeparkservice.waiting.application.service.v2;
 
 import com.business.themeparkservice.themepark.application.exception.ThemeparkExceptionCode;
 import com.business.themeparkservice.themepark.infastructure.persistence.themepark.ThemeparkJpaRepository;
-import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
-import com.business.themeparkservice.waiting.application.dto.response.*;
+import com.business.themeparkservice.waiting.application.dto.request.v2.ReqWaitingPostDTOApiV2;
+import com.business.themeparkservice.waiting.application.dto.response.v2.*;
 import com.business.themeparkservice.waiting.application.exception.WaitingExceptionCode;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.entity.WaitingRedisEntity;
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
+public class WaitingServiceImplApiV2 implements WaitingServiceApiV2 {
 
     private final WaitingJpaRepository waitingRepository;
 
@@ -39,7 +39,7 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
     @Transactional
     @Override
-    public ResWaitingPostDTOApiV1 postBy(ReqWaitingPostDTOApiV1 reqDto,Long userId) {
+    public ResWaitingPostDTOApiV2 postBy(ReqWaitingPostDTOApiV2 reqDto, Long userId) {
         UUID themeparkId = reqDto.getWaiting().getThemeparkId();
         ThemeparkChecking(themeparkId);
 //        WaitingChecking(reqDto,userId);
@@ -82,7 +82,7 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
 
             waitingRepository.save(waitingEntity);
 
-            return ResWaitingPostDTOApiV1.of(waitingEntity);
+            return ResWaitingPostDTOApiV2.of(waitingEntity);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -93,34 +93,34 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
     }
 
     @Override
-    public ResWaitingGetByIdDTOApiV1 getBy(UUID id) {
+    public ResWaitingGetByIdDTOApiV2 getBy(UUID id) {
         WaitingEntity waitingEntity = findByIdAndStatus(id,WaitingStatus.WAITING);
         int waitingLeft = waitingRepository
                 .checkingMyWaitingLeft(waitingEntity.getWaitingNumber(),waitingEntity.getThemeparkId());
 
         waitingEntity.updateWaitingLeft(waitingLeft);
 
-        return ResWaitingGetByIdDTOApiV1.of(waitingEntity);
+        return ResWaitingGetByIdDTOApiV2.of(waitingEntity);
     }
 
     @Override
-    public ResWaitingGetDTOApiV1 getBy(Predicate predicate, Pageable pageable) {
+    public ResWaitingGetDTOApiV2 getBy(Predicate predicate, Pageable pageable) {
         Page<WaitingEntity> waitingEntityPage = waitingRepository.findAll(predicate,pageable);
-        return ResWaitingGetDTOApiV1.of(waitingEntityPage);
+        return ResWaitingGetDTOApiV2.of(waitingEntityPage);
     }
 
     @Override
-    public ResWaitingPostDoneDTOApiV1 postDoneBy(UUID id) {
+    public ResWaitingPostDoneDTOApiV2 postDoneBy(UUID id) {
         WaitingEntity waitingEntity = findByIdAndStatus(id,WaitingStatus.WAITING);
         waitingEntity.postDone();
-        return ResWaitingPostDoneDTOApiV1.of(waitingEntity);
+        return ResWaitingPostDoneDTOApiV2.of(waitingEntity);
     }
 
     @Override
-    public ResWaitingPostCancelDTOApiV1 postCancelBy(UUID id) {
+    public ResWaitingPostCancelDTOApiV2 postCancelBy(UUID id) {
         WaitingEntity waitingEntity = findByIdAndStatus(id,WaitingStatus.WAITING);
         waitingEntity.postCancel();
-        return ResWaitingPostCancelDTOApiV1.of(waitingEntity);
+        return ResWaitingPostCancelDTOApiV2.of(waitingEntity);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class WaitingServiceImplApiV1 implements WaitingServiceApiV1{
     }
 
 
-    private void WaitingChecking(ReqWaitingPostDTOApiV1 reqDto, Long userId) {
+    private void WaitingChecking(ReqWaitingPostDTOApiV2 reqDto, Long userId) {
         if(waitingRepository.countByThemeparkIdAndUserIdAndWaitingStatus(
                 reqDto.getWaiting().getThemeparkId(),userId,WaitingStatus.WAITING)!= 0){
             throw new CustomException(WaitingExceptionCode.WAITING_DUPLICATE);

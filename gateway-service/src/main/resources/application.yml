@@ -26,7 +26,7 @@ spring:
         - id: themepark-service
           uri: lb://themepark-service
           predicates:
-            - Path=/v1/themeparks/**, /v1/hashtags/**,/v?/waitings/**, /springdoc/openapi3-themepark-service.json
+            - Path=/v1/themeparks/**, /v1/hashtags/**,/v1/waitings/**, /springdoc/openapi3-themepark-service.json
 
         - id: user-service
           uri: lb://user-service

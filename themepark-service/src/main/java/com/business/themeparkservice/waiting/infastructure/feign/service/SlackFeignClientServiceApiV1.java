@@ -7,24 +7,25 @@ import com.business.themeparkservice.waiting.application.exception.WaitingExcept
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import com.business.themeparkservice.waiting.infastructure.feign.dto.request.ReqSlackPostDTOApiV1;
+import com.business.themeparkservice.waiting.infastructure.feign.SlackFeignClientApiV1;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class SlackKafkaService {
+public class SlackFeignClientServiceApiV1 {
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final SlackFeignClientApiV1 slackFeignClientApiV1;
     private final WaitingJpaRepository waitingRepository;
     private final ThemeparkJpaRepository themeparkRepository;
 
-    @Transactional(readOnly = true)
+
     public void getCallById(UUID id) {
 
         WaitingEntity waitingEntity =
@@ -36,7 +37,7 @@ public class SlackKafkaService {
         String message = createCallMessage(waitingEntity);
         request.createslack(message);
 
-        kafkaTemplate.send("slack-send",request);
+        slackFeignClientApiV1.postBy(request);
     }
 
     private String createCallMessage(WaitingEntity waitingEntity) {

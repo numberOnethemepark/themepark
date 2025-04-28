@@ -1,4 +1,4 @@
-package com.business.themeparkservice.waiting.application.dto.response;
+package com.business.themeparkservice.waiting.application.dto.response.v3;
 
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
@@ -14,11 +14,11 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResWaitingGetDTOApiV1 {
+public class ResWaitingGetDTOApiV3 {
     private WaitingPage waitingPage;
 
-    public static ResWaitingGetDTOApiV1 of(Page<WaitingEntity> tempWaitingPage) {
-        return ResWaitingGetDTOApiV1.builder()
+    public static ResWaitingGetDTOApiV3 of(Page<WaitingEntity> tempWaitingPage) {
+        return ResWaitingGetDTOApiV3.builder()
                 .waitingPage(new WaitingPage(tempWaitingPage))
                 .build();
     }

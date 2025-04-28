@@ -1,7 +1,7 @@
-package com.business.themeparkservice.waiting.application.service;
+package com.business.themeparkservice.waiting.application.service.v1;
 
-import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
-import com.business.themeparkservice.waiting.application.dto.response.*;
+import com.business.themeparkservice.waiting.application.dto.request.v1.ReqWaitingPostDTOApiV1;
+import com.business.themeparkservice.waiting.application.dto.response.v1.*;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface WaitingServiceApiV1 {
-    ResWaitingPostDTOApiV1 postBy(@Valid ReqWaitingPostDTOApiV1 reqDto,Long userId);
+    ResWaitingPostDTOApiV1 postBy(@Valid ReqWaitingPostDTOApiV1 reqDto, Long userId);
 
     ResWaitingGetByIdDTOApiV1 getBy(UUID id);
 

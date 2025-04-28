@@ -19,6 +19,7 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -36,6 +37,7 @@ public class ProductServiceImplApiV2 implements ProductServiceApiV2 {
     private final StockJpaRepository stockRepository;
     private final SlackFeignClientApiV1 slackFeignClientApiV1;
     private final RedissonClient redissonClient;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public ResProductPostDTOApiV2 postBy(ReqProductPostDTOApiV2 reqDto) {
@@ -100,18 +102,15 @@ public class ProductServiceImplApiV2 implements ProductServiceApiV2 {
 
         boolean isLocked = false;
         try{
-            log.info("락 시도");
-            isLocked = lock.tryLock(5, 30, TimeUnit.SECONDS); // waitTime: 5초, leaseTime: 3초
+            isLocked = lock.tryLock(5, 3, TimeUnit.SECONDS); // waitTime: 5초, leaseTime: 3초
 
-            System.out.println("🔒 현재 락 키 존재 여부: " + redissonClient.getKeys().getKeysStream()
+            System.out.println("현재 락 키 존재 여부: " + redissonClient.getKeys().getKeysStream()
                     .filter(key -> key.startsWith("lock:"))
                     .toList());
 
             if (!isLocked) {
-                log.warn("락 획득 실패");
                 throw new CustomException(ProductExceptionCode.LOCK_FAILED);
             }
-            log.info("락 획득 성공");
 
             StockEntity stockEntity = stockRepository.findById(id)
                     .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
@@ -122,30 +121,11 @@ public class ProductServiceImplApiV2 implements ProductServiceApiV2 {
 
             stockEntity.decrease();
 
-            if(stockEntity.getStock() == 0){
-                String productName = stockEntity.getProduct().getName();
+            String cacheKey = "stock:" + id;
+            redisTemplate.opsForValue().set(cacheKey, stockEntity.getStock());
 
-                ReqToSlackPostDTOApiV1.Slack.SlackTarget target = ReqToSlackPostDTOApiV1.Slack.SlackTarget.builder()
-                        .slackId("C01ABCDEF78")
-                        .type("ADMIN_CHANNEL")
-                        .build();
-
-                ReqToSlackPostDTOApiV1.Slack slack = ReqToSlackPostDTOApiV1.Slack.builder()
-                        .slackEventType("STOCK_OUT")
-                        .relatedName(productName)
-                        .target(target)
-                        .build();
-
-                ReqToSlackPostDTOApiV1 request = ReqToSlackPostDTOApiV1.builder()
-                        .slack(slack)
-                        .build();
-                try {
-                    // 슬랙 API 호출 (FeignClient 직접 사용)
-                    slackFeignClientApiV1.postBy(request);
-                    log.info("슬랙 성공");
-                } catch (Exception e) {
-                    log.warn("슬랙 전송 실패 - 상품명: {}", productName, e);
-                }
+            if (stockEntity.getStock() == 0) {
+                sendStockSoldOutSlack(stockEntity);
             }
         } catch(InterruptedException e){
             throw new CustomException(ProductExceptionCode.LOCK_INTERRUPTED);
@@ -175,6 +155,18 @@ public class ProductServiceImplApiV2 implements ProductServiceApiV2 {
         StockEntity stockEntity = stockRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
         return ResStockGetByIdDTOApiV2.of(stockEntity);
+    }
+
+    private void sendStockSoldOutSlack(StockEntity stockEntity) {
+        String productName = stockEntity.getProduct().getName();
+
+        ReqToSlackPostDTOApiV1 request = ReqToSlackPostDTOApiV1.createStockSoldOutMessage(productName);
+
+        try {
+            slackFeignClientApiV1.postBy(request);
+        } catch (Exception e) {
+            log.warn("슬랙 전송 실패 - 상품명: {}", productName, e);
+        }
     }
 
 }

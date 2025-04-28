@@ -1,6 +1,6 @@
 package com.business.themeparkservice.waiting.infastructure.feign.dto.request;
 
-import com.business.themeparkservice.waiting.infastructure.feign.vo.TargetType;
+import com.business.themeparkservice.waiting.infastructure.domain.vo.TargetType;
 import lombok.Builder;
 import lombok.Getter;
 

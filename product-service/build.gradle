@@ -82,6 +82,12 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
 
+    // actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
 }
 
 // 컴파일 시 빌드 폴더를 지웁니다.

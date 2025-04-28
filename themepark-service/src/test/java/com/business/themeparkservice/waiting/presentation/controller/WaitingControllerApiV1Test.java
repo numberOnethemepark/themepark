@@ -1,6 +1,7 @@
 package com.business.themeparkservice.waiting.presentation.controller;
 
 import com.business.themeparkservice.waiting.application.dto.request.v2.ReqWaitingPostDTOApiV2;
+import com.business.themeparkservice.waiting.application.dto.request.v3.ReqWaitingPostDTOApiV3;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
@@ -38,17 +39,17 @@ public class WaitingControllerApiV1Test {
 
     @Test
     public void testWaitingPostSuccess() throws Exception{
-        ReqWaitingPostDTOApiV2 reqWaitingPostDTOApiV2 =
-                ReqWaitingPostDTOApiV2.builder().waiting(
-                        ReqWaitingPostDTOApiV2.Waiting.builder()
+        ReqWaitingPostDTOApiV3 reqWaitingPostDTOApiV3 =
+                ReqWaitingPostDTOApiV3.builder().waiting(
+                        ReqWaitingPostDTOApiV3.Waiting.builder()
                                 .themeparkId(UUID.fromString("0ad6129e-540c-45da-b389-34d69114cd95"))
                                 .build()
                 ).build();
 
-        String reqJsonDto = objectMapper.writeValueAsString(reqWaitingPostDTOApiV2);
+        String reqJsonDto = objectMapper.writeValueAsString(reqWaitingPostDTOApiV3);
 
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/v1/waitings")
+                RestDocumentationRequestBuilders.post("/v3/waitings")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-User-Id", 1)
                         .header("X-User-Role","USER")
@@ -61,7 +62,7 @@ public class WaitingControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Waiting v1")
+                                        .tag("Waiting v3")
                                         .build()
                                 )
                         )
@@ -71,7 +72,7 @@ public class WaitingControllerApiV1Test {
     @Test
     public void testWaitingGetByIdSuccess() throws Exception{
         mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/v1/waitings/{id}", UUID.randomUUID())
+                RestDocumentationRequestBuilders.get("/v3/waitings/{id}", UUID.randomUUID())
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -80,7 +81,7 @@ public class WaitingControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Waiting v1")
+                                        .tag("Waiting v3")
                                         .pathParameters(
                                                 parameterWithName("id").type(SimpleType.STRING).description("대기 ID")
                                         )
@@ -93,7 +94,7 @@ public class WaitingControllerApiV1Test {
     @Test
     public void testWaitingGetSuccess() throws Exception{
         mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/v1/waitings")
+                RestDocumentationRequestBuilders.get("/v3/waitings")
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -102,7 +103,7 @@ public class WaitingControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Waiting v1")
+                                        .tag("Waiting v3")
                                         .build()
                                 )
                         )
@@ -112,7 +113,7 @@ public class WaitingControllerApiV1Test {
     @Test
     public void testWaitingPostDoneSuccess() throws Exception{
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/v1/waitings/{id}/done", UUID.randomUUID())
+                RestDocumentationRequestBuilders.post("/v3/waitings/{id}/done", UUID.randomUUID())
                         .header("X-User-Role","MASTER")
         )
                 .andExpectAll(
@@ -122,7 +123,7 @@ public class WaitingControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Waiting v1")
+                                        .tag("Waiting v3")
                                         .pathParameters(
                                                 parameterWithName("id").type(SimpleType.STRING).description("대기 ID")
                                         )
@@ -135,7 +136,7 @@ public class WaitingControllerApiV1Test {
     @Test
     public void testWaitingPostCancelSuccess() throws Exception{
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.post("/v1/waitings/{id}/cancel", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.post("/v3/waitings/{id}/cancel", UUID.randomUUID())
                         .header("X-User-Role","MASTER")
         )
                 .andExpectAll(
@@ -145,7 +146,7 @@ public class WaitingControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Waiting v1")
+                                        .tag("Waiting v3")
                                         .pathParameters(
                                                 parameterWithName("id").type(SimpleType.STRING).description("대기 ID")
                                         )
@@ -158,7 +159,7 @@ public class WaitingControllerApiV1Test {
     @Test
     public void testWaitingGetDeletedSuccess() throws Exception{
         mockMvc.perform(
-                RestDocumentationRequestBuilders.delete("/v1/waitings/{id}", UUID.randomUUID())
+                RestDocumentationRequestBuilders.delete("/v3/waitings/{id}", UUID.randomUUID())
                         .header("X-User-Id", 1)
                         .header("X-User-Role","MASTER")
         )
@@ -169,7 +170,7 @@ public class WaitingControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Waiting v1")
+                                        .tag("Waiting v3")
                                         .pathParameters(
                                                 parameterWithName("id").type(SimpleType.STRING).description("대기 ID")
                                         )

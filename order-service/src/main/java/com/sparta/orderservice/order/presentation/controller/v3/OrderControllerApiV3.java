@@ -1,16 +1,13 @@
-package com.sparta.orderservice.order.presentation.controller.v2;
+package com.sparta.orderservice.order.presentation.controller.v3;
 
 import com.github.themepark.common.application.dto.ResDTO;
-import com.sparta.orderservice.order.application.facade.v2.OrderFacadeV2;
+import com.sparta.orderservice.order.application.facade.v3.OrderFacadeV3;
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
-import com.sparta.orderservice.order.presentation.dto.v1.request.ReqOrderPutDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.v1.request.ReqOrdersPostDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.v1.response.ResOrderGetDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.v1.response.ResOrderPostDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.v1.response.ResOrdersGetByIdDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.v2.request.ReqOrderPutDtoApiV2;
-import com.sparta.orderservice.order.presentation.dto.v2.request.ReqOrdersPostDtoApiV2;
-import com.sparta.orderservice.order.presentation.dto.v2.response.ResOrderPostDtoApiV2;
+import com.sparta.orderservice.order.presentation.dto.v3.request.ReqOrderPutDtoApiV3;
+import com.sparta.orderservice.order.presentation.dto.v3.request.ReqOrdersPostDtoApiV3;
+import com.sparta.orderservice.order.presentation.dto.v3.response.ResOrderGetDtoApiV3;
+import com.sparta.orderservice.order.presentation.dto.v3.response.ResOrderPostDtoApiV3;
+import com.sparta.orderservice.order.presentation.dto.v3.response.ResOrdersGetByIdDtoApiV3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,25 +18,25 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/v2/orders")
+@RequestMapping("/v3/orders")
 @RequiredArgsConstructor
-public class OrderControllerApiV2 {
+public class OrderControllerApiV3 {
 
-    private final OrderFacadeV2 orderFacadeV2;
+    private final OrderFacadeV3 orderFacadeV3;
 
     @PostMapping
-    public ResponseEntity<ResDTO<ResOrderPostDtoApiV2>> postBy(
-           @RequestBody ReqOrdersPostDtoApiV2 reqOrdersPostDtoApiV2,
+    public ResponseEntity<ResDTO<ResOrderPostDtoApiV3>> postBy(
+           @RequestBody ReqOrdersPostDtoApiV3 reqOrdersPostDtoApiV3,
            @RequestHeader("X-User-Id") Long userId
            )  {
 
-        ResOrderPostDtoApiV2 resOrderPostDtoApiV2 = orderFacadeV2.processOrder(userId, reqOrdersPostDtoApiV2);
+        ResOrderPostDtoApiV3 resOrderPostDtoApiV3 = orderFacadeV3.processOrder(userId, reqOrdersPostDtoApiV3);
 
         return new ResponseEntity<>(
-                ResDTO.<ResOrderPostDtoApiV2>builder()
+                ResDTO.<ResOrderPostDtoApiV3>builder()
                         .code("0")
                         .message("주문을 생성하였습니다!")
-                        .data(resOrderPostDtoApiV2)
+                        .data(resOrderPostDtoApiV3)
                         .build(),
                 HttpStatus.CREATED
         );
@@ -48,9 +45,9 @@ public class OrderControllerApiV2 {
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> updateBy(
             @PathVariable("id") UUID id,
-            @RequestBody ReqOrderPutDtoApiV2 reqOrderPutDtoApiV2
+            @RequestBody ReqOrderPutDtoApiV3 reqOrderPutDtoApiV3
     ) {
-        orderFacadeV2.updateBy(reqOrderPutDtoApiV2, id);
+        orderFacadeV3.updateBy(reqOrderPutDtoApiV3, id);
 
         return new ResponseEntity<>(
                 ResDTO.builder()
@@ -62,32 +59,32 @@ public class OrderControllerApiV2 {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResDTO<ResOrderGetDtoApiV1>> getBy(
+    public ResponseEntity<ResDTO<ResOrderGetDtoApiV3>> getBy(
             @PathVariable("id") UUID id
     ){
         return new ResponseEntity<>(
-                ResDTO.<ResOrderGetDtoApiV1>builder()
+                ResDTO.<ResOrderGetDtoApiV3>builder()
                         .code("0")
                         .message("주문정보를 조회하였습니다!")
-                        .data(ResOrderGetDtoApiV1.of(orderFacadeV2.getOrderBy(id)))
+                        .data(ResOrderGetDtoApiV3.of(orderFacadeV3.getOrderBy(id)))
                         .build(),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("")
-    public ResponseEntity<ResDTO<ResOrdersGetByIdDtoApiV1>> getBy(
+    public ResponseEntity<ResDTO<ResOrdersGetByIdDtoApiV3>> getBy(
             @RequestParam(name = "userId", required = false) Long id,
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "10") int size
     ){
-        Page<OrderEntity> orderPage = orderFacadeV2.getOrdersByUserId(id, page, size);
+        Page<OrderEntity> orderPage = orderFacadeV3.getOrdersByUserId(id, page, size);
 
         return new ResponseEntity<>(
-                ResDTO.<ResOrdersGetByIdDtoApiV1>builder()
+                ResDTO.<ResOrdersGetByIdDtoApiV3>builder()
                         .code("0")
                         .message("주문목록을 조회하였습니다!")
-                        .data(ResOrdersGetByIdDtoApiV1.of(orderPage))
+                        .data(ResOrdersGetByIdDtoApiV3.of(orderPage))
                         .build(),
                 HttpStatus.OK
         );

@@ -1,4 +1,4 @@
-package com.sparta.orderservice.order.application.dto.v2.reponse;
+package com.sparta.orderservice.order.application.dto.reponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResProductGetByIdDTOApiV2 {
+public class ResProductGetByIdDTOApi {
 
     private Product product;
 

@@ -1,9 +1,9 @@
-package com.business.productservice.presentation.controller;
+package com.business.productservice.presentation.controller.v1;
 
-import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
-import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1;
-import com.business.productservice.application.dto.response.*;
-import com.business.productservice.application.service.ProductServiceApiV1;
+import com.business.productservice.application.dto.v1.request.ReqProductPostDTOApiV1;
+import com.business.productservice.application.dto.v1.request.ReqProductPutDTOApiV1;
+import com.business.productservice.application.dto.v1.response.*;
+import com.business.productservice.application.service.v1.ProductServiceApiV1;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.github.themepark.common.application.aop.annotation.ApiPermission;
 import com.github.themepark.common.application.dto.ResDTO;
@@ -139,12 +139,12 @@ public class ProductControllerApiV1 {
 
         @ApiPermission(roles = {ApiPermission.Role.USER, ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
         @GetMapping("/{id}/stock")
-        public ResponseEntity<ResDTO<ResStockGetByIdDTOApiv1>> getStockById(
+        public ResponseEntity<ResDTO<ResStockGetByIdDTOApiV1>> getStockById(
                 @PathVariable("id") UUID id
         ){
-                ResStockGetByIdDTOApiv1 responseDto = productServiceApiV1.getStockById(id);
+                ResStockGetByIdDTOApiV1 responseDto = productServiceApiV1.getStockById(id);
                 return new ResponseEntity<>(
-                        ResDTO.<ResStockGetByIdDTOApiv1>builder()
+                        ResDTO.<ResStockGetByIdDTOApiV1>builder()
                                 .code("0")
                                 .message("상품 재고 조회에 성공했습니다.")
                                 .data(responseDto)

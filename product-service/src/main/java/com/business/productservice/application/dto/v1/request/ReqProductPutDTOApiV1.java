@@ -1,4 +1,4 @@
-package com.business.productservice.application.dto.request;
+package com.business.productservice.application.dto.v1.request;
 
 import com.business.productservice.domain.product.vo.ProductStatus;
 import com.business.productservice.domain.product.vo.ProductType;

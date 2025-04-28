@@ -4,16 +4,23 @@ import com.business.slackservice.domain.slack.entity.SlackEntity;
 import com.business.slackservice.domain.slack.vo.SlackStatus;
 import com.business.slackservice.domain.slack.vo.TargetType;
 import com.business.slackservice.domain.slackEventType.entity.SlackEventTypeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReqSlackPostDTOApiV1 {
     private Slack slack;
 
+
     @Builder
     @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Slack {
         private String slackEventType;
         private String relatedName;
@@ -21,6 +28,8 @@ public class ReqSlackPostDTOApiV1 {
 
         @Builder
         @Getter
+        @NoArgsConstructor
+        @AllArgsConstructor
         public static class SlackTarget {
             private String slackId;
             private TargetType type;

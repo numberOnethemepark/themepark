@@ -7,43 +7,42 @@ import com.business.themeparkservice.waiting.application.exception.WaitingExcept
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
 import com.business.themeparkservice.waiting.infastructure.feign.dto.request.ReqSlackPostDTOApiV1;
-import com.business.themeparkservice.waiting.infastructure.feign.SlackFeignClientApiV1;
 import com.business.themeparkservice.waiting.infastructure.persistence.waiting.WaitingJpaRepository;
 import com.github.themepark.common.application.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class SlackFeignClientServiceApiV1 {
+public class SlackKafkaService {
 
-    private final SlackFeignClientApiV1 slackFeignClientApiV1;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     private final WaitingJpaRepository waitingRepository;
     private final ThemeparkJpaRepository themeparkRepository;
 
-
+    @Transactional(readOnly = true)
     public void getCallById(UUID id) {
 
         WaitingEntity waitingEntity =
                 waitingRepository.findByIdAndWaitingStatus(id, WaitingStatus.WAITING)
-                .orElseThrow(() -> new CustomException(WaitingExceptionCode.WAITING_NOT_FOUND));
+                        .orElseThrow(() -> new CustomException(WaitingExceptionCode.WAITING_NOT_FOUND));
 
         ReqSlackPostDTOApiV1 request =  new ReqSlackPostDTOApiV1();
 
         String message = createCallMessage(waitingEntity);
         request.createslack(message);
 
-        slackFeignClientApiV1.postBy(request);
+        kafkaTemplate.send("slack-send",request);
     }
 
     private String createCallMessage(WaitingEntity waitingEntity) {
         ThemeparkEntity themeparkEntity =
                 themeparkRepository.findById(waitingEntity.getThemeparkId()).orElseThrow(
-                ()->new CustomException(ThemeparkExceptionCode.THEMEPARK_NOT_FOUND));
+                        ()->new CustomException(ThemeparkExceptionCode.THEMEPARK_NOT_FOUND));
 
         return themeparkEntity.getName() + " 대기번호" + waitingEntity.getWaitingNumber();
     }

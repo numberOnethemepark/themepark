@@ -1,8 +1,8 @@
-package com.business.productservice.application.service;
+package com.business.productservice.application.service.v2;
 
-import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
-import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1;
-import com.business.productservice.application.dto.response.*;
+import com.business.productservice.application.dto.v2.request.ReqProductPostDTOApiV2;
+import com.business.productservice.application.dto.v2.request.ReqProductPutDTOApiV2;
+import com.business.productservice.application.dto.v2.response.*;
 import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.domain.product.entity.StockEntity;
@@ -19,6 +19,7 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -30,39 +31,40 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class ProductServiceImplApiV1 implements ProductServiceApiV1{
+public class ProductServiceImplApiV2 implements ProductServiceApiV2 {
 
     private final ProductJpaRepository productRepository;
     private final StockJpaRepository stockRepository;
     private final SlackFeignClientApiV1 slackFeignClientApiV1;
     private final RedissonClient redissonClient;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
+    public ResProductPostDTOApiV2 postBy(ReqProductPostDTOApiV2 reqDto) {
         ProductEntity product = reqDto.toEntityWithStock();
 
         ProductEntity savedProduct = productRepository.save(product);
 
-        return ResProductPostDTOApiV1.of(savedProduct);
+        return ResProductPostDTOApiV2.of(savedProduct);
     }
 
     @Override
-    public ResProductGetByIdDTOApiV1 getBy(UUID id){
+    public ResProductGetByIdDTOApiV2 getBy(UUID id){
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
-        return ResProductGetByIdDTOApiV1.of(productEntity);
+        return ResProductGetByIdDTOApiV2.of(productEntity);
     }
 
 
     @Override
-    public ResProductGetDTOApiV1 getBy(Predicate predicate, Pageable pageable){
+    public ResProductGetDTOApiV2 getBy(Predicate predicate, Pageable pageable){
 
         Page<ProductEntity> productEntityPage = productRepository.findAll(predicate, pageable);
-        return ResProductGetDTOApiV1.of(productEntityPage);
+        return ResProductGetDTOApiV2.of(productEntityPage);
     }
 
     @Override
-    public ResProductPutDTOApiV1 putBy(UUID id, ReqProductPutDTOApiV1 dto) {
+    public ResProductPutDTOApiV2 putBy(UUID id, ReqProductPutDTOApiV2 dto) {
 
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
@@ -77,7 +79,7 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
                 dto.getProduct().getLimitQuantity(),
                 dto.getProduct().getProductStatus()
         );
-        return ResProductPutDTOApiV1.of(productEntity);
+        return ResProductPutDTOApiV2.of(productEntity);
     }
 
     @Override
@@ -100,18 +102,15 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
 
         boolean isLocked = false;
         try{
-            log.info("락 시도");
-            isLocked = lock.tryLock(5, 30, TimeUnit.SECONDS); // waitTime: 5초, leaseTime: 3초
+            isLocked = lock.tryLock(5, 3, TimeUnit.SECONDS); // waitTime: 5초, leaseTime: 3초
 
-            System.out.println("🔒 현재 락 키 존재 여부: " + redissonClient.getKeys().getKeysStream()
+            System.out.println("현재 락 키 존재 여부: " + redissonClient.getKeys().getKeysStream()
                     .filter(key -> key.startsWith("lock:"))
                     .toList());
 
             if (!isLocked) {
-                log.warn("락 획득 실패");
                 throw new CustomException(ProductExceptionCode.LOCK_FAILED);
             }
-            log.info("락 획득 성공");
 
             StockEntity stockEntity = stockRepository.findById(id)
                     .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
@@ -122,30 +121,11 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
 
             stockEntity.decrease();
 
-            if(stockEntity.getStock() == 0){
-                String productName = stockEntity.getProduct().getName();
+            String cacheKey = "stock:" + id;
+            redisTemplate.opsForValue().set(cacheKey, stockEntity.getStock());
 
-                ReqToSlackPostDTOApiV1.Slack.SlackTarget target = ReqToSlackPostDTOApiV1.Slack.SlackTarget.builder()
-                        .slackId("C01ABCDEF78")
-                        .type("ADMIN_CHANNEL")
-                        .build();
-
-                ReqToSlackPostDTOApiV1.Slack slack = ReqToSlackPostDTOApiV1.Slack.builder()
-                        .slackEventType("STOCK_OUT")
-                        .relatedName(productName)
-                        .target(target)
-                        .build();
-
-                ReqToSlackPostDTOApiV1 request = ReqToSlackPostDTOApiV1.builder()
-                        .slack(slack)
-                        .build();
-                try {
-                    // 슬랙 API 호출 (FeignClient 직접 사용)
-                    slackFeignClientApiV1.postBy(request);
-                    log.info("슬랙 성공");
-                } catch (Exception e) {
-                    log.warn("슬랙 전송 실패 - 상품명: {}", productName, e);
-                }
+            if (stockEntity.getStock() == 0) {
+                sendStockSoldOutSlack(stockEntity);
             }
         } catch(InterruptedException e){
             throw new CustomException(ProductExceptionCode.LOCK_INTERRUPTED);
@@ -171,10 +151,22 @@ public class ProductServiceImplApiV1 implements ProductServiceApiV1{
     }
 
     @Override
-    public ResStockGetByIdDTOApiv1 getStockById(UUID id){
+    public ResStockGetByIdDTOApiV2 getStockById(UUID id){
         StockEntity stockEntity = stockRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
-        return ResStockGetByIdDTOApiv1.of(stockEntity);
+        return ResStockGetByIdDTOApiV2.of(stockEntity);
+    }
+
+    private void sendStockSoldOutSlack(StockEntity stockEntity) {
+        String productName = stockEntity.getProduct().getName();
+
+        ReqToSlackPostDTOApiV1 request = ReqToSlackPostDTOApiV1.createStockSoldOutMessage(productName);
+
+        try {
+            slackFeignClientApiV1.postBy(request);
+        } catch (Exception e) {
+            log.warn("슬랙 전송 실패 - 상품명: {}", productName, e);
+        }
     }
 
 }

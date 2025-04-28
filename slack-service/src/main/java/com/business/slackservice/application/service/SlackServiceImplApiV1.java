@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +41,7 @@ public class SlackServiceImplApiV1 implements SlackServiceApiV1 {
     private final SlackMessageSender slackMessageSender;
     private final SlackRedisRepository slackRedisRepository;
 
+    @KafkaListener(groupId = "group_a", topics = "slack-send")
     @Transactional
     @Override
     public ResSlackPostDTOApiV1 postBy(ReqSlackPostDTOApiV1 dto) throws SlackApiException, IOException {

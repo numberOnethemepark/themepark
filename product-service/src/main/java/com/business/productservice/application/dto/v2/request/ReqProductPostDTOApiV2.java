@@ -1,4 +1,4 @@
-package com.business.productservice.application.dto.request;
+package com.business.productservice.application.dto.v2.request;
 
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.domain.product.vo.ProductType;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor //테스트 코드를 위해 추가
 @AllArgsConstructor //테스트 코드를 위해 추가
-public class ReqProductPostDTOApiV1 {
+public class ReqProductPostDTOApiV2 {
 
     @Valid
     @NotNull(message = "상품 정보를 입력해주세요.")

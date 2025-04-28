@@ -21,7 +21,11 @@ spring:
       port: 6379
       username: default
       password: systempass
-
+  kafka:
+    bootstrap-servers: localhost:8088
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 eureka:
   client:
     register-with-eureka: true

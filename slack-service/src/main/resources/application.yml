@@ -1,4 +1,4 @@
 spring:
   profiles:
     # 성능 테스트 시 performance 설정
-    active: performance
+    active: dev

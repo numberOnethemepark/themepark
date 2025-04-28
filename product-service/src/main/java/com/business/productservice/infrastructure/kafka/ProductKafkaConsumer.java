@@ -18,4 +18,10 @@ public class ProductKafkaConsumer {
         UUID id = UUID.fromString(productId);
         productService.postDecreaseById(id);
     }
+
+    @KafkaListener(topics = "stock-restore-topic", groupId = "product-service-group")
+    public void consumeStockRestore(String productId){
+        UUID id = UUID.fromString(productId);
+        productService.postRestoreById(id);
+    }
 }

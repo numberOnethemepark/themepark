@@ -1,9 +1,7 @@
-package com.business.themeparkservice.waiting.application.dto.response;
+package com.business.themeparkservice.waiting.application.dto.response.v2;
 
-import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,11 +13,11 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResWaitingPostDTOApiV1 {
+public class ResWaitingPostCancelDTOApiV2 {
     private Waiting waiting;
 
-    public static ResWaitingPostDTOApiV1 of(WaitingEntity waitingEntity) {
-        return ResWaitingPostDTOApiV1.builder()
+    public static ResWaitingPostCancelDTOApiV2 of(WaitingEntity waitingEntity) {
+        return ResWaitingPostCancelDTOApiV2.builder()
                 .waiting(Waiting.from(waitingEntity))
                 .build();
     }
@@ -47,5 +45,4 @@ public class ResWaitingPostDTOApiV1 {
                     .build();
         }
     }
-
 }

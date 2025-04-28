@@ -1,4 +1,4 @@
-package com.business.themeparkservice.waiting.application.dto.response;
+package com.business.themeparkservice.waiting.application.dto.response.v2;
 
 import com.business.themeparkservice.waiting.domain.entity.WaitingEntity;
 import com.business.themeparkservice.waiting.domain.vo.WaitingStatus;
@@ -11,21 +11,21 @@ import java.util.UUID;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ResWaitingPostDoneDTOApiV1 {
+@AllArgsConstructor
+public class ResWaitingGetByIdDTOApiV2 {
     private Waiting waiting;
 
-    public static ResWaitingPostDoneDTOApiV1 of(WaitingEntity waitingEntity) {
-        return ResWaitingPostDoneDTOApiV1.builder()
+    public static ResWaitingGetByIdDTOApiV2 of(WaitingEntity waitingEntity) {
+        return ResWaitingGetByIdDTOApiV2.builder()
                 .waiting(Waiting.from(waitingEntity))
                 .build();
     }
 
     @Getter
     @Builder
-    @AllArgsConstructor
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class Waiting{
         private UUID id;
         private Long userId;
@@ -33,6 +33,7 @@ public class ResWaitingPostDoneDTOApiV1 {
         private Integer waitingNumber;
         private Integer waitingLeft;
         private WaitingStatus status;
+
 
         public static Waiting from(WaitingEntity waitingEntity) {
             return Waiting.builder()
@@ -44,6 +45,5 @@ public class ResWaitingPostDoneDTOApiV1 {
                     .status(waitingEntity.getWaitingStatus())
                     .build();
         }
-
     }
 }

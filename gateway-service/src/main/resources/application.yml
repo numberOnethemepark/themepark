@@ -41,7 +41,7 @@ spring:
         - id: order-service
           uri: lb://order-service
           predicates:
-            - Path=/v1/orders/**, /springdoc/openapi3-order-service.json
+            - Path=/v1/orders/**, /springdoc/openapi3-order-service.json, /v2/orders/**, /v3/orders/**
 
         - id: slack-service
           uri: lb://slack-service

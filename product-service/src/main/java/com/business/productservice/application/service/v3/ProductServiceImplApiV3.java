@@ -6,8 +6,8 @@ import com.business.productservice.application.dto.v3.response.*;
 import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.domain.product.entity.StockEntity;
-import com.business.productservice.infrastructure.dto.ReqToSlackPostDTOApiV1;
 import com.business.productservice.infrastructure.feign.SlackFeignClientApiV1;
+import com.business.productservice.infrastructure.kafka.SlackKafkaProducerService;
 import com.business.productservice.infrastructure.persistence.product.ProductJpaRepository;
 import com.business.productservice.infrastructure.persistence.product.StockJpaRepository;
 import com.github.themepark.common.application.exception.CustomException;
@@ -38,6 +38,7 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
     private final SlackFeignClientApiV1 slackFeignClientApiV1;
     private final RedissonClient redissonClient;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final SlackKafkaProducerService slackKafkaProducerService;
 
     @Override
     public ResProductPostDTOApiV3 postBy(ReqProductPostDTOApiV3 reqDto) {
@@ -125,7 +126,7 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
             redisTemplate.opsForValue().set(cacheKey, stockEntity.getStock());
 
             if (stockEntity.getStock() == 0) {
-                sendStockSoldOutSlack(stockEntity);
+                slackKafkaProducerService.sendStockSoldOutSlack(stockEntity);
             }
         } catch(InterruptedException e){
             throw new CustomException(ProductExceptionCode.LOCK_INTERRUPTED);
@@ -157,16 +158,6 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
         return ResStockGetByIdDTOApiV3.of(stockEntity);
     }
 
-    private void sendStockSoldOutSlack(StockEntity stockEntity) {
-        String productName = stockEntity.getProduct().getName();
 
-        ReqToSlackPostDTOApiV1 request = ReqToSlackPostDTOApiV1.createStockSoldOutMessage(productName);
-
-        try {
-            slackFeignClientApiV1.postBy(request);
-        } catch (Exception e) {
-            log.warn("슬랙 전송 실패 - 상품명: {}", productName, e);
-        }
-    }
 
 }

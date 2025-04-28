@@ -1,8 +1,8 @@
-package com.business.productservice.application.service;
+package com.business.productservice.application.service.v1;
 
-import com.business.productservice.application.dto.request.ReqProductPostDTOApiV1;
-import com.business.productservice.application.dto.request.ReqProductPutDTOApiV1;
-import com.business.productservice.application.dto.response.*;
+import com.business.productservice.application.dto.v1.request.ReqProductPostDTOApiV1;
+import com.business.productservice.application.dto.v1.request.ReqProductPutDTOApiV1;
+import com.business.productservice.application.dto.v1.response.*;
 import com.querydsl.core.types.Predicate;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -24,5 +24,5 @@ public interface ProductServiceApiV1 {
 
     void postRestoreById(UUID id);
 
-    ResStockGetByIdDTOApiv1 getStockById(UUID id);
+    ResStockGetByIdDTOApiV1 getStockById(UUID id);
 }

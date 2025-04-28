@@ -42,6 +42,12 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
+    // actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    //Resilience4J
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
 }
 
 ext {

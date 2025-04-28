@@ -14,7 +14,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         default_schema: slack_service
-
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: default
+      password: systempass
 
 eureka:
   client:
@@ -29,3 +34,9 @@ server:
 slack:
   admin:
     id: C08NM9CQ3SA
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'prometheus'

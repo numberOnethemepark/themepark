@@ -58,6 +58,10 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     // Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     implementation "org.springframework.boot:spring-boot-starter-security"
 

@@ -20,7 +20,7 @@ Authorization: {{accessToken}}
 {
   "themepark":
     {
-      "name": "알라딘2",
+      "name": "알라딘",
       "description": "아라비안 나이트",
       "type": "RIDE",
       "heightLimit": "130~180cm",
@@ -28,11 +28,11 @@ Authorization: {{accessToken}}
       "operationEndTime": "18:00",
       "supervisor": true,
       "hashtagList": [{
-        "hashtagId": "314202c4-ae6a-4d0b-997d-95057b520748",
+        "hashtagId": "376df3fd-f172-4046-8bd2-9ab22b9c79cd",
         "name": "신나는"
       },{
-        "hashtagId": "58d75bbe-61cc-46eb-8419-d0ef49a952fe",
-        "name": "짜릿한"
+        "hashtagId": "06b9986a-f997-49b0-8d7e-3d9dad67943b",
+        "name": "즐거운"
       }
       ]
     }

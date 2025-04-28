@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/v2/waitings")
+@RequestMapping("/v3/waitings")
 @RequiredArgsConstructor
 public class WaitingControllerApiV3 {
 

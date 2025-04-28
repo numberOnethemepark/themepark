@@ -1,10 +1,10 @@
-package com.business.themeparkservice.waiting.presentation.controller;
+package com.business.themeparkservice.waiting.presentation.controller.v1;
 
 import com.business.themeparkservice.themepark.domain.entity.ThemeparkEntity;
-import com.business.themeparkservice.waiting.application.dto.request.ReqWaitingPostDTOApiV1;
-import com.business.themeparkservice.waiting.application.dto.response.*;
-import com.business.themeparkservice.waiting.application.service.WaitingServiceApiV1;
-import com.business.themeparkservice.waiting.infastructure.feign.service.SlackKafkaService;
+import com.business.themeparkservice.waiting.application.dto.request.v1.ReqWaitingPostDTOApiV1;
+import com.business.themeparkservice.waiting.application.dto.response.v1.*;
+import com.business.themeparkservice.waiting.application.service.v1.WaitingServiceApiV1;
+import com.business.themeparkservice.waiting.infastructure.feign.service.SlackFeignClientServiceApiV1;
 import com.github.themepark.common.application.aop.annotation.ApiPermission;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
@@ -25,7 +25,7 @@ public class WaitingControllerApiV1 {
 
     private final WaitingServiceApiV1 waitingService;
 
-    private final SlackKafkaService slackKafkaService;
+    private final SlackFeignClientServiceApiV1 slackClientService;
 
     @ApiPermission(roles = {ApiPermission.Role.USER})
     @PostMapping
@@ -109,7 +109,7 @@ public class WaitingControllerApiV1 {
 
     @PostMapping("/internal/{id}/call")
     public ResponseEntity<ResDTO<Object>> getCallById(@PathVariable UUID id){
-        slackKafkaService.getCallById(id);
+        slackClientService.getCallById(id);
         return new ResponseEntity<>(
                 ResDTO.builder()
                         .code("0")

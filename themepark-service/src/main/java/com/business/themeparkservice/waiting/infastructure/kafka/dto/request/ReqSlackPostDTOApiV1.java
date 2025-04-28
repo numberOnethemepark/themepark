@@ -1,4 +1,4 @@
-package com.business.themeparkservice.waiting.infastructure.feign.dto.request;
+package com.business.themeparkservice.waiting.infastructure.kafka.dto.request;
 
 import com.business.themeparkservice.waiting.infastructure.domain.vo.TargetType;
 import lombok.Builder;

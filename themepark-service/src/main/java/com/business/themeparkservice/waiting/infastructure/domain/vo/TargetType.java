@@ -1,4 +1,4 @@
-package com.business.themeparkservice.waiting.infastructure.feign.vo;
+package com.business.themeparkservice.waiting.infastructure.domain.vo;
 
 import lombok.RequiredArgsConstructor;
 

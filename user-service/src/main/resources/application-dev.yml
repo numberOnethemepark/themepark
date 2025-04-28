@@ -16,7 +16,7 @@ spring:
         default_schema: user_service
   data:
     redis:
-      host: redis-stack-compose
+      host: localhost
       port: 6379
       username: default
       password: systempass

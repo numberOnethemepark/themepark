@@ -21,8 +21,8 @@ public class BlacklistRepositoryImpl implements BlacklistRepository {
     }
 
     @Override
-    public Optional<String> findByUserId(String userId) {
-        return Optional.ofNullable((String) redisTemplate.opsForValue().get(BLACKLIST_PREFIX + userId));
+    public Optional<Timestamp> findByUserId(String userId) {
+        return Optional.ofNullable((Timestamp) redisTemplate.opsForValue().get(BLACKLIST_PREFIX + userId));
     }
 
     @Override

@@ -43,8 +43,10 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
         HttpMethod.GET, List.of(
             "/v?/products",
             "/v?/products/*",
-            "/v?/themeparks*",
-            "/v?/hashtags*",
+            "/v?/themeparks",
+            "/v?/themeparks/*",
+            "/v?/hashtags",
+            "/v?/hashtags/*",
             "/v?/auth/refresh",
             "/springdoc/*"
         ),

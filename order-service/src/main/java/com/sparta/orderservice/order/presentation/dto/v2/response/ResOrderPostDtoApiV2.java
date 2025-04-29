@@ -1,4 +1,4 @@
-package com.sparta.orderservice.order.presentation.dto.response;
+package com.sparta.orderservice.order.presentation.dto.v2.response;
 
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import lombok.Builder;
@@ -8,12 +8,12 @@ import java.util.UUID;
 
 @Getter
 @Builder
-public class ResOrderPostDtoApiV1 {
+public class ResOrderPostDtoApiV2 {
 
     private Order order;
 
-    public static ResOrderPostDtoApiV1 of(OrderEntity orderEntity) {
-        return ResOrderPostDtoApiV1.builder()
+    public static ResOrderPostDtoApiV2 of(OrderEntity orderEntity) {
+        return ResOrderPostDtoApiV2.builder()
                 .order(Order.from(orderEntity))
                 .build();
     };

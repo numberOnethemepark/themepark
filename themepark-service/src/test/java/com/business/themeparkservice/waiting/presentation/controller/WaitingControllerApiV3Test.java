@@ -1,6 +1,5 @@
 package com.business.themeparkservice.waiting.presentation.controller;
 
-import com.business.themeparkservice.waiting.application.dto.request.v2.ReqWaitingPostDTOApiV2;
 import com.business.themeparkservice.waiting.application.dto.request.v3.ReqWaitingPostDTOApiV3;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
@@ -29,7 +28,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 @AutoConfigureRestDocs
 @Transactional
 @ActiveProfiles("dev")
-public class WaitingControllerApiV1Test {
+public class WaitingControllerApiV3Test {
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,7 +41,7 @@ public class WaitingControllerApiV1Test {
         ReqWaitingPostDTOApiV3 reqWaitingPostDTOApiV3 =
                 ReqWaitingPostDTOApiV3.builder().waiting(
                         ReqWaitingPostDTOApiV3.Waiting.builder()
-                                .themeparkId(UUID.fromString("0ad6129e-540c-45da-b389-34d69114cd95"))
+                                .themeparkId(UUID.fromString("81b8843a-b77c-4d17-9a11-76915b8a2725"))
                                 .build()
                 ).build();
 
@@ -167,6 +166,30 @@ public class WaitingControllerApiV1Test {
                         MockMvcResultMatchers.status().isOk()
                 ).andDo(
                         MockMvcRestDocumentationWrapper.document("Waiting 삭제 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("Waiting v3")
+                                        .pathParameters(
+                                                parameterWithName("id").type(SimpleType.STRING).description("대기 ID")
+                                        )
+                                        .build()
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void testWaitingCallSuccess() throws Exception{
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.post("/v3/waitings/internal/{id}/call", UUID.randomUUID())
+                                .header("X-User-Id", 1)
+                                .header("X-User-Role","MASTER")
+                )
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk()
+                ).andDo(
+                        MockMvcRestDocumentationWrapper.document("Waiting 호출 성공",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.order.domain.repository.OrderRepository;
-import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.v1.request.ReqOrdersPostDtoApiV1;
 import com.sparta.orderservice.payment.application.dto.request.ReqPaymentTossDto;
 import com.sparta.orderservice.payment.application.dto.response.ResPaymentTossDto;
 import com.sparta.orderservice.payment.domain.entity.PaymentEntity;
@@ -98,7 +98,7 @@ public class PaymentControllerApiV1Test {
                 )
                 .build();
 
-        orderEntity = OrderEntity.createOrder(reqOrdersPostDtoApiV1, 1L);
+        orderEntity = OrderEntity.createOrder(reqOrdersPostDtoApiV1.getOrder().getProductId(),reqOrdersPostDtoApiV1.getOrder().getAmount(), reqOrdersPostDtoApiV1.getOrder().getSlackId(),1L);
         orderRepository.save(orderEntity);
     }
 

@@ -1,41 +1,45 @@
-package com.sparta.orderservice.order.presentation.controller;
+package com.sparta.orderservice.order.presentation.controller.v2;
 
-import com.sparta.orderservice.order.application.facade.OrderFacade;
-import com.sparta.orderservice.order.domain.entity.OrderEntity;
-import com.sparta.orderservice.order.presentation.dto.response.ResOrderPostDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.response.ResOrdersGetByIdDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.request.ReqOrderPutDtoApiV1;
-import com.sparta.orderservice.order.presentation.dto.request.ReqOrdersPostDtoApiV1;
 import com.github.themepark.common.application.dto.ResDTO;
-import com.sparta.orderservice.order.presentation.dto.response.ResOrderGetDtoApiV1;
+import com.sparta.orderservice.order.application.facade.v2.OrderFacadeV2;
+import com.sparta.orderservice.order.domain.entity.OrderEntity;
+import com.sparta.orderservice.order.presentation.dto.v1.request.ReqOrderPutDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.v1.request.ReqOrdersPostDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.v1.response.ResOrderGetDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.v1.response.ResOrderPostDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.v1.response.ResOrdersGetByIdDtoApiV1;
+import com.sparta.orderservice.order.presentation.dto.v2.request.ReqOrderPutDtoApiV2;
+import com.sparta.orderservice.order.presentation.dto.v2.request.ReqOrdersPostDtoApiV2;
+import com.sparta.orderservice.order.presentation.dto.v2.response.ResOrderPostDtoApiV2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
+
 import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/v1/orders")
+@RequestMapping("/v2/orders")
 @RequiredArgsConstructor
-public class OrderControllerApiV1 {
+public class OrderControllerApiV2 {
 
-    private final OrderFacade orderFacade;
+    private final OrderFacadeV2 orderFacadeV2;
 
     @PostMapping
-    public ResponseEntity<ResDTO<ResOrderPostDtoApiV1>> postBy(
-           @RequestBody ReqOrdersPostDtoApiV1 reqOrdersPostDtoApiV1,
+    public ResponseEntity<ResDTO<ResOrderPostDtoApiV2>> postBy(
+           @RequestBody ReqOrdersPostDtoApiV2 reqOrdersPostDtoApiV2,
            @RequestHeader("X-User-Id") Long userId
            )  {
 
-        ResOrderPostDtoApiV1 resOrderPostDtoApiV1 = orderFacade.processOrder(userId, reqOrdersPostDtoApiV1);
+        ResOrderPostDtoApiV2 resOrderPostDtoApiV2 = orderFacadeV2.processOrder(userId, reqOrdersPostDtoApiV2);
 
         return new ResponseEntity<>(
-                ResDTO.<ResOrderPostDtoApiV1>builder()
+                ResDTO.<ResOrderPostDtoApiV2>builder()
                         .code("0")
                         .message("주문을 생성하였습니다!")
-                        .data(resOrderPostDtoApiV1)
+                        .data(resOrderPostDtoApiV2)
                         .build(),
                 HttpStatus.CREATED
         );
@@ -44,9 +48,9 @@ public class OrderControllerApiV1 {
     @PutMapping("/{id}")
     public ResponseEntity<ResDTO<Object>> updateBy(
             @PathVariable("id") UUID id,
-            @RequestBody ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1
+            @RequestBody ReqOrderPutDtoApiV2 reqOrderPutDtoApiV2
     ) {
-        orderFacade.updateBy(reqOrderPutDtoApiV1, id);
+        orderFacadeV2.updateBy(reqOrderPutDtoApiV2, id);
 
         return new ResponseEntity<>(
                 ResDTO.builder()
@@ -65,7 +69,7 @@ public class OrderControllerApiV1 {
                 ResDTO.<ResOrderGetDtoApiV1>builder()
                         .code("0")
                         .message("주문정보를 조회하였습니다!")
-                        .data(ResOrderGetDtoApiV1.of(orderFacade.getOrderBy(id)))
+                        .data(ResOrderGetDtoApiV1.of(orderFacadeV2.getOrderBy(id)))
                         .build(),
                 HttpStatus.OK
         );
@@ -77,7 +81,7 @@ public class OrderControllerApiV1 {
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "10") int size
     ){
-        Page<OrderEntity> orderPage = orderFacade.getOrdersByUserId(id, page, size);
+        Page<OrderEntity> orderPage = orderFacadeV2.getOrdersByUserId(id, page, size);
 
         return new ResponseEntity<>(
                 ResDTO.<ResOrdersGetByIdDtoApiV1>builder()

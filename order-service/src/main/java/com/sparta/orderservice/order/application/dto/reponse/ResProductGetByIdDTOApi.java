@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResProductGetByIdDTOApiV1 {
+public class ResProductGetByIdDTOApi {
 
     private Product product;
 

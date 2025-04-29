@@ -48,11 +48,11 @@ public class ThemeparkControllerApiV1Test {
 
         List<ReqThemeparkPostDTOApiV1.ThemePark.Hashtag> hashtags = Arrays.asList(
                 ReqThemeparkPostDTOApiV1.ThemePark.Hashtag.builder()
-                        .hashtagId(UUID.fromString("314202c4-ae6a-4d0b-997d-95057b520748"))
-                        .name("신나는").build(),
+                        .hashtagId(UUID.fromString("376df3fd-f172-4046-8bd2-9ab22b9c79cd"))
+                        .build(),
                 ReqThemeparkPostDTOApiV1.ThemePark.Hashtag.builder()
-                        .hashtagId(UUID.fromString("58d75bbe-61cc-46eb-8419-d0ef49a952fe"))
-                        .name("즐거운").build()
+                        .hashtagId(UUID.fromString("06b9986a-f997-49b0-8d7e-3d9dad67943b"))
+                        .build()
         );
 
         ReqThemeparkPostDTOApiV1 reqThemeparkPostDTOApiV1 =

@@ -28,11 +28,9 @@ Authorization: {{accessToken}}
       "operationEndTime": "18:00",
       "supervisor": true,
       "hashtagList": [{
-        "hashtagId": "376df3fd-f172-4046-8bd2-9ab22b9c79cd",
-        "name": "신나는"
+        "hashtagId": "376df3fd-f172-4046-8bd2-9ab22b9c79cd"
       },{
-        "hashtagId": "06b9986a-f997-49b0-8d7e-3d9dad67943b",
-        "name": "즐거운"
+        "hashtagId": "06b9986a-f997-49b0-8d7e-3d9dad67943b"
       }
       ]
     }
@@ -57,12 +55,10 @@ Authorization: {{accessToken}}
     "heightLimit": "140~180cm",
     "hashtagList": [
       {
-        "hashtagId": "f5e49e7d-3baf-478f-bb36-d70b66330f79",
-        "name": "즐거운"
+        "hashtagId": "f5e49e7d-3baf-478f-bb36-d70b66330f79"
       },
       {
-        "hashtagId": "f5e49e5d-3baf-478f-bb36-d70b66330f79",
-        "name": "짜릿한"
+        "hashtagId": "f5e49e5d-3baf-478f-bb36-d70b66330f79"
       }
     ]
   }

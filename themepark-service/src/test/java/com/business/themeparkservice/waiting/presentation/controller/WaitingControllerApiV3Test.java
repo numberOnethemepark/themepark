@@ -71,7 +71,7 @@ public class WaitingControllerApiV3Test {
     @Test
     public void testWaitingGetByIdSuccess() throws Exception{
         mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/v3/waitings/{id}", UUID.randomUUID())
+                RestDocumentationRequestBuilders.get("/v3/waitings/{id}", "1cabbc3b-c4fa-49be-833a-688559ce0797")
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -112,7 +112,7 @@ public class WaitingControllerApiV3Test {
     @Test
     public void testWaitingPostDoneSuccess() throws Exception{
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/v3/waitings/{id}/done", UUID.randomUUID())
+                RestDocumentationRequestBuilders.post("/v3/waitings/{id}/done", "1cabbc3b-c4fa-49be-833a-688559ce0797")
                         .header("X-User-Role","MASTER")
         )
                 .andExpectAll(
@@ -135,7 +135,7 @@ public class WaitingControllerApiV3Test {
     @Test
     public void testWaitingPostCancelSuccess() throws Exception{
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.post("/v3/waitings/{id}/cancel", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.post("/v3/waitings/{id}/cancel", "1cabbc3b-c4fa-49be-833a-688559ce0797")
                         .header("X-User-Role","MASTER")
         )
                 .andExpectAll(
@@ -158,7 +158,7 @@ public class WaitingControllerApiV3Test {
     @Test
     public void testWaitingGetDeletedSuccess() throws Exception{
         mockMvc.perform(
-                RestDocumentationRequestBuilders.delete("/v3/waitings/{id}", UUID.randomUUID())
+                RestDocumentationRequestBuilders.delete("/v3/waitings/{id}", "8bedc38a-f59a-4816-9b91-dec2a82ee331")
                         .header("X-User-Id", 1)
                         .header("X-User-Role","MASTER")
         )
@@ -182,7 +182,7 @@ public class WaitingControllerApiV3Test {
     @Test
     public void testWaitingCallSuccess() throws Exception{
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.post("/v3/waitings/internal/{id}/call", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.post("/v3/waitings/internal/{id}/call", "1cabbc3b-c4fa-49be-833a-688559ce0797")
                                 .header("X-User-Id", 1)
                                 .header("X-User-Role","MASTER")
                 )

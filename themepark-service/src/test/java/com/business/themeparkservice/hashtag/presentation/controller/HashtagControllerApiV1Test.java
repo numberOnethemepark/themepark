@@ -77,7 +77,7 @@ public class HashtagControllerApiV1Test {
     @Test
     public void testThemeparkGetByIdSuccess() throws Exception{
         mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/v1/hashtags/{id}", "ccf32034-8056-4e02-b269-277c8d2c383c")
+                RestDocumentationRequestBuilders.get("/v1/hashtags/{id}", "376df3fd-f172-4046-8bd2-9ab22b9c79cd")
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -127,7 +127,7 @@ public class HashtagControllerApiV1Test {
         String reqDtoJson = objectMapper.writeValueAsString(reqHashtagPutDTOApiV1);
 
         mockMvc.perform(
-                RestDocumentationRequestBuilders.put("/v1/hashtags/{id}", "ccf32034-8056-4e02-b269-277c8d2c383c")
+                RestDocumentationRequestBuilders.put("/v1/hashtags/{id}", "376df3fd-f172-4046-8bd2-9ab22b9c79cd")
                         .header("X-User-Id",1)
                         .header("X-User-Role","MASTER")
                         .content(reqDtoJson)
@@ -153,7 +153,7 @@ public class HashtagControllerApiV1Test {
     @Test
     public void testThemeparkDeleteSuccess() throws Exception{
         mockMvc.perform(
-                RestDocumentationRequestBuilders.delete("/v1/hashtags/{id}", "ccf32034-8056-4e02-b269-277c8d2c383c")
+                RestDocumentationRequestBuilders.delete("/v1/hashtags/{id}", "376df3fd-f172-4046-8bd2-9ab22b9c79cd")
                         .header("X-User-Id",1)
                         .header("X-User-Role","MASTER")
         )

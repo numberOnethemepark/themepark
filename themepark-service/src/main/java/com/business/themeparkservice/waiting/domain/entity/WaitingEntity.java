@@ -56,6 +56,6 @@ public class WaitingEntity extends BaseEntity {
     }
 
     public void postCancel() {
-        this.waitingStatus = WaitingStatus.CANCELLED;
+        this.waitingStatus = WaitingStatus.CANCELED;
     }
 }

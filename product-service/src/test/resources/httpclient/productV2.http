@@ -94,6 +94,6 @@ Authorization: {{accessToken}}
 Content-Type: application/json
 
 ### 10. 상품 재고 조회
-GET http://localhost:8080/v2/products/e61caf66-b5c0-4e23-bb9f-fd75821efc67/stock
+GET http://localhost:8080/v2/products/476c2d9e-cb99-49a3-9fb8-721096683d04/stock
 Authorization: {{accessToken}}
 Content-Type: application/json

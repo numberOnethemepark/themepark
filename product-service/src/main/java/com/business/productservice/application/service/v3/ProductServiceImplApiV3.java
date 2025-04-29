@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -105,9 +106,9 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
         try{
             isLocked = lock.tryLock(5, 3, TimeUnit.SECONDS); // waitTime: 5초, leaseTime: 3초
 
-            System.out.println("현재 락 키 존재 여부: " + redissonClient.getKeys().getKeysStream()
-                    .filter(key -> key.startsWith("lock:"))
-                    .toList());
+//            System.out.println("현재 락 키 존재 여부: " + redissonClient.getKeys().getKeysStream()
+//                    .filter(key -> key.startsWith("lock:"))
+//                    .toList());
 
             if (!isLocked) {
                 throw new CustomException(ProductExceptionCode.LOCK_FAILED);
@@ -123,7 +124,7 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
             stockEntity.decrease();
 
             String cacheKey = "stock:" + id;
-            redisTemplate.opsForValue().set(cacheKey, stockEntity.getStock());
+            redisTemplate.opsForValue().set(cacheKey, stockEntity.getStock(), Duration.ofMinutes(5));
 
             if (stockEntity.getStock() == 0) {
                 slackKafkaProducerService.sendStockSoldOutSlack(stockEntity);
@@ -145,10 +146,37 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
 
     @Override
     public void postRestoreById(UUID id) {
-        StockEntity stockEntity = stockRepository.findByIdWithPessimisticLock(id)
-                .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
+        String lockKey = "lock:stock:" + id;
+        RLock lock = redissonClient.getLock(lockKey);
+        boolean isLocked = false;
 
-        stockEntity.restore();
+        try {
+            isLocked = lock.tryLock(5, 3, TimeUnit.SECONDS);
+            if (!isLocked) {
+                throw new CustomException(ProductExceptionCode.LOCK_FAILED);
+            }
+
+            StockEntity stockEntity = stockRepository.findById(id)
+                    .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
+
+            stockEntity.restore();
+
+            String cacheKey = "stock:" + id;
+            redisTemplate.opsForValue().set(cacheKey, stockEntity.getStock(), Duration.ofMinutes(5));
+
+
+        } catch (InterruptedException e) {
+            throw new CustomException(ProductExceptionCode.LOCK_INTERRUPTED);
+        } finally {
+            if (isLocked) {
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+                    @Override
+                    public void afterCommit() {
+                        lock.unlock();
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -167,7 +195,8 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
         StockEntity stockEntity = stockRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
 
-        redisTemplate.opsForValue().set(cacheKey, stockEntity.getStock());
+        redisTemplate.opsForValue().set(cacheKey, stockEntity.getStock(), Duration.ofMinutes(5));
+
         return ResStockGetByIdDTOApiV3.of(stockEntity);
     }
 

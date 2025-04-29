@@ -11,7 +11,6 @@ import com.business.userservice.domain.user.repository.BlacklistRepository;
 import com.business.userservice.domain.user.repository.UserRepository;
 import com.business.userservice.infrastructure.jwt.JwtUtil;
 import com.github.themepark.common.application.exception.CustomException;
-import java.sql.Timestamp;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -77,13 +76,10 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
     }
 
     private void checkTokenBlacklisted(String userId, Date issuedAt) {
-        blacklistRepository.findByUserId(userId).ifPresent(blacklistedAtStr -> {
-            Timestamp blacklistedAt = Timestamp.valueOf(blacklistedAtStr);
-            Timestamp tokenIssuedAt = new Timestamp(issuedAt.getTime());
-
-            if (tokenIssuedAt.before(blacklistedAt)) {
+        blacklistRepository.findByUserId(userId)
+            .filter(issuedAt::before)
+            .ifPresent(blacklistedAt -> {
                 throw new CustomException(AuthExceptionCode.BLOCKED_USER);
-            }
-        });
+            });
     }
 }

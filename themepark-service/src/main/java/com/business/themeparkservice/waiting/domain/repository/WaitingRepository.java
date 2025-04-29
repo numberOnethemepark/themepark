@@ -28,5 +28,9 @@ public interface WaitingRepository {
             "where w.waitingNumber < :waitingNumber AND w.themeparkId = :themeparkId AND w.waitingStatus = 'WAITING'")
     int checkingMyWaitingLeft(Integer waitingNumber,UUID themeparkId);
 
+    @Query("SELECT COALESCE(MAX(w.waitingNumber), 0) FROM WaitingEntity w WHERE w.themeparkId = :themeparkId AND w.waitingStatus = 'WAITING'")
+    int findLastWaitingNumber(@NotNull(message = "테마파크번호를 입력해주세요") UUID themeparkId);
+
+
     Optional<WaitingEntity> findByIdAndWaitingStatus(UUID id,WaitingStatus waitingStatus);
 }

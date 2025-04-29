@@ -26,17 +26,17 @@ spring:
         - id: themepark-service
           uri: lb://themepark-service
           predicates:
-            - Path=/v1/themeparks/**, /v1/hashtags/**,/v1/waitings/**, /springdoc/openapi3-themepark-service.json
+            - Path=/v?/themeparks/**, /v?/hashtags/**, /v?/waitings/**, /springdoc/openapi3-themepark-service.json
 
         - id: user-service
           uri: lb://user-service
           predicates:
-            - Path=/v1/users/**, /v1/auth/**, /springdoc/openapi3-user-service.json
+            - Path=/v?/users/**, /v?/auth/**, /springdoc/openapi3-user-service.json
 
         - id: product-service
           uri: lb://product-service
           predicates:
-            - Path=/v1/products/**, /v2/products/**, /springdoc/openapi3-product-service.json
+            - Path=/v?/products/**, /v?/products/**, /springdoc/openapi3-product-service.json
 
         - id: order-service
           uri: lb://order-service
@@ -46,7 +46,7 @@ spring:
         - id: slack-service
           uri: lb://slack-service
           predicates:
-            - Path=/v1/slacks/**, /v1/slack-templates/**, /v1/slack-event-types/**, /springdoc/openapi3-slack-service.json
+            - Path=/v?/slacks/**, /v?/slack-templates/**, /v?/slack-event-types/**, /springdoc/openapi3-slack-service.json
       discovery:
         locator:
           enabled: true

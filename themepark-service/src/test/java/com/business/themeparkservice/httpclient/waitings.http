@@ -13,7 +13,7 @@ Content-Type:application/json
 
 ###
 
-POST http://localhost:8080/v1/waitings
+POST http://localhost:8080/v3/waitings
 Content-Type: application/json
 Authorization: {{accessToken}}
 
@@ -25,31 +25,31 @@ Authorization: {{accessToken}}
 
 ###
 
-GET http://localhost:8080/v1/waitings/8599d801-8e69-4204-872d-ebe13916e0c7
+GET http://localhost:8080/v3/waitings/8599d801-8e69-4204-872d-ebe13916e0c7
 Authorization: {{accessToken}}
 
 ###
 
-GET http://localhost:8080/v1/waitings?themeparkId=f5220852-59fe-4894-8fc4-200bd1419872
+GET http://localhost:8080/v3/waitings?themeparkId=f5220852-59fe-4894-8fc4-200bd1419872
 Authorization: {{accessToken}}
 
 ###
 
-POST http://localhost:8080/v1/waitings/83fd502d-1ff3-47bd-8915-4ca4bd9433d1/done
+POST http://localhost:8080/v3/waitings/83fd502d-1ff3-47bd-8915-4ca4bd9433d1/done
 Authorization: {{accessToken}}
 
 ###
 
-POST http://localhost:8080/v1/waitings/8599d801-8e69-4204-872d-ebe13916e0c7/cancel
+POST http://localhost:8080/v3/waitings/8599d801-8e69-4204-872d-ebe13916e0c7/cancel
 Authorization: {{accessToken}}
 
 ###
 
-DELETE http://localhost:8080/v1/waitings/8599d801-8e69-4204-872d-ebe13916e0c7
+DELETE http://localhost:8080/v3/waitings/8599d801-8e69-4204-872d-ebe13916e0c7
 Authorization: {{accessToken}}
 
 ###
 
-POST http://localhost:8080/v1/waitings/internal/1cabbc3b-c4fa-49be-833a-688559ce0797/call
+POST http://localhost:8080/v3/waitings/internal/1cabbc3b-c4fa-49be-833a-688559ce0797/call
 Authorization: {{accessToken}}
 

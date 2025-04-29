@@ -42,7 +42,7 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
     private static final Map<HttpMethod, List<String>> EXCLUDED_PATHS_BY_METHOD = Map.of(
         HttpMethod.GET, List.of(
             "/v?/products",
-            "/v?/products*",
+            "/v?/products/*",
             "/v?/themeparks*",
             "/v?/hashtags*",
             "/v?/auth/refresh",

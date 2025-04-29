@@ -96,7 +96,7 @@ public class ThemeparkControllerApiV1Test {
     @Test
     public void testThemeparkGetByIdSuccess() throws Exception{
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/v1/themeparks/{id}", "0ad6129e-540c-45da-b389-34d69114cd95")
+                        RestDocumentationRequestBuilders.get("/v1/themeparks/{id}", "81b8843a-b77c-4d17-9a11-76915b8a2725")
                 )
                 .andExpectAll(
                         status().isOk()
@@ -150,7 +150,7 @@ public class ThemeparkControllerApiV1Test {
         String reqDtoJson = objectMapper.writeValueAsString(reqThemeparkPutDTOApiV1);
 
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.put("/v1/themeparks/{id}", "0ad6129e-540c-45da-b389-34d69114cd95")
+                        RestDocumentationRequestBuilders.put("/v1/themeparks/{id}", "81b8843a-b77c-4d17-9a11-76915b8a2725")
                             .header("X-User-Id",1)
                             .header("X-User-Role","MASTER")
                             .content(reqDtoJson)
@@ -177,7 +177,7 @@ public class ThemeparkControllerApiV1Test {
     @Test
     public void testThemeparkDeleteSuccess() throws Exception{
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.delete("/v1/themeparks/{id}", "0ad6129e-540c-45da-b389-34d69114cd95")
+                        RestDocumentationRequestBuilders.delete("/v1/themeparks/{id}", "81b8843a-b77c-4d17-9a11-76915b8a2725")
                         .header("X-User-Id",1)
                         .header("X-User-Role","MASTER")
                 )

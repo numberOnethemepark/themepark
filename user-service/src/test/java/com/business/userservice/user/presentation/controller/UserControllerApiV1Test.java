@@ -41,6 +41,7 @@ public class UserControllerApiV1Test {
     public void testUserGetByIdSuccess() throws Exception {
         mockMvc.perform(
                 RestDocumentationRequestBuilders.get("/v1/users/{id}", 1)
+                    .header("X-User-Role", "USER")
             )
             .andExpectAll(
                 MockMvcResultMatchers.status().isOk()
@@ -75,6 +76,7 @@ public class UserControllerApiV1Test {
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.put("/v1/users/{id}", 1)
+                    .header("X-User-Role", "USER")
                     .content(dtoToJson(dto))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -100,6 +102,7 @@ public class UserControllerApiV1Test {
     public void testUserGetSuccess() throws Exception {
         mockMvc.perform(
                 RestDocumentationRequestBuilders.get("/v1/users")
+                    .header("X-User-Role", "MASTER")
             )
             .andExpectAll(
                 MockMvcResultMatchers.status().isOk()
@@ -121,13 +124,14 @@ public class UserControllerApiV1Test {
         ReqUserPostDeleteDTOApiV1 dto = ReqUserPostDeleteDTOApiV1.builder()
             .user(
                 ReqUserPostDeleteDTOApiV1.User.builder()
-                    .password("password1234")
+                    .password("passwordddddddd")
                     .build()
             )
             .build();
 
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/v1/users/{id}/delete", 1)
+                RestDocumentationRequestBuilders.post("/v1/users/{id}/delete", 2)
+                    .header("X-User-Role", "USER")
                     .content(dtoToJson(dto))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -153,6 +157,7 @@ public class UserControllerApiV1Test {
     public void testUserPatchSuccess() throws Exception {
         mockMvc.perform(
                 RestDocumentationRequestBuilders.patch("/v1/users/{id}/is-blacklisted", 1)
+                    .header("X-User-Role", "MASTER")
             )
             .andExpectAll(
                 MockMvcResultMatchers.status().isOk()

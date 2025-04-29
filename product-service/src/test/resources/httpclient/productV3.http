@@ -1,0 +1,99 @@
+### 1. 이벤트 상품 생성
+POST http://localhost:8080/v3/products
+Authorization: {{accessToken}}
+Content-Type: application/json
+
+{
+  "product": {
+    "name": "할인 이용권",
+    "description": "8월 한정 20% 할인",
+    "productType": "EVENT",
+    "price": 25000,
+    "limitQuantity": 100,
+    "eventStartAt": "2025-05-01T09:00:00",
+    "eventEndAt": "2025-05-31T23:59:59"
+  }
+}
+
+### 2. 일반 입장권 상품 생성
+POST http://localhost:8080/v3/products
+Authorization: {{accessToken}}
+Content-Type: application/json
+
+{
+  "product": {
+    "name": "입장권",
+    "description": "일반 입장권",
+    "productType": "TICKET",
+    "price": 30000,
+    "limitQuantity": -1,
+    "eventStartAt": "9999-12-31T23:59:00",
+    "eventEndAt": "9999-12-31T23:59:00"
+  }
+}
+
+### 3. 연회원권 상품 생성
+POST http://localhost:8080/v3/products
+Authorization: {{accessToken}}
+Content-Type: application/json
+
+{
+  "product": {
+    "name": "회원권",
+    "description": "연 회원권",
+    "productType": "MEMBERSHIP",
+    "price": 250000,
+    "limitQuantity": -1,
+    "eventStartAt": "9999-12-31T23:59:00",
+    "eventEndAt": "9999-12-31T23:59:00"
+  }
+}
+
+### 4. 상품 단건 조회
+GET http://localhost:8080/v3/products/e61caf66-b5c0-4e23-bb9f-fd75821efc67
+Authorization: {{accessToken}}
+Content-Type: application/json
+
+### 5. 상품 정보 수정
+PUT http://localhost:8080/v3/products/e61caf66-b5c0-4e23-bb9f-fd75821efc67
+Authorization: {{accessToken}}
+Content-Type: application/json
+
+{
+  "product": {
+    "id": "476c2d9e-cb99-49a3-9fb8-721096683d04",
+    "name": "할인 이용권",
+    "description": "8월 한정 20% 할인",
+    "productType": "EVENT",
+    "price": 25000,
+    "limitQuantity": 100,
+    "eventStartAt": "2025-05-01T09:00:00",
+    "eventEndAt": "2025-05-31T23:59:59",
+    "productStatus": "OPEN"
+  }
+}
+
+### 6. 상품 삭제
+DELETE http://localhost:8080/v3/products/48aa06d0-f865-4a49-acf6-64c13adb389c
+Authorization: {{accessToken}}
+Content-Type: application/json
+
+### 7. 상품 검색 조회
+GET http://localhost:8080/v3/products
+Authorization: {{accessToken}}
+Content-Type: application/json
+
+### 8. 상품 재고 차감 (내부 호출용) - 선착순 1인 1예매
+POST http://localhost:8080/v3/products/internal/476c2d9e-cb99-49a3-9fb8-721096683d04/stocks-decrease
+Authorization: {{accessToken}}
+Content-Type: application/json
+
+### 9. 상품 재고 복구 (내부 호출용) - 주문, 결제 실패 시 호출
+POST http://localhost:8080/v3/products/internal/330592a8-f6ab-465c-833e-c108e4b56e10/stocks-restore
+Authorization: {{accessToken}}
+Content-Type: application/json
+
+### 10. 상품 재고 조회
+GET http://localhost:8080/v3/products/e61caf66-b5c0-4e23-bb9f-fd75821efc67/stock
+Authorization: {{accessToken}}
+Content-Type: application/json

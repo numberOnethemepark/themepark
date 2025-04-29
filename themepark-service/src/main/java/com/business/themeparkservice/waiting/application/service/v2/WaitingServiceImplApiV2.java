@@ -125,7 +125,7 @@ public class WaitingServiceImplApiV2 implements WaitingServiceApiV2 {
 
     @Override
     public void deleteBy(UUID id,Long userId) {
-        WaitingEntity waitingEntity = findByIdAndStatus(id,WaitingStatus.CANCELLED);
+        WaitingEntity waitingEntity = findByIdAndStatus(id,WaitingStatus.CANCELED);
         waitingEntity.deletedBy(userId);
     }
 

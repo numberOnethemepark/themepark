@@ -38,33 +38,25 @@ Authorization: {{accessToken}}
 
 ###
 
-GET http://localhost:8080/v1/themeparks/3dca02ed-55c7-4f7c-9e5b-2126f9b2139f
+GET http://localhost:8080/v1/themeparks/45fbc880-83be-45d0-868f-552ab124b708
 
 ###
 
-GET http://localhost:8080/v1/themeparks?description=슝슝 놀이기구입니다.3
+GET http://localhost:8080/v1/themeparks?description=아라비안 나이트
 
 ###
 
-PUT http://localhost:8080/v1/themeparks/7949401a-a67e-41cf-a5e3-192ad62d81f8
+PUT http://localhost:8080/v1/themeparks/45fbc880-83be-45d0-868f-552ab124b708
 Content-Type: application/json
 Authorization: {{accessToken}}
 
 {
   "themepark": {
-    "heightLimit": "140~180cm",
-    "hashtagList": [
-      {
-        "hashtagId": "f5e49e7d-3baf-478f-bb36-d70b66330f79"
-      },
-      {
-        "hashtagId": "f5e49e5d-3baf-478f-bb36-d70b66330f79"
-      }
-    ]
+    "heightLimit": "140~180cm"
   }
 }
 
 ###
 
-DELETE http://localhost:8080/v1/themeparks/1bce86d2-1afb-4e80-994e-a1fb4d92aaf9
+DELETE http://localhost:8080/v1/themeparks/45fbc880-83be-45d0-868f-552ab124b708
 Authorization: {{accessToken}}

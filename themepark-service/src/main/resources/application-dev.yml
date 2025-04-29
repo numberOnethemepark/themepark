@@ -37,6 +37,11 @@ management:
     web:
       exposure:
         include: 'prometheus'
-
+  tracing:
+    sampling:
+      probability: 1.0
+    enabled: true
+    zipkin:
+      endpoint: http://localhost:9411/api/v2/spans
 server:
   port: 8005

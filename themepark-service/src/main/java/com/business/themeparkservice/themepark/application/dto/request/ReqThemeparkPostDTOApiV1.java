@@ -72,7 +72,6 @@ public class ReqThemeparkPostDTOApiV1 {
         @Builder
         public static class Hashtag{
             private UUID hashtagId;
-            private String name;
         }
     }
 }

@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface OrderRepository {
     void save(OrderEntity orderEntity);
+    void delete(OrderEntity orderEntity);
 
     OrderEntity findById(UUID orderId);
 

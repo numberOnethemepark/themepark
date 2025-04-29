@@ -1,108 +1,86 @@
 package com.sparta.orderservice.order.application.service.v3;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.themepark.common.application.dto.ResDTO;
+
+import com.github.themepark.common.application.exception.CustomException;
 import com.sparta.orderservice.order.application.dto.reponse.ResProductGetByIdDTOApi;
+import com.sparta.orderservice.order.application.exception.OrderExceptionCode;
+import com.sparta.orderservice.order.application.helper.OrderTransactionHelper;
 import com.sparta.orderservice.order.application.usecase.v3.OrderUseCaseV3;
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.order.domain.repository.OrderRepository;
-import com.sparta.orderservice.order.infrastructure.feign.ProductFeignClientApi;
-import com.sparta.orderservice.order.infrastructure.kafka.service.KafkaService;
 import com.sparta.orderservice.order.presentation.dto.v3.request.ReqOrderPutDtoApiV3;
 import com.sparta.orderservice.order.presentation.dto.v3.request.ReqOrdersPostDtoApiV3;
 import com.sparta.orderservice.order.presentation.dto.v3.response.ResOrderPostDtoApiV3;
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.Objects;
 import java.util.UUID;
 
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceV3 implements OrderUseCaseV3 {
 
     private final OrderRepository orderRepository;
-    private final ProductFeignClientApi productFeignClientApi;
-    private final RedisTemplate<String, ResProductGetByIdDTOApi> productRedisTemplate;
-    private final KafkaService kafkaService;
-    private final ObjectMapper objectMapper;
+    private final OrderTransactionHelper orderTransactionHelper;
     private final Tracer tracer;
-
-    public OrderServiceV3(
-            OrderRepository orderRepository,
-            ProductFeignClientApi productFeignClientApi,
-            @Qualifier("ProductRedisTemplate") RedisTemplate<String, ResProductGetByIdDTOApi> productRedisTemplate,
-            KafkaService kafkaService,
-            ObjectMapper objectMapper,
-            Tracer tracer
-    ) {
-        this.orderRepository = orderRepository;
-        this.productFeignClientApi = productFeignClientApi;
-        this.productRedisTemplate = productRedisTemplate;
-        this.kafkaService = kafkaService;
-        this.objectMapper = objectMapper;
-        this.tracer = tracer;
-    }
 
     @Override
     public ResOrderPostDtoApiV3 processOrder(Long userId, ReqOrdersPostDtoApiV3 reqOrdersPostDtoApiV3){
         String productId = reqOrdersPostDtoApiV3.getOrder().getProductId().toString();
         String redisProductKey = "stock : " + productId;
-
-        // 🔥 Redis 조회 + 재고관리 Span 시작
-        Span redisSpan = tracer.nextSpan().name("Redis 처리").start();
-        ResProductGetByIdDTOApi product = null;
-        try (Tracer.SpanInScope ws = tracer.withSpan(redisSpan)) {
-            Object raw = productRedisTemplate.opsForValue().get(redisProductKey);
-            if (raw != null) {
-                product = objectMapper.convertValue(raw, ResProductGetByIdDTOApi.class);
-            }
-        } finally {
-            redisSpan.end();
-        }
-
-        // 상품 타입 확인
+        ResProductGetByIdDTOApi product;
+        OrderEntity orderEntity = null;
         boolean isEventProduct = false;
-        if (product == null) {
-            // Redis 캐시 미스 → Product 서비스 호출 후 캐싱
-            ResDTO<ResProductGetByIdDTOApi> resProduct = productFeignClientApi.getBy(reqOrdersPostDtoApiV3.getOrder().getProductId());
-            product = resProduct.getData();
-            productRedisTemplate.opsForValue().set(redisProductKey, product, Duration.ofMinutes(10)); // TTL 10분 예시
-        }
-        isEventProduct = "EVENT".equals(product.getProduct().getProductType());
 
-        // 🔥 EVENT 상품이면 재고 확인 & Kafka 전송
-        if (isEventProduct) {
-            productFeignClientApi.getStockById(reqOrdersPostDtoApiV3.getOrder().getProductId());
-            kafkaService.sendOrderAsync("stock-decrease-topic", productId);
-        }
+        Span rootSpan = tracer.nextSpan().name("Order 전체 프로세스").start();
+        try (Tracer.SpanInScope ws = tracer.withSpan(rootSpan)) {
 
-        // 🔥 DB 저장 Span 시작
-        Span dbSpan = tracer.nextSpan().name("DB 저장").start();
-        OrderEntity orderEntity;
-        try (Tracer.SpanInScope ws = tracer.withSpan(dbSpan)) {
-            orderEntity = OrderEntity.createOrder(
-                    reqOrdersPostDtoApiV3.getOrder().getProductId(),
-                    reqOrdersPostDtoApiV3.getOrder().getAmount(),
-                    reqOrdersPostDtoApiV3.getOrder().getSlackId(),
-                    userId
-            );
-            orderRepository.save(orderEntity);
+            // transaction 1 - Redis 조회
+            try (Tracer.SpanInScope redisScope = tracer.withSpan(tracer.nextSpan().name("Redis 조회").start())) {
+                product = orderTransactionHelper.getRedis(redisProductKey);
+            }
+
+            // transaction 2 - 상품 타입 확인 및 Redis 저장
+            try (Tracer.SpanInScope checkProductScope = tracer.withSpan(tracer.nextSpan().name("상품 타입 확인 + redis 저장").start())) {
+                isEventProduct = orderTransactionHelper.checkProduct(product, reqOrdersPostDtoApiV3, redisProductKey);
+            }
+
+            // transaction 3 - EVENT 상품 재고 확인 및 Kafka 전송
+            try (Tracer.SpanInScope eventKafkaScope = tracer.withSpan(tracer.nextSpan().name("EVENT 상품이면 재고 확인 + Kafka 전송").start())) {
+                orderTransactionHelper.decreaseStock(reqOrdersPostDtoApiV3, productId, isEventProduct);
+            }
+
+            // transaction 4 - DB 저장
+            try (Tracer.SpanInScope dbScope = tracer.withSpan(tracer.nextSpan().name("DB 저장").start())) {
+                orderEntity = orderTransactionHelper.createOrder(userId, reqOrdersPostDtoApiV3);
+            }
+
+            return ResOrderPostDtoApiV3.of(orderEntity);
+
+        } catch (Exception ex) {
+            Objects.requireNonNull(tracer.currentSpan()).tag("error", ex.getMessage());
+
+            // 보상 트랜잭션 시작 (역순 실행)
+            if (orderEntity != null) {
+                orderTransactionHelper.cancelOrder(orderEntity); // DB 롤백
+            }
+            if (isEventProduct) {
+                orderTransactionHelper.increaseStock(productId); // 재고 복원
+            }
+
+            throw new CustomException(OrderExceptionCode.ORDER_CANCEL);
         } finally {
-            dbSpan.end();
+            rootSpan.end();
         }
-
-        return ResOrderPostDtoApiV3.of(orderEntity);
     }
-
 
     @Override
     public void updateBy(ReqOrderPutDtoApiV3 reqOrderPutDtoApiV3, UUID orderId) {
@@ -120,5 +98,4 @@ public class OrderServiceV3 implements OrderUseCaseV3 {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return orderRepository.findByUserId(userId, pageable);
     }
-
 }

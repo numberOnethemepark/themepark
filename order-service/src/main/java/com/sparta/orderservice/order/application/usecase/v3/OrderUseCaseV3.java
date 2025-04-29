@@ -20,6 +20,5 @@ public interface OrderUseCaseV3 {
     @Transactional
     Page<OrderEntity> getOrdersByUserId(Long userId, int page, int size);
 
-    @Transactional
     ResOrderPostDtoApiV3 processOrder(Long userId, ReqOrdersPostDtoApiV3 reqOrdersPostDtoApiV3);
 }

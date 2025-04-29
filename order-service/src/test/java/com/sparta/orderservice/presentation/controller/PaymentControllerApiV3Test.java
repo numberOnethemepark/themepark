@@ -47,7 +47,7 @@ import java.util.UUID;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @ActiveProfiles("test")
-public class PaymentControllerApiV1Test {
+public class PaymentControllerApiV3Test {
 
     @Autowired
     private MockMvc mockMvc;

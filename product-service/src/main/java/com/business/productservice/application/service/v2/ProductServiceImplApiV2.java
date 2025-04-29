@@ -3,6 +3,7 @@ package com.business.productservice.application.service.v2;
 import com.business.productservice.application.dto.v2.request.ReqProductPostDTOApiV2;
 import com.business.productservice.application.dto.v2.request.ReqProductPutDTOApiV2;
 import com.business.productservice.application.dto.v2.response.*;
+import com.business.productservice.application.dto.v3.response.ResStockGetByIdDTOApiV3;
 import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.domain.product.entity.StockEntity;
@@ -152,8 +153,21 @@ public class ProductServiceImplApiV2 implements ProductServiceApiV2 {
 
     @Override
     public ResStockGetByIdDTOApiV2 getStockById(UUID id){
+        String cacheKey = "stock:" + id;
+
+        Integer cachedStock = (Integer) redisTemplate.opsForValue().get(cacheKey);
+        if (cachedStock != null) {
+            return ResStockGetByIdDTOApiV2.builder()
+                    .stock(ResStockGetByIdDTOApiV2.Stock.builder()
+                            .stock(cachedStock)
+                            .build())
+                    .build();
+        }
+
         StockEntity stockEntity = stockRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
+
+        redisTemplate.opsForValue().set(cacheKey, stockEntity.getStock());
         return ResStockGetByIdDTOApiV2.of(stockEntity);
     }
 

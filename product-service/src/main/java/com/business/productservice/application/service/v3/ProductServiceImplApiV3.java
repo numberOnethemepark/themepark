@@ -153,8 +153,21 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
 
     @Override
     public ResStockGetByIdDTOApiV3 getStockById(UUID id){
+        String cacheKey = "stock:" + id;
+
+        Integer cachedStock = (Integer) redisTemplate.opsForValue().get(cacheKey);
+        if (cachedStock != null) {
+            return ResStockGetByIdDTOApiV3.builder()
+                    .stock(ResStockGetByIdDTOApiV3.Stock.builder()
+                            .stock(cachedStock)
+                            .build())
+                    .build();
+        }
+
         StockEntity stockEntity = stockRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ProductExceptionCode.PRODUCT_NOT_FOUND));
+
+        redisTemplate.opsForValue().set(cacheKey, stockEntity.getStock());
         return ResStockGetByIdDTOApiV3.of(stockEntity);
     }
 

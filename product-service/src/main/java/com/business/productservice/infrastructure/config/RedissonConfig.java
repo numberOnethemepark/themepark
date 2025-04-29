@@ -1,4 +1,4 @@
-package com.business.productservice.config;
+package com.business.productservice.infrastructure.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

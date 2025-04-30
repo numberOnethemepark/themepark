@@ -43,7 +43,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 @AutoConfigureRestDocs
 @Transactional
 @ActiveProfiles("test")
-public class OrderControllerApiV1Test {
+public class OrderControllerApiV3Test {
 
     @Autowired
     private MockMvc mockMvc;
@@ -56,8 +56,6 @@ public class OrderControllerApiV1Test {
 
     private OrderEntity orderEntity;
     private ResDTO<ResProductGetByIdDTOApi> response;
-
-
 
     @MockitoBean
     private ProductFeignClientApi productFeignClientApi;
@@ -103,7 +101,7 @@ public class OrderControllerApiV1Test {
 
         // when & then
         mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/v1/orders/{id}", orderId)
+                RestDocumentationRequestBuilders.get("/v3/orders/{id}", orderId)
         )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -113,7 +111,7 @@ public class OrderControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Order v1")
+                                        .tag("Order v3")
                                         .pathParameters(
                                                 parameterWithName("id").type(SimpleType.STRING).description("주문 ID")
                                         )
@@ -129,7 +127,7 @@ public class OrderControllerApiV1Test {
         Long userId = orderEntity.getUserId();
 
         mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/v1/orders")
+                RestDocumentationRequestBuilders.get("/v3/orders")
                         .param("userId", userId.toString())
                         .param("size", String.valueOf(10))
                         .param("page", String.valueOf(0))
@@ -142,7 +140,7 @@ public class OrderControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Order v1")
+                                        .tag("Order v3")
                                         .queryParameters(
                                                 parameterWithName("userId").type(SimpleType.STRING).description("사용자 ID (UUID 형식)"),
                                                 parameterWithName("page").type(SimpleType.NUMBER).description("페이지 번호 (0부터 시작)"),
@@ -172,7 +170,7 @@ public class OrderControllerApiV1Test {
         when(productFeignClientApi.getBy(any())).thenReturn(response);
 
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/v1/orders")
+                RestDocumentationRequestBuilders.post("/v3/orders")
                         .header("X-User-Id", 1L)
                         .content(reqDtoJson)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -184,9 +182,9 @@ public class OrderControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Order v1")
+                                        .tag("Order v3")
                                         .requestFields(
-                                                fieldWithPath("order.slackId").type(JsonFieldType.STRING).description("주문자 슬랙 ID"),
+                                                fieldWithPath("order.slackId").type(JsonFieldType.STRING).description("슬랙 ID"),
                                                 fieldWithPath("order.amount").type(JsonFieldType.NUMBER).description("주문 금액"),
                                                 fieldWithPath("order.productId").type(JsonFieldType.STRING).description("상품 ID")
                                         )
@@ -202,8 +200,8 @@ public class OrderControllerApiV1Test {
         // given
         ReqOrderPutDtoApiV1 reqOrderPutDtoApiV1 = ReqOrderPutDtoApiV1.builder()
                 .order(ReqOrderPutDtoApiV1.Order.builder()
-                        .slackId("1234")
                         .paymentStatus(PaymentStatus.NOT_PAID)
+                        .slackId("TestSlackId")
                         .build())
                 .build();
 
@@ -212,7 +210,7 @@ public class OrderControllerApiV1Test {
 
         // when & then
         mockMvc.perform(
-                RestDocumentationRequestBuilders.put("/v1/orders/{id}", orderId)
+                RestDocumentationRequestBuilders.put("/v3/orders/{id}", orderId)
                         .content(reqDtoJson)
                         .contentType(MediaType.APPLICATION_JSON)
         )
@@ -223,9 +221,9 @@ public class OrderControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Order v1")
+                                        .tag("Order v3")
                                         .requestFields(
-                                                fieldWithPath("order.slackId").type(JsonFieldType.STRING).description("주문자 슬랙 ID"),
+                                                fieldWithPath("order.slackId").type(JsonFieldType.STRING).description("슬랙 ID"),
                                                 fieldWithPath("order.paymentStatus").type(JsonFieldType.STRING).description("결제상태"),
                                                 fieldWithPath("order.paymentId")
                                                         .type(JsonFieldType.STRING)
@@ -242,7 +240,7 @@ public class OrderControllerApiV1Test {
     public void testOrderDeleteSuccess() throws Exception {
 
         mockMvc.perform(
-                RestDocumentationRequestBuilders.delete("/v1/orders/{id}", UUID.randomUUID())
+                RestDocumentationRequestBuilders.delete("/v3/orders/{id}", UUID.randomUUID())
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -251,7 +249,7 @@ public class OrderControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("Order v1")
+                                        .tag("Order v3")
                                         .pathParameters(
                                                 parameterWithName("id").type(SimpleType.STRING).description("주문 ID")
                                         )

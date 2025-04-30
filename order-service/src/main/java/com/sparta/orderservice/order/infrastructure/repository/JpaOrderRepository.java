@@ -29,4 +29,9 @@ public class JpaOrderRepository implements OrderRepository {
 
     @Override
     public Page<OrderEntity> findByUserId(Long userId, Pageable pageable){return jpaOrderRepository.findByUserId(userId, pageable);}
+
+    @Override
+    public void delete(OrderEntity orderEntity) {
+        jpaOrderRepository.delete(orderEntity);
+    }
 }

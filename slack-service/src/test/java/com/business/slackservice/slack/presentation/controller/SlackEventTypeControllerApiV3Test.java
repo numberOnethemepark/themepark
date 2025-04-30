@@ -6,8 +6,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
-import com.business.slackservice.application.dto.v1.request.slackEventType.ReqSlackEventTypePostDTOApiV1;
-import com.business.slackservice.application.dto.v1.request.slackEventType.ReqSlackEventTypePutDTOApiV1;
+import com.business.slackservice.application.dto.v3.request.slackEventType.ReqSlackEventTypePostDTOApiV3;
+import com.business.slackservice.application.dto.v3.request.slackEventType.ReqSlackEventTypePutDTOApiV3;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("dev")
-public class SlackEventTypeControllerApiV1Test {
+public class SlackEventTypeControllerApiV3Test {
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,11 +38,13 @@ public class SlackEventTypeControllerApiV1Test {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private final UUID slackEventTypeId = UUID.fromString("3abeba8a-8eba-4819-90a4-5ac21cc27382");
+
     @Test
     public void testSlackEventTypePostSuccess() throws Exception {
-        ReqSlackEventTypePostDTOApiV1 req = ReqSlackEventTypePostDTOApiV1.builder()
+        ReqSlackEventTypePostDTOApiV3 req = ReqSlackEventTypePostDTOApiV3.builder()
             .slackEventType(
-                ReqSlackEventTypePostDTOApiV1.SlackEventType.builder()
+                ReqSlackEventTypePostDTOApiV3.SlackEventType.builder()
                     .name("TEST_EVENT_TYPE")
                     .build()
             )
@@ -61,7 +63,7 @@ public class SlackEventTypeControllerApiV1Test {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder()
-                        .tag("SLACK EVENT TYPE v1")
+                        .tag("SLACK EVENT TYPE v3")
                         .build()
                     )
                 )
@@ -70,10 +72,8 @@ public class SlackEventTypeControllerApiV1Test {
 
     @Test
     public void testSlackEventTypeGetByIdSuccess() throws Exception {
-        UUID id = UUID.randomUUID();
-
         mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/v1/slack-event-types/{id}", id)
+                RestDocumentationRequestBuilders.get("/v1/slack-event-types/{id}", slackEventTypeId)
             )
             .andExpectAll(
                 MockMvcResultMatchers.status().isOk()
@@ -83,7 +83,7 @@ public class SlackEventTypeControllerApiV1Test {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder()
-                        .tag("SLACK EVENT TYPE v1")
+                        .tag("SLACK EVENT TYPE v3")
                         .pathParameters(
                             parameterWithName("id").type(SimpleType.STRING)
                                 .description("슬랙 이벤트 타입 ID")
@@ -107,7 +107,7 @@ public class SlackEventTypeControllerApiV1Test {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder()
-                        .tag("SLACK EVENT TYPE v1")
+                        .tag("SLACK EVENT TYPE v3")
                         .build()
                     )
                 )
@@ -116,17 +116,16 @@ public class SlackEventTypeControllerApiV1Test {
 
     @Test
     public void testSlackEventTypePutByIdSuccess() throws Exception {
-        UUID id = UUID.randomUUID();
-        ReqSlackEventTypePutDTOApiV1 req = ReqSlackEventTypePutDTOApiV1.builder()
+        ReqSlackEventTypePutDTOApiV3 req = ReqSlackEventTypePutDTOApiV3.builder()
             .slackEventType(
-                ReqSlackEventTypePutDTOApiV1.SlackEventType.builder()
+                ReqSlackEventTypePutDTOApiV3.SlackEventType.builder()
                     .name("TEST_EVENT_TYPE_UPDATE")
                     .build()
             )
             .build();
 
         mockMvc.perform(
-                RestDocumentationRequestBuilders.put("/v1/slack-event-types/{id}", id)
+                RestDocumentationRequestBuilders.put("/v1/slack-event-types/{id}", slackEventTypeId)
                     .content(dtoToJson(req))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -138,7 +137,7 @@ public class SlackEventTypeControllerApiV1Test {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder()
-                        .tag("SLACK EVENT TYPE v1")
+                        .tag("SLACK EVENT TYPE v3")
                         .pathParameters(
                             parameterWithName("id").type(SimpleType.STRING)
                                 .description("슬랙 이벤트 타입 ID")
@@ -151,10 +150,8 @@ public class SlackEventTypeControllerApiV1Test {
 
     @Test
     public void testSlackEventTypeDeleteByIdSuccess() throws Exception {
-        UUID id = UUID.randomUUID();
-
         mockMvc.perform(
-                RestDocumentationRequestBuilders.delete("/v1/slack-event-types/{id}", id)
+                RestDocumentationRequestBuilders.delete("/v1/slack-event-types/{id}", slackEventTypeId)
                     .header("X-User-Id", 1L)
             )
             .andExpectAll(
@@ -165,7 +162,7 @@ public class SlackEventTypeControllerApiV1Test {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder()
-                        .tag("SLACK EVENT TYPE v1")
+                        .tag("SLACK EVENT TYPE v3")
                         .pathParameters(
                             parameterWithName("id").type(SimpleType.STRING)
                                 .description("슬랙 이벤트 타입 ID")

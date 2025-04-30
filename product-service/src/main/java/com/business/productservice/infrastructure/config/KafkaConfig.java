@@ -52,11 +52,26 @@ public class KafkaConfig {
                 new ErrorHandlingDeserializer<>(new JsonDeserializer<>(ReqStockDecreaseDTOApiV3.class))
         );
     }
+    @Bean
+    public ConsumerFactory<String, String> stringConsumerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088");
+        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+        configProps.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
+        configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, StringDeserializer.class);
+
+        return new DefaultKafkaConsumerFactory<>(
+                configProps,
+                new StringDeserializer(),
+                new ErrorHandlingDeserializer<>(new StringDeserializer())
+        );
+    }
 
     // DLQ용 KafkaTemplate
     @Bean
-    public KafkaTemplate<String, String> dlqKafkaTemplate() {
-        ProducerFactory<String, String> factory = new DefaultKafkaProducerFactory<>(Map.of(
+    public KafkaTemplate<Object, Object> dlqKafkaTemplate() {
+        ProducerFactory<Object, Object> factory = new DefaultKafkaProducerFactory<>(Map.of(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088",
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class
@@ -66,7 +81,7 @@ public class KafkaConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ReqStockDecreaseDTOApiV3> kafkaListenerContainerFactory(
-            KafkaTemplate<String, String> dlqKafkaTemplate
+            KafkaTemplate<Object, Object> dlqKafkaTemplate
     ) {
         ConcurrentKafkaListenerContainerFactory<String, ReqStockDecreaseDTOApiV3> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
@@ -76,6 +91,29 @@ public class KafkaConfig {
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
 
         // 2️. 재시도 + DLQ 설정
+        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(dlqKafkaTemplate);
+
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
+                recoverer,
+                new FixedBackOff(1000L, 3L) // 1초 간격으로 3번 재시도
+        );
+
+        factory.setCommonErrorHandler(errorHandler);
+
+        return factory;
+    }
+
+
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> stringKafkaListenerContainerFactory(
+            KafkaTemplate<Object, Object> dlqKafkaTemplate
+    ) {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+
+        factory.setConsumerFactory(stringConsumerFactory());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(dlqKafkaTemplate);
 
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(

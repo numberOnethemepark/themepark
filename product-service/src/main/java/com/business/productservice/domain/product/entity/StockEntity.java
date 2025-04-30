@@ -1,11 +1,14 @@
 package com.business.productservice.domain.product.entity;
 
+import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.vo.ProductType;
+import com.github.themepark.common.application.exception.CustomException;
 import com.github.themepark.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
 
@@ -14,6 +17,7 @@ import java.util.UUID;
 @Table(name = "p_product_stocks")
 @AllArgsConstructor
 @NoArgsConstructor
+@Slf4j
 public class StockEntity extends BaseEntity {
 
     @Id
@@ -53,6 +57,11 @@ public class StockEntity extends BaseEntity {
     public void restore(){
         if(!product.getProductType().equals(ProductType.EVENT)){
             return;
+        }
+        if (this.stock >= product.getLimitQuantity()) {
+            log.error("재고 복구 수량 초과 요청- productId: {}, 현재 재고: {}, 제한 수량: {}",
+                    product.getId(), this.stock, product.getLimitQuantity());
+            throw new CustomException(ProductExceptionCode.PRODUCT_STOCK_RESTORE_LIMIT_EXCEEDED);
         }
         this.stock++;
     }

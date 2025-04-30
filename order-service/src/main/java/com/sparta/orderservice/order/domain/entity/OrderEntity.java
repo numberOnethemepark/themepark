@@ -46,7 +46,7 @@ public class OrderEntity extends BaseEntity {
         orderEntity.productId = productId;
         orderEntity.amount = amount;
         orderEntity.slackId = slackId;
-        orderEntity.paymentStatus = PaymentStatus.NOT_PAID;
+        orderEntity.paymentStatus = PaymentStatus.WAITING;
         orderEntity.paymentId = null;
 
         return orderEntity;

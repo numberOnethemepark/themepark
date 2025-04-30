@@ -85,7 +85,7 @@ public class OrderServiceV3 implements OrderUseCaseV3 {
                 orderTransactionHelper.cancelOrder(orderEntity); // DB 롤백
             }
             if (isEventProduct) {
-                orderTransactionHelper.increaseStock(productId); // 재고 복원
+                orderTransactionHelper.restoreStock(productId); // 재고 복원
             }
 
             throw new CustomException(OrderExceptionCode.ORDER_CANCEL);

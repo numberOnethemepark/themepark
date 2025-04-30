@@ -87,7 +87,7 @@ public class OrderTransactionHelper {
 
     @Transactional
     public void increaseStock(String productId){
-        kafkaService.sendOrderAsync("stock-increase-topic", productId);
+        kafkaService.sendRestoreAsync("stock-increase-topic", productId);
     }
 
     public void cancelOrder(OrderEntity orderEntity) {

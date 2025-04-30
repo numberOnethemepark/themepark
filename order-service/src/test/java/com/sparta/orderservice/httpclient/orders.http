@@ -1,12 +1,12 @@
 ###
-POST http://localhost:8080/v1/orders
+POST http://localhost:8080/v3/orders
 Content-Type: application/json
 Authorization: {{accessToken}}
 
 {
   "order" : {
     "slackId" : "1234",
-    "productId" : "e97ac418-79d5-4282-8fde-c072b2d431e6",
+    "productId" : "72106dbc-b8d6-4dbf-8deb-6d4ce7b7feda",
     "amount" : 5000
   }
 }

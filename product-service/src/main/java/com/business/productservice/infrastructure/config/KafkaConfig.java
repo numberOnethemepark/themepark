@@ -53,21 +53,6 @@ public class KafkaConfig {
         );
     }
 
-//    @Bean
-//    public ConsumerFactory<String, String> consumerFactory() {
-//        Map<String, Object> configProps = new HashMap<>();
-//        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088");
-//        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
-//        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
-//        configProps.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
-//        configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, StringDeserializer.class);
-//        return new DefaultKafkaConsumerFactory<>(
-//                configProps,
-//                new StringDeserializer(),
-//                new ErrorHandlingDeserializer<>(new JsonDeserializer<>(ReqStockDecreaseDTOApiV3.class))
-//        );
-//    }
-
     // DLQ용 KafkaTemplate
     @Bean
     public KafkaTemplate<String, String> dlqKafkaTemplate() {

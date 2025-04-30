@@ -28,6 +28,15 @@ public class KafkaConsumeConfig {
         configProps.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
         configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
 
+        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
+
+        JsonDeserializer<ResProductKafkaDto> deserializer = new JsonDeserializer<>(ResProductKafkaDto.class);
+        deserializer.setRemoveTypeHeaders(true);
+        deserializer.setUseTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+
+
         return new DefaultKafkaConsumerFactory<>(
                 configProps,
                 new StringDeserializer(),

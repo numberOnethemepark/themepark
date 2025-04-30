@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResProductKafkaDto {
-
     private String productId;
     private String orderId;
     private String reason;

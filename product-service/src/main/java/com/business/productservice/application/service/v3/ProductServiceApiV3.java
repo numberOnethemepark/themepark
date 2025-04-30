@@ -20,7 +20,7 @@ public interface ProductServiceApiV3 {
 
     void deleteBy(UUID id);
 
-    void postDecreaseById(UUID id);
+    void postDecreaseById(UUID id, String orderId);
 
     void postRestoreById(UUID id);
 

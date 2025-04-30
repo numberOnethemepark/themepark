@@ -6,6 +6,7 @@ import com.business.productservice.application.dto.v3.response.*;
 import com.business.productservice.application.service.v3.ProductServiceApiV3;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.infrastructure.kafka.TestKafkaProducer;
+import com.business.productservice.infrastructure.kafka.dto.ReqStockDecreaseDTOApiV3;
 import com.github.themepark.common.application.aop.annotation.ApiPermission;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
@@ -111,11 +112,11 @@ public class ProductControllerApiV3 {
                 );
         }
 
-        @PostMapping("/internal/{id}/stocks-decrease")
+        @PostMapping("/internal/stocks-decrease")
         public ResponseEntity<ResDTO<Object>> postDecreaseById(
-                @PathVariable("id") UUID id
+                @RequestBody ReqStockDecreaseDTOApiV3 dto
         ){
-                productServiceApiV3.postDecreaseById(id);
+                productServiceApiV3.postDecreaseById(dto.getProductId(), dto.getOrderId());
                 return new ResponseEntity<>(
                         ResDTO.builder()
                                 .code("0")

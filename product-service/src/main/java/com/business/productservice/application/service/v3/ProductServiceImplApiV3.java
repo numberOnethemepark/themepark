@@ -7,10 +7,14 @@ import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.domain.product.entity.StockEntity;
 import com.business.productservice.infrastructure.feign.SlackFeignClientApiV1;
+import com.business.productservice.infrastructure.kafka.OrderKafkaProducerService;
 import com.business.productservice.infrastructure.kafka.SlackKafkaProducerService;
+import com.business.productservice.infrastructure.kafka.dto.ReqStockDecreaseFailDTOApiV3;
+import com.business.productservice.infrastructure.kafka.dto.ReqStockDecreaseSuccessDTOApiV3;
 import com.business.productservice.infrastructure.persistence.product.ProductJpaRepository;
 import com.business.productservice.infrastructure.persistence.product.StockJpaRepository;
 import com.github.themepark.common.application.exception.CustomException;
+import com.github.themepark.common.application.exception.GlobalExceptionCode;
 import com.querydsl.core.types.Predicate;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +44,7 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
     private final RedissonClient redissonClient;
     private final RedisTemplate<String, Object> redisTemplate;
     private final SlackKafkaProducerService slackKafkaProducerService;
+    private final OrderKafkaProducerService orderKafkaProducerService;
 
     @Override
     public ResProductPostDTOApiV3 postBy(ReqProductPostDTOApiV3 reqDto) {
@@ -98,7 +103,7 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
 
     @Override
     @Transactional
-    public void postDecreaseById(UUID id) {
+    public void postDecreaseById(UUID id, String orderId) {
         String lockKey = "lock:stock:"+id;
         RLock lock = redissonClient.getLock(lockKey);
 
@@ -129,13 +134,31 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
             if (stockEntity.getStock() == 0) {
                 slackKafkaProducerService.sendStockSoldOutSlack(stockEntity);
             }
-        } catch(InterruptedException e){
+        } catch (CustomException e) {
+            orderKafkaProducerService.sendStockDecreaseFailMessage(
+                    new ReqStockDecreaseFailDTOApiV3(orderId, id.toString(), e.getCode())
+            );
+            throw e;
+
+        } catch (InterruptedException e) {
+            orderKafkaProducerService.sendStockDecreaseFailMessage(
+                    new ReqStockDecreaseFailDTOApiV3(orderId, id.toString(), ProductExceptionCode.LOCK_INTERRUPTED.getCode())
+            );
             throw new CustomException(ProductExceptionCode.LOCK_INTERRUPTED);
+
+        } catch (Exception e) {
+            orderKafkaProducerService.sendStockDecreaseFailMessage(
+                    new ReqStockDecreaseFailDTOApiV3(orderId, id.toString(), GlobalExceptionCode.INTERNAL_ERROR.getCode())
+            );
+            throw e;
         } finally{
             if (isLocked) {
                 TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
                     @Override
                     public void afterCommit() {
+                        orderKafkaProducerService.sendStockDecreaseSuccessMessage(
+                                new ReqStockDecreaseSuccessDTOApiV3(orderId, id.toString())
+                        );
                         lock.unlock();
                     }
                 });

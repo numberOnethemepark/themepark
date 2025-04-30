@@ -88,6 +88,10 @@ dependencies {
     // prometheus
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
+    //zipkin
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
 }
 
 // 컴파일 시 빌드 폴더를 지웁니다.

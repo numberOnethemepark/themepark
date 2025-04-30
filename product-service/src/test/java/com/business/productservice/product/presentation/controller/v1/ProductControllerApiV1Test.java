@@ -1,11 +1,9 @@
-package com.business.productservice.product.presentation.controller;
+package com.business.productservice.product.presentation.controller.v1;
 
 import com.business.productservice.application.dto.v1.request.ReqProductPostDTOApiV1;
 import com.business.productservice.application.dto.v1.request.ReqProductPutDTOApiV1;
 import com.business.productservice.application.dto.v1.request.ReqStockDecreasePostDTOApiV1;
 import com.business.productservice.application.dto.v1.request.ReqStockRestorePostDTOApiV1;
-import com.business.productservice.application.dto.v1.response.ResProductGetByIdDTOApiV1;
-import com.business.productservice.application.service.v1.ProductServiceApiV1;
 import com.business.productservice.domain.product.vo.ProductStatus;
 import com.business.productservice.domain.product.vo.ProductType;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
@@ -17,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,7 +27,6 @@ import java.util.UUID;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 
 @SpringBootTest
@@ -45,10 +41,6 @@ public class ProductControllerApiV1Test {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @SuppressWarnings("removal")
-    @MockBean
-    private ProductServiceApiV1 productService;
 
     @Test
     public void testProductPostSuccess() throws Exception {
@@ -89,28 +81,8 @@ public class ProductControllerApiV1Test {
 
     @Test
     public void testProductGetByIdSuccess() throws Exception {
-        UUID testId = UUID.randomUUID();
-
-        ResProductGetByIdDTOApiV1 responseDto = ResProductGetByIdDTOApiV1.builder()
-                .product(
-                        ResProductGetByIdDTOApiV1.Product.builder()
-                                .name("테스트 상품")
-                                .description("테스트 설명")
-                                .productType(ProductType.EVENT)
-                                .price(15000)
-                                .limitQuantity(30)
-                                .eventStartAt(LocalDateTime.now())
-                                .eventEndAt(LocalDateTime.now().plusDays(7))
-                                .productStatus(ProductStatus.DRAFT)
-                                .build()
-                )
-                .build();
-
-        // Mocking: 해당 ID로 호출 시 응답 DTO 리턴
-        when(productService.getBy(testId)).thenReturn(responseDto);
-
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/v1/products/{id}", testId)
+                        RestDocumentationRequestBuilders.get("/v1/products/{id}", "476c2d9e-cb99-49a3-9fb8-721096683d04")
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk()
@@ -282,6 +254,32 @@ public class ProductControllerApiV1Test {
                                 )
                         );
 
+    }
+
+    @Test
+    public void testStockGetByIdSuccess() throws Exception {
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.get("/v1/products/{id}/stock", "476c2d9e-cb99-49a3-9fb8-721096683d04")
+                                .header("X-User-Role","MASTER")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk()
+                )
+                .andDo(
+                        MockMvcRestDocumentationWrapper.document("상품재고 개별 조회 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("Product v1")
+                                        .pathParameters(
+                                                parameterWithName("id").type(SimpleType.STRING).description("상품 ID")
+                                        )
+                                        .build()
+                                )
+                        )
+                );
     }
 
     private String dtoToJson(Object dto) throws Exception {

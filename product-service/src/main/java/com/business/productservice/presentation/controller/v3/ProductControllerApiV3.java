@@ -5,6 +5,7 @@ import com.business.productservice.application.dto.v3.request.ReqProductPutDTOAp
 import com.business.productservice.application.dto.v3.response.*;
 import com.business.productservice.application.service.v3.ProductServiceApiV3;
 import com.business.productservice.domain.product.entity.ProductEntity;
+import com.business.productservice.infrastructure.kafka.TestKafkaProducer;
 import com.github.themepark.common.application.aop.annotation.ApiPermission;
 import com.github.themepark.common.application.dto.ResDTO;
 import com.querydsl.core.types.Predicate;
@@ -27,6 +28,7 @@ import java.util.UUID;
 public class ProductControllerApiV3 {
 
         private final ProductServiceApiV3 productServiceApiV3;
+        private final TestKafkaProducer testKafkaProducer;
 
         @ApiPermission(roles = {ApiPermission.Role.MASTER, ApiPermission.Role.MANAGER})
         @PostMapping
@@ -151,5 +153,12 @@ public class ProductControllerApiV3 {
                                 .build(),
                         HttpStatus.OK
                 );
+        }
+
+        //카프카 테스트 용 (삭제 예정)
+        @PostMapping("/send-stock-decrease")
+        public String sendStockDecrease(@RequestParam("productId") UUID productId) {
+                testKafkaProducer.sendStockDecreaseTest(productId);
+                return "Stock decrease test message sent!";
         }
 }

@@ -6,6 +6,7 @@ import com.business.productservice.application.dto.v3.request.ReqStockDecreasePo
 import com.business.productservice.application.dto.v3.request.ReqStockRestorePostDTOApiV3;
 import com.business.productservice.domain.product.vo.ProductStatus;
 import com.business.productservice.domain.product.vo.ProductType;
+import com.business.productservice.infrastructure.kafka.dto.ReqStockDecreaseDTOApiV3;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
@@ -28,6 +29,7 @@ import java.util.UUID;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 @SpringBootTest
 @AutoConfigureRestDocs
@@ -192,16 +194,21 @@ public class ProductControllerApiV3Test {
     @Test
     public void testStockDecreasePostSuccess() throws Exception {
 
-        ReqStockDecreasePostDTOApiV3 dto = ReqStockDecreasePostDTOApiV3.builder()
-                .stock(
-                        ReqStockDecreasePostDTOApiV3.Stock.builder()
-                                .stockDecreaseAmount(3)
-                                .build()
-                )
-                .build();
+        // 테스트용 UUID 값 (문자열로 보낼 거니까 toString() 사용)
+        String productId = UUID.randomUUID().toString();
+        String orderId = UUID.randomUUID().toString();
+        ReqStockDecreaseDTOApiV3 dto = new ReqStockDecreaseDTOApiV3(orderId, productId);
+
+//        ReqStockDecreasePostDTOApiV3 dto = ReqStockDecreasePostDTOApiV3.builder()
+//                .stock(
+//                        ReqStockDecreasePostDTOApiV3.Stock.builder()
+//                                .stockDecreaseAmount(3)
+//                                .build()
+//                )
+//                .build();
 
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.post("/v3/products/internal/{id}/stocks-decrease", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.post("/v3/products/internal/stocks-decrease")
                                 .header("X-User-Role","MASTER")
                                 .content(dtoToJson(dto))
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -215,8 +222,9 @@ public class ProductControllerApiV3Test {
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
                                         .tag("Product v3")
-                                        .pathParameters(
-                                                parameterWithName("id").type(SimpleType.STRING).description("상품 ID")
+                                        .requestFields(
+                                                fieldWithPath("orderId").description("주문 ID"),
+                                                fieldWithPath("productId").description("상품 ID")
                                         )
                                         .build()
                                 )

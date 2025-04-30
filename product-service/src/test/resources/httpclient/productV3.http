@@ -98,6 +98,11 @@ Authorization: {{accessToken}}
 Content-Type: application/json
 
 ### 11. 카프카 테스트 엔드포인트 호출
-POST http://localhost:8080/v3/products/send-stock-decrease?productId=e61caf66-b5c0-4e23-bb9f-fd75821efc67
+POST http://localhost:8080/v3/products/internal/stocks-decrease
 Authorization: {{accessToken}}
 Content-Type: application/json
+
+{
+  "orderId": "555c2d9e-cb99-49a3-9fb8-721096683d04",
+  "productId": "e61caf66-b5c0-4e23-bb9f-fd75821efc67"
+}

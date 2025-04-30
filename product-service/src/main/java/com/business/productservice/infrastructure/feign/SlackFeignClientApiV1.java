@@ -1,6 +1,6 @@
 package com.business.productservice.infrastructure.feign;
 
-import com.business.productservice.infrastructure.dto.ReqToSlackPostDTOApiV1;
+import com.business.productservice.infrastructure.kafka.dto.ReqToSlackPostDTOApiV1;
 import com.github.themepark.common.infrastructure.config.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

@@ -3,6 +3,7 @@ package com.business.productservice.infrastructure.kafka;
 import com.business.productservice.application.service.v3.ProductServiceApiV3;
 import com.business.productservice.infrastructure.kafka.dto.ReqStockDecreaseDTOApiV3;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,13 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ProductKafkaConsumer {
 
     private final ProductServiceApiV3 productService;
 
-    @KafkaListener(topics = "stock-decrease-topic", groupId = "product-service-group")
+    @KafkaListener(topics = "stock-decrease-topic", groupId = "product-service-group",
+            containerFactory = "kafkaListenerContainerFactory")
     public void consumeStockDecrease(ReqStockDecreaseDTOApiV3 dto, Acknowledgment ack){
         try {
             // 의도적으로 에러 발생
@@ -31,10 +34,11 @@ public class ProductKafkaConsumer {
         }
     }
 
-    @KafkaListener(topics = "stock-restore-topic", groupId = "product-service-group")
+    @KafkaListener(topics = "stock-restore-topic", groupId = "product-service-group",
+            containerFactory = "stringKafkaListenerContainerFactory")
     public void consumeStockRestore(String productId, Acknowledgment ack){
         try {
-            UUID id = UUID.fromString(productId);
+            UUID id = UUID.fromString(productId.replace("\"", ""));
             productService.postRestoreById(id);
 
             ack.acknowledge();

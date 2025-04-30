@@ -6,7 +6,7 @@ import com.business.productservice.application.dto.v1.response.*;
 import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.domain.product.entity.StockEntity;
-import com.business.productservice.infrastructure.dto.ReqToSlackPostDTOApiV1;
+import com.business.productservice.infrastructure.kafka.dto.ReqToSlackPostDTOApiV1;
 import com.business.productservice.infrastructure.feign.SlackFeignClientApiV1;
 import com.business.productservice.infrastructure.persistence.product.ProductJpaRepository;
 import com.business.productservice.infrastructure.persistence.product.StockJpaRepository;

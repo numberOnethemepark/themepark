@@ -1,7 +1,7 @@
 package com.business.productservice.infrastructure.kafka;
 
 import com.business.productservice.domain.product.entity.StockEntity;
-import com.business.productservice.infrastructure.dto.ReqToSlackPostDTOApiV1;
+import com.business.productservice.infrastructure.kafka.dto.ReqToSlackPostDTOApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

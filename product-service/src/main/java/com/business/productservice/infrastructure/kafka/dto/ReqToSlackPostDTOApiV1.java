@@ -1,4 +1,4 @@
-package com.business.productservice.infrastructure.dto;
+package com.business.productservice.infrastructure.kafka.dto;
 
 import lombok.*;
 

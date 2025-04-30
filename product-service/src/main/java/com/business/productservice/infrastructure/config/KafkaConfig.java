@@ -12,6 +12,7 @@ import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.util.backoff.FixedBackOff;
@@ -41,14 +42,31 @@ public class KafkaConfig {
     public ConsumerFactory<String, ReqStockDecreaseDTOApiV3> consumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088");
-        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+        configProps.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
+        configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(
                 configProps,
                 new StringDeserializer(),
-                new JsonDeserializer<>(ReqStockDecreaseDTOApiV3.class)
+                new ErrorHandlingDeserializer<>(new JsonDeserializer<>(ReqStockDecreaseDTOApiV3.class))
         );
     }
+
+//    @Bean
+//    public ConsumerFactory<String, String> consumerFactory() {
+//        Map<String, Object> configProps = new HashMap<>();
+//        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088");
+//        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+//        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+//        configProps.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
+//        configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, StringDeserializer.class);
+//        return new DefaultKafkaConsumerFactory<>(
+//                configProps,
+//                new StringDeserializer(),
+//                new ErrorHandlingDeserializer<>(new JsonDeserializer<>(ReqStockDecreaseDTOApiV3.class))
+//        );
+//    }
 
     // DLQ용 KafkaTemplate
     @Bean

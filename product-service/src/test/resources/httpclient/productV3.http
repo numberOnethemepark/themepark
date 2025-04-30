@@ -51,7 +51,6 @@ Content-Type: application/json
 
 ### 4. 상품 단건 조회
 GET http://localhost:8080/v3/products/e61caf66-b5c0-4e23-bb9f-fd75821efc67
-Authorization: {{accessToken}}
 Content-Type: application/json
 
 ### 5. 상품 정보 수정
@@ -95,5 +94,10 @@ Content-Type: application/json
 
 ### 10. 상품 재고 조회
 GET http://localhost:8080/v3/products/e61caf66-b5c0-4e23-bb9f-fd75821efc67/stock
+Authorization: {{accessToken}}
+Content-Type: application/json
+
+### 11. 카프카 테스트 엔드포인트 호출
+POST http://localhost:8080/v3/products/send-stock-decrease?productId=e61caf66-b5c0-4e23-bb9f-fd75821efc67
 Authorization: {{accessToken}}
 Content-Type: application/json

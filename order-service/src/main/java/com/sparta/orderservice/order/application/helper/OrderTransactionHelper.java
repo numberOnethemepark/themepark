@@ -6,6 +6,7 @@ import com.sparta.orderservice.order.application.dto.reponse.ResProductGetByIdDT
 import com.sparta.orderservice.order.domain.entity.OrderEntity;
 import com.sparta.orderservice.order.domain.repository.OrderRepository;
 import com.sparta.orderservice.order.infrastructure.feign.ProductFeignClientApi;
+import com.sparta.orderservice.order.infrastructure.kafka.dto.req.ReqProductKafkaDto;
 import com.sparta.orderservice.order.infrastructure.kafka.service.KafkaService;
 import com.sparta.orderservice.order.presentation.dto.v3.request.ReqOrdersPostDtoApiV3;
 import io.micrometer.tracing.Tracer;
@@ -62,10 +63,13 @@ public class OrderTransactionHelper {
     }
 
     @Transactional
-    public void decreaseStock(ReqOrdersPostDtoApiV3 reqOrdersPostDtoApiV3, String productId, boolean isEventProduct){
+    public void decreaseStock(String orderId, String productId, boolean isEventProduct){
         if (isEventProduct) {
-            productFeignClientApi.getStockById(reqOrdersPostDtoApiV3.getOrder().getProductId());
-            kafkaService.sendOrderAsync("stock-decrease-topic", productId);
+            ReqProductKafkaDto reqProductKafkaDto = ReqProductKafkaDto.builder()
+                    .productId(productId)
+                    .orderId(orderId)
+                    .build();
+            kafkaService.sendOrderAsync("stock-decrease-topic", reqProductKafkaDto);
         }
     }
 

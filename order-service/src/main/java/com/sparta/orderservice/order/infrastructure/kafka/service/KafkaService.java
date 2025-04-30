@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KafkaService {
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void sendOrderAsync(String topic, String productId) {
-        kafkaTemplate.send(topic, productId)
+    public void sendOrderAsync(String topic, Object kafkaDto) {
+        kafkaTemplate.send(topic, kafkaDto)
                 .whenComplete((result, ex) -> {
                     if (ex != null) {
-                        log.error("Kafka 전송 실패: {}", productId, ex);
+                        log.error("Kafka 전송 실패: {}", kafkaDto, ex);
                     } else {
-                        log.info("Kafka 전송 성공: {}", productId);
+                        log.info("Kafka 전송 성공: {}", kafkaDto);
                     }
                 });
     }

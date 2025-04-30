@@ -44,23 +44,35 @@ public class OrderServiceV3 implements OrderUseCaseV3 {
         try (Tracer.SpanInScope ws = tracer.withSpan(rootSpan)) {
 
             // transaction 1 - Redis 조회
-            try (Tracer.SpanInScope redisScope = tracer.withSpan(tracer.nextSpan().name("Redis 조회").start())) {
+            Span redisSpan = tracer.nextSpan().name("Redis 조회").start();
+            try (Tracer.SpanInScope redisScope = tracer.withSpan(redisSpan)) {
                 product = orderTransactionHelper.getRedis(redisProductKey);
+            } finally {
+                redisSpan.end();
             }
 
             // transaction 2 - 상품 타입 확인 및 Redis 저장
-            try (Tracer.SpanInScope checkProductScope = tracer.withSpan(tracer.nextSpan().name("상품 타입 확인 + redis 저장").start())) {
+            Span checkProductSpan = tracer.nextSpan().name("상품 타입 확인 + redis 저장").start();
+            try (Tracer.SpanInScope checkProductScope = tracer.withSpan(checkProductSpan)) {
                 isEventProduct = orderTransactionHelper.checkProduct(product, reqOrdersPostDtoApiV3, redisProductKey);
+            } finally {
+                checkProductSpan.end();
             }
 
-            // transaction 3 - EVENT 상품 재고 확인 및 Kafka 전송
-            try (Tracer.SpanInScope eventKafkaScope = tracer.withSpan(tracer.nextSpan().name("EVENT 상품이면 재고 확인 + Kafka 전송").start())) {
-                orderTransactionHelper.decreaseStock(reqOrdersPostDtoApiV3, productId, isEventProduct);
-            }
-
-            // transaction 4 - DB 저장
-            try (Tracer.SpanInScope dbScope = tracer.withSpan(tracer.nextSpan().name("DB 저장").start())) {
+            // transaction 3 - DB 저장
+            Span dbSpan = tracer.nextSpan().name("DB 저장").start();
+            try (Tracer.SpanInScope dbScope = tracer.withSpan(dbSpan)) {
                 orderEntity = orderTransactionHelper.createOrder(userId, reqOrdersPostDtoApiV3);
+            } finally {
+                dbSpan.end();
+            }
+
+            // transaction 4 - EVENT 상품 재고 확인 및 Kafka 전송
+            Span eventKafkaSpan = tracer.nextSpan().name("EVENT 상품이면 재고 확인 + Kafka 전송").start();
+            try (Tracer.SpanInScope eventKafkaScope = tracer.withSpan(eventKafkaSpan)) {
+                orderTransactionHelper.decreaseStock(orderEntity.getOrderId().toString(), productId, isEventProduct);
+            } finally {
+                eventKafkaSpan.end();
             }
 
             return ResOrderPostDtoApiV3.of(orderEntity);

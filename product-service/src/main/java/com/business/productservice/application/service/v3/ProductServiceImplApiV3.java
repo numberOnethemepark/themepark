@@ -6,7 +6,6 @@ import com.business.productservice.application.dto.v3.response.*;
 import com.business.productservice.application.exception.ProductExceptionCode;
 import com.business.productservice.domain.product.entity.ProductEntity;
 import com.business.productservice.domain.product.entity.StockEntity;
-import com.business.productservice.infrastructure.feign.SlackFeignClientApiV1;
 import com.business.productservice.infrastructure.kafka.OrderKafkaProducerService;
 import com.business.productservice.infrastructure.kafka.SlackKafkaProducerService;
 import com.business.productservice.infrastructure.kafka.dto.ReqStockDecreaseFailDTOApiV3;
@@ -40,7 +39,6 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
 
     private final ProductJpaRepository productRepository;
     private final StockJpaRepository stockRepository;
-    private final SlackFeignClientApiV1 slackFeignClientApiV1;
     private final RedissonClient redissonClient;
     private final RedisTemplate<String, Object> redisTemplate;
     private final SlackKafkaProducerService slackKafkaProducerService;

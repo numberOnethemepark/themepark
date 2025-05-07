@@ -1,6 +1,6 @@
 spring:
   application:
-    name: themepark-service
+    name: user-service
   datasource:
     url: jdbc:postgresql://51.20.67.219:5430/themeparkdb
     username: admin
@@ -12,36 +12,29 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        default_schema: themepark_service
+        default_schema: user_service
   data:
     redis:
       host: 51.20.67.219
       port: 6379
       username: default
       password: systempass
-  kafka:
-    bootstrap-servers: 51.20.67.219:8088
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  jwt:
+    secret: "MeyhsO2FjOuniO2MjO2BrOyLnO2BrOumv+2CpOyeheuLiOuLpOyVhOyVhOyVhOyVhOyVhOyVhA=="
+
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+server:
+  port: 8001
+
 management:
   endpoints:
     web:
       exposure:
         include: 'prometheus'
-  tracing:
-    sampling:
-      probability: 1.0
-    enabled: true
-    zipkin:
-      endpoint: http://51.20.67.219:9411/api/v2/spans
-server:
-  port: 8005

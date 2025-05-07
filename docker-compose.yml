@@ -1,4 +1,15 @@
 services:
+  eureka-server:
+    build:
+      context: ./eureka  # eureka 서버 Dockerfile이 있는 경로
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - msa-network
+
   postgres:
     image: postgres:latest
     container_name: themepark_db
@@ -97,3 +108,4 @@ volumes:
 networks:
   prometheus-network:
     external: false  # 내부 네트워크로 설정
+

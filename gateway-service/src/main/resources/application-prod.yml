@@ -111,3 +111,13 @@ resilience4j:
       defaultCircuitBreaker: # circuitbreaker name
         baseConfig: default # 기본 config 지정
         slowCallDurationThreshold: 3000
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 6s  # 6초로 늘림
+        cancelRunningFuture: true
+
+#logging:
+#  level:
+#    org.springframework.cloud.gateway: DEBUG
+#    reactor.netty.http.client: DEBUG

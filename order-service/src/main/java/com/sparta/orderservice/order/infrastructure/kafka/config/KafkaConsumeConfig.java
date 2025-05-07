@@ -21,7 +21,7 @@ public class KafkaConsumeConfig {
     @Bean
     public ConsumerFactory<String, ResProductKafkaDto> consumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088");
+        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "51.20.67.219:8088");
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "order-service");
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);

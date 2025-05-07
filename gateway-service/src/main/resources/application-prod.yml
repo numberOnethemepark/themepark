@@ -114,7 +114,7 @@ resilience4j:
   timelimiter:
     configs:
       default:
-        timeoutDuration: 6s  # 6초로 늘림
+        timeoutDuration: 60s  # 60초로 늘림
         cancelRunningFuture: true
 
 #logging:

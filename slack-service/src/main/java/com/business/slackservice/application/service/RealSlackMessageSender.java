@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("dev")
+@Profile("prod")
 public class RealSlackMessageSender implements SlackMessageSender {
 
     @Value("${slack.bot.token}")

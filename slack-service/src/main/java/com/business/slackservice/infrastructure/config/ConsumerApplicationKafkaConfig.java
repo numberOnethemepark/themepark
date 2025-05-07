@@ -24,7 +24,7 @@ public class ConsumerApplicationKafkaConfig {
     public ConsumerFactory<String, ReqSlackPostDTOApiV1> consumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
 
-        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088");
+        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "51.20.67.219:8088");
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         configProps.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);

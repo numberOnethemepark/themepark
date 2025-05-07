@@ -26,7 +26,7 @@ public class KafkaConfig {
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088");
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "51.20.67.219:8088");
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(configProps);
@@ -41,7 +41,7 @@ public class KafkaConfig {
     @Bean
     public ConsumerFactory<String, ReqStockDecreaseDTOApiV3> consumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088");
+        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "51.20.67.219:8088");
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         configProps.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
@@ -55,7 +55,7 @@ public class KafkaConfig {
     @Bean
     public ConsumerFactory<String, String> stringConsumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088");
+        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "51.20.67.219:8088");
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         configProps.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
@@ -72,7 +72,7 @@ public class KafkaConfig {
     @Bean
     public KafkaTemplate<Object, Object> dlqKafkaTemplate() {
         ProducerFactory<Object, Object> factory = new DefaultKafkaProducerFactory<>(Map.of(
-                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8088",
+                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "51.20.67.219:8088",
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class
         ));

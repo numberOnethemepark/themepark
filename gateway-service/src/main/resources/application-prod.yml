@@ -1,0 +1,113 @@
+server:
+  port: 8080
+
+spring:
+  data:
+    redis:
+      host: 51.20.67.219
+      port: 6379
+      password: systempass
+
+  application:
+    name: gateway-service
+  jwt:
+    secret: "MeyhsO2FjOuniO2MjO2BrOyLnO2BrOumv+2CpOyeheuLiOuLpOyVhOyVhOyVhOyVhOyVhOyVhA=="
+  main:
+    web-application-type: reactive
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+  cloud:
+    gateway:
+      routes:
+        - id: themepark-service
+          uri: lb://themepark-service
+          predicates:
+            - Path=/v?/themeparks/**, /v?/hashtags/**, /v?/waitings/**, /springdoc/openapi3-themepark-service.json
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/v?/users/**, /v?/auth/**, /springdoc/openapi3-user-service.json
+
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/v?/products/**, /v?/products/**, /springdoc/openapi3-product-service.json
+
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/v?/orders/**, /springdoc/openapi3-order-service.json
+
+        - id: slack-service
+          uri: lb://slack-service
+          predicates:
+            - Path=/v?/slacks/**, /v?/slack-templates/**, /v?/slack-event-types/**, /springdoc/openapi3-slack-service.json
+      discovery:
+        locator:
+          enabled: true
+      loadbalancer:
+        enabled: true
+      default-filters:
+        - name: CircuitBreaker
+          args:
+            name: defaultCircuitBreaker
+
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    urls[0]:
+      name: ThemePark Service
+      url: /springdoc/openapi3-themepark-service.json
+    urls[1]:
+      name: User Service
+      url: /springdoc/openapi3-user-service.json
+    urls[2]:
+      name: Product Service
+      url: /springdoc/openapi3-product-service.json
+    urls[3]:
+      name: Order Service
+      url: /springdoc/openapi3-order-service.json
+    urls[4]:
+      name: Slack Service
+      url: /springdoc/openapi3-slack-service.json
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - 'prometheus'
+          - 'circuitbreakers'
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        # 최소 5개의 요청이 있어야 서킷이 계산
+        minimumNumberOfCalls: 5
+        slowCallRateThreshold: 100
+        # 요청이 느린 것으로 간주되는 기간
+        slowCallDurationThreshold: 60000
+        failureRateThreshold: 60
+        # 서킷이 HALF_OPEN상태일 때 허용되는 호출수
+        permittedNumberOfCallsInHalfOpenState: 3
+        # 서킷의 상태가 OPEN에서 HALF_OPEN으로 변경되기 전에 Circuit Break가 기다리는 시간
+        waitDurationInOpenState: 60s
+        automatic-transition-from-open-to-half-open-enabled: true
+    instances:
+      defaultCircuitBreaker: # circuitbreaker name
+        baseConfig: default # 기본 config 지정
+        slowCallDurationThreshold: 3000

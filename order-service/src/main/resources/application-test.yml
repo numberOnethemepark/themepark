@@ -13,13 +13,13 @@ spring:
 
   data:
     redis:
-      host: localhost
+      host: 51.20.67.219
       port: 6379
       username: default
       password: systempass
 
   kafka:
-    bootstrap-servers: localhost:8088
+    bootstrap-servers: 51.20.67.219:8088
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -30,7 +30,7 @@ management:
       probability: 1.0
     enabled: true
     zipkin:
-      endpoint: http://localhost:9411/api/v2/spans
+      endpoint: http://51.20.67.219:9411/api/v2/spans
 
 
 toss:

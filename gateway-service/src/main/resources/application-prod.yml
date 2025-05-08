@@ -4,7 +4,7 @@ server:
 spring:
   data:
     redis:
-      host: 51.20.67.219
+      host: 3.39.10.27
       port: 6379
       password: systempass
 

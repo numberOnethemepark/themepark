@@ -2,7 +2,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:postgresql://51.20.67.219:5430/themeparkdb
+    url: jdbc:postgresql://3.39.10.27:5430/themeparkdb
     username: admin
     password: 12345
     driver-class-name: org.postgresql.Driver
@@ -16,7 +16,7 @@ spring:
         default_schema: user_service
   data:
     redis:
-      host: 51.20.67.219
+      host: 3.39.10.27
       port: 6379
       username: default
       password: systempass

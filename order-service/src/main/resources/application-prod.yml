@@ -3,7 +3,7 @@ spring:
     name: order-service
 
   datasource:
-    url: jdbc:postgresql://51.20.67.219:5430/themeparkdb
+    url: jdbc:postgresql://3.39.10.27:5430/themeparkdb
     username: admin
     password: 12345
     driver-class-name: org.postgresql.Driver
@@ -15,13 +15,13 @@ spring:
 
   data:
     redis:
-      host: 51.20.67.219
+      host: 3.39.10.27
       port: 6379
       username: default
       password: systempass
 
   kafka:
-    bootstrap-servers: 51.20.67.219:8088
+    bootstrap-servers: 3.39.10.27:8088
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -41,7 +41,7 @@ management:
       probability: 1.0
     enabled: true
     zipkin:
-      endpoint: http://51.20.67.219:9411/api/v2/spans
+      endpoint: http://3.39.10.27:9411/api/v2/spans
 
 toss:
   secretKey: test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6

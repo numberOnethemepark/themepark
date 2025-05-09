@@ -36,7 +36,7 @@
 
 | [김도원](https://github.com/dowon0113) | [문고은](https://github.com/moongzz) | [신다은](https://github.com/devdaeun) | [김대중](https://github.com/djmachine) |
 | --- | --- | --- | --- |
-| <a href="https://github.com/dowon0113"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/6d3e3b18-3e88-4f19-889b-2ec0ce2cfcb1"/></a> | <a href="https://github.com/moongzz"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/14b98138-b68b-44e7-85b2-1b8ac2640e81"/></a> | <a href="https://github.com/devdaeun"><img height="150px" width="130px" src=""/></a> | <a href="https://github.com/djmachine"><img height="150px" width="130px" src=""/></a> | 
+| <a href="https://github.com/dowon0113"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/6d3e3b18-3e88-4f19-889b-2ec0ce2cfcb1"/></a> | <a href="https://github.com/moongzz"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/14b98138-b68b-44e7-85b2-1b8ac2640e81"/></a> | <a href="https://github.com/devdaeun"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/4b8ef41c-ebfe-4e3b-81ff-e908e1f46b28"/></a> | <a href="https://github.com/djmachine"><img height="150px" width="130px" src=""/></a> | 
 | 상품, 티켓팅 | 인증/인가, 유저, 슬랙 | 테마파크, 대기열, 해시태그 | 주문, 결제 | 
 
 <br><br>

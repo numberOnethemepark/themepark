@@ -36,7 +36,7 @@
 
 | [김도원](https://github.com/dowon0113) | [문고은](https://github.com/moongzz) | [신다은](https://github.com/devdaeun) | [김대중](https://github.com/djmachine) |
 | --- | --- | --- | --- |
-| <a href="https://github.com/dowon0113"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/6d3e3b18-3e88-4f19-889b-2ec0ce2cfcb1"/></a> | <a href="https://github.com/moongzz"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/14b98138-b68b-44e7-85b2-1b8ac2640e81"/></a> | <a href="https://github.com/devdaeun"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/4b8ef41c-ebfe-4e3b-81ff-e908e1f46b28"/></a> | <a href="https://github.com/djmachine"><img height="150px" width="130px" src=""/></a> | 
+| <a href="https://github.com/dowon0113"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/6d3e3b18-3e88-4f19-889b-2ec0ce2cfcb1"/></a> | <a href="https://github.com/moongzz"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/14b98138-b68b-44e7-85b2-1b8ac2640e81"/></a> | <a href="https://github.com/devdaeun"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/4b8ef41c-ebfe-4e3b-81ff-e908e1f46b28"/></a> | <a href="https://github.com/djmachine"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/7ef09772-7d4d-46f9-b657-6d3e0bdc2430"/></a> | 
 | 상품, 티켓팅 | 인증/인가, 유저, 슬랙 | 테마파크, 대기열, 해시태그 | 주문, 결제 | 
 
 <br><br>
@@ -241,9 +241,16 @@ Dead Letter Topic을 발행하여 정상적으로 처리되지 않은 메세지�
 </details>
 <details>
 <summary>ERD</summary>
+        <img src= "https://github.com/user-attachments/assets/47669b57-f89e-4539-a625-9eee562b076e" width="500">
 </details>
+
 <details>
 <summary>Flow Chart</summary>
+        <img src= "https://github.com/user-attachments/assets/51bfd0df-0e47-4bef-a900-6d7d8dbd867c" width="500">
+        <img src= "https://github.com/user-attachments/assets/d2c71a53-2a0f-4b08-a223-8a3d44bfb497" width="500">
+        <img src= "https://github.com/user-attachments/assets/b6500d74-f379-4b91-980e-3990fa7c4869" width="500">
+        <img src= "https://github.com/user-attachments/assets/0a81e5a7-0d33-4ba0-a20d-c1dc16db7d21" width="500">
+        <img src= "https://github.com/user-attachments/assets/2bebbcdd-4f65-45b1-ad00-9eff0eb45a5d" width="500">
 </details>
 
 <br><br>

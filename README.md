@@ -31,11 +31,12 @@
 
 <br><br>
 
+
 ## 팀원 소개
 
 | [김도원](https://github.com/dowon0113) | [문고은](https://github.com/moongzz) | [신다은](https://github.com/devdaeun) | [김대중](https://github.com/djmachine) |
 | --- | --- | --- | --- |
-| <a href="https://github.com/dowon0113"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/6d3e3b18-3e88-4f19-889b-2ec0ce2cfcb1"/></a> | <a href="https://github.com/moongzz"><img height="150px" width="130px" src=""/></a> | <a href="https://github.com/devdaeun"><img height="150px" width="130px" src=""/></a> | <a href="https://github.com/djmachine"><img height="150px" width="130px" src=""/></a> | 
+| <a href="https://github.com/dowon0113"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/6d3e3b18-3e88-4f19-889b-2ec0ce2cfcb1"/></a> | <a href="https://github.com/moongzz"><img height="150px" width="130px" src="https://github.com/user-attachments/assets/14b98138-b68b-44e7-85b2-1b8ac2640e81"/></a> | <a href="https://github.com/devdaeun"><img height="150px" width="130px" src=""/></a> | <a href="https://github.com/djmachine"><img height="150px" width="130px" src=""/></a> | 
 | 상품, 티켓팅 | 인증/인가, 유저, 슬랙 | 테마파크, 대기열, 해시태그 | 주문, 결제 | 
 
 <br><br>
@@ -235,6 +236,7 @@ Dead Letter Topic을 발행하여 정상적으로 처리되지 않은 메세지�
 <details>
 <summary>인프라 설계도</summary>
 <div>
+<img src="https://github.com/user-attachments/assets/1a6bdf00-b0ac-48a0-a6ef-f07bba1099f9" width="500">
 </div>
 </details>
 <details>

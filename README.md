@@ -181,7 +181,10 @@ DefaultErrorHandler errorHandler = new DefaultErrorHandler(
 <br><br>
 
 ## 트러블 슈팅
-
+### [JWT 관리 전략 전환](https://github.com/numberOnethemepark/themepark/wiki/JWT-%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5-%EC%A0%84%ED%99%98)
+### [비관적 락 적용](https://github.com/numberOnethemepark/themepark/wiki/%EB%B9%84%EA%B4%80%EC%A0%81-%EB%9D%BD-%EC%A0%81%EC%9A%A9)
+### [상품 조회 테스트 에러](https://github.com/numberOnethemepark/themepark/wiki/%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-2)
+### [상품 등록 시 재고 저장 구조 개선](https://github.com/numberOnethemepark/themepark/wiki/%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%851)
 <br><br>
 
 ## 주요 기능

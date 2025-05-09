@@ -1,0 +1,62 @@
+POST http://localhost:8080/v1/auth/login
+Content-Type:application/json
+
+{
+  "user": {
+    "username": "asdf",
+    "password": "asdkasjdh1123"
+  }
+}
+> {%
+    client.global.set("accessToken", response.headers.valueOf("ACCESS_TOKEN"))
+%}
+
+###
+
+POST http://localhost:8080/v1/themeparks
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+  "themepark":
+    {
+      "name": "알라딘",
+      "description": "아라비안 나이트",
+      "type": "RIDE",
+      "heightLimit": "130~180cm",
+      "operationStartTime": "10:00",
+      "operationEndTime": "18:00",
+      "supervisor": true,
+      "hashtagList": [{
+        "hashtagId": "376df3fd-f172-4046-8bd2-9ab22b9c79cd"
+      },{
+        "hashtagId": "06b9986a-f997-49b0-8d7e-3d9dad67943b"
+      }
+      ]
+    }
+}
+
+###
+
+GET http://localhost:8080/v1/themeparks/45fbc880-83be-45d0-868f-552ab124b708
+
+###
+
+GET http://localhost:8080/v1/themeparks?description=아라비안 나이트
+
+###
+
+PUT http://localhost:8080/v1/themeparks/45fbc880-83be-45d0-868f-552ab124b708
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+  "themepark": {
+    "heightLimit": "140~180cm"
+  }
+}
+
+###
+
+DELETE http://localhost:8080/v1/themeparks/45fbc880-83be-45d0-868f-552ab124b708
+Authorization: {{accessToken}}

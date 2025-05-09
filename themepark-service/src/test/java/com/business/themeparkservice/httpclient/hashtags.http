@@ -1,0 +1,62 @@
+POST http://localhost:8080/v1/auth/join
+Content-Type: application/json
+
+{
+  "user": {
+    "username": "hgfhbhj",
+    "password": "asdkasjdhs1123",
+    "slackId": "aksdjasdsld"
+  }
+}
+
+###
+POST http://localhost:8080/v1/auth/login
+Content-Type:application/json
+
+{
+  "user": {
+    "username": "asdf",
+    "password": "asdkasjdh1123"
+  }
+}
+> {%
+    client.global.set("accessToken", response.headers.valueOf("ACCESS_TOKEN"))
+%}
+
+###
+
+POST http://localhost:8080/v1/hashtags
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+  "hashtag": {
+    "name": "즐거운"
+  }
+}
+
+####
+
+GET http://localhost:8080/v1/hashtags/1d57d230-3fe2-4b9b-ae80-d69f73a117b2
+
+###
+
+GET http://localhost:8080/v1/hashtags?name=짜릿한&name=신나는
+
+###
+
+PUT http://localhost:8080/v1/hashtags/f20d7a0c-0872-4b95-9440-dc2bd1c49cc1
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+  "hashtag": {
+    "name": "흥미로운"
+  }
+}
+
+###
+
+DELETE http://localhost:8080/v1/hashtags/1d57d230-3fe2-4b9b-ae80-d69f73a117b2
+Authorization: {{accessToken}}
+

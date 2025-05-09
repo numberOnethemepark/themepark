@@ -1,0 +1,38 @@
+# application-test.yml
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  data:
+    redis:
+      host: 51.20.67.219
+      port: 6379
+      username: default
+      password: systempass
+
+  kafka:
+    bootstrap-servers: 51.20.67.219:8088
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    enabled: true
+    zipkin:
+      endpoint: http://51.20.67.219:9411/api/v2/spans
+
+
+toss:
+  secretKey: test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6
+  clientKey: test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm

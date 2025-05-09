@@ -1,0 +1,16 @@
+rootProject.name = 'themepark-root'
+include 'eureka-server'
+include 'order-service'
+include 'gateway-service'
+include 'themepark-service'
+include 'product-service'
+include 'user-service'
+include 'slack-service'
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
